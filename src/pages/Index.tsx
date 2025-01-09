@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import ProjectCard from "@/components/ProjectCard";
 import CertificateCard from "@/components/CertificateCard";
-import { Github, Mail, Linkedin, Brain, BookOpen, Function } from "lucide-react";
+import { Github, Mail, Linkedin, Brain, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
