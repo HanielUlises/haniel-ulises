@@ -1,17 +1,455 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>haniel-landing-portal</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-    <meta property="og:image" content="/og-image.png" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Haniel Ulises — Computer Engineer, AI Specialist, Formal Logic & Mathematics." />
+  <meta name="keywords" content="Computer Engineer, AI, C++, Systems Programming, Formal Logic, Mathematics, ROS, Machine Learning" />
+  <meta name="author" content="Haniel Ulises" />
+  <title>Haniel Ulises</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0a;--mid-gray:#555;--light-gray:#999;--pale-gray:#ccc;
+      --text:#f0f0f0;--heading:#fafafa;
+      --border:rgba(255,255,255,0.07);--border-light:rgba(255,255,255,0.12);
+      --nav-bg:rgba(10,10,10,0.93);--hover-bg:rgba(255,255,255,0.018);--skill-hover:rgba(255,255,255,0.025);
+      --serif:'EB Garamond',Georgia,serif;--mono:'JetBrains Mono','Courier New',monospace;
+      --t:0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    html.light{
+      --bg:#f7f7f5;--mid-gray:#888;--light-gray:#555;--pale-gray:#222;
+      --text:#1a1a1a;--heading:#080808;
+      --border:rgba(0,0,0,0.08);--border-light:rgba(0,0,0,0.16);
+      --nav-bg:rgba(247,247,245,0.94);--hover-bg:rgba(0,0,0,0.025);--skill-hover:rgba(0,0,0,0.03);
+    }
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background var(--t),color var(--t)}
+    ::selection{background:rgba(128,128,128,0.2)}
+    a{color:inherit;text-decoration:none}
 
-  <body>
-    <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 4rem;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background var(--t),border-color var(--t)}
+    .nav-logo{font-family:var(--mono);font-size:.8rem;font-weight:300;letter-spacing:.15em;color:var(--pale-gray);text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none}
+    .nav-links a{font-family:var(--mono);font-size:.72rem;font-weight:300;letter-spacing:.12em;color:var(--light-gray);text-transform:uppercase;transition:color var(--t);position:relative}
+    .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--pale-gray);transition:width var(--t)}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links a:hover::after{width:100%}
+    .nav-controls{display:flex;align-items:center;gap:.6rem}
+    .nav-btn{font-family:var(--mono);font-size:.72rem;font-weight:400;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;border:1px solid var(--border-light);padding:.35rem .85rem;cursor:pointer;background:transparent;transition:all var(--t);user-select:none;line-height:1}
+    .nav-btn:hover{border-color:var(--pale-gray);color:var(--pale-gray)}
+    .theme-btn{width:2.2rem;height:2.2rem;padding:0;letter-spacing:0;font-size:.9rem;display:flex;align-items:center;justify-content:center}
+
+    /* HERO */
+    #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 4rem;padding-top:5rem;position:relative;overflow:hidden;max-width:unset}
+    .hero-inner{max-width:900px}
+    .hero-label{font-family:var(--mono);font-size:.7rem;font-weight:300;letter-spacing:.25em;color:var(--mid-gray);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp .8s ease forwards .2s}
+    .hero-name{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.5rem);font-weight:400;line-height:1.05;letter-spacing:-.02em;color:var(--heading);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s ease forwards .4s}
+    .hero-subtitle{font-family:var(--serif);font-size:clamp(1rem,2vw,1.3rem);font-weight:400;font-style:italic;color:var(--light-gray);margin-bottom:2.5rem;max-width:680px;opacity:0;animation:fadeUp .8s ease forwards .6s}
+    .hero-axiom{font-family:var(--mono);font-size:.78rem;font-weight:300;letter-spacing:.05em;color:var(--mid-gray);border-left:1px solid var(--border-light);padding-left:1.2rem;max-width:560px;line-height:1.9;opacity:0;animation:fadeUp .8s ease forwards .8s}
+    .hero-scroll{position:absolute;bottom:3rem;left:4rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase;opacity:0;animation:fadeUp .8s ease forwards 1.2s;display:flex;align-items:center;gap:.8rem}
+    .hero-scroll::before{content:'';width:2rem;height:1px;background:var(--mid-gray)}
+
+    /* SECTIONS */
+    section{padding:7rem 4rem;max-width:1100px;margin:0 auto}
+    .section-header{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:4rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+    .section-num{font-family:var(--mono);font-size:.65rem;font-weight:300;letter-spacing:.2em;color:var(--mid-gray)}
+    .section-title{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;letter-spacing:-.01em;color:var(--heading)}
+
+    /* ABOUT */
+    .about-text{font-size:1.05rem;color:var(--text);max-width:780px;line-height:1.9}
+    .about-text p+p{margin-top:1.4rem}
+    .about-text em{color:var(--pale-gray);font-style:italic}
+
+    /* SKILLS */
+    .skills-blocks{display:flex;flex-direction:column;border:1px solid var(--border)}
+    .skill-block{padding:2.2rem 2.4rem;border-bottom:1px solid var(--border);transition:background var(--t)}
+    .skill-block:last-child{border-bottom:none}
+    .skill-block:hover{background:var(--skill-hover)}
+    .skill-block-title{font-family:var(--mono);font-size:.65rem;font-weight:400;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase;margin-bottom:1.4rem}
+    .skill-subsections{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem 3rem}
+    .skill-sub-label{font-family:var(--mono);font-size:.6rem;font-weight:300;letter-spacing:.18em;color:var(--light-gray);text-transform:uppercase;margin-bottom:.9rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+    .skill-items{list-style:none;display:flex;flex-direction:column;gap:.35rem}
+    .skill-items li{font-family:var(--serif);font-size:.95rem;color:var(--pale-gray)}
+    .skill-block>.skill-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.35rem 2rem}
+
+    /* PROJECTS */
+    .projects-grid{display:grid;grid-template-columns:1fr;border:1px solid var(--border)}
+    .project-card{padding:2.8rem;border-bottom:1px solid var(--border);position:relative;transition:background var(--t);cursor:pointer;display:block}
+    .project-card:last-child{border-bottom:none}
+    .project-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background var(--t)}
+    .project-card:hover{background:var(--hover-bg)}
+    .project-card:hover::before{background:var(--pale-gray)}
+    .project-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}
+    .project-title{font-family:var(--serif);font-size:1.25rem;font-weight:500;color:var(--heading);letter-spacing:-.01em}
+    .project-link-icon{font-family:var(--mono);font-size:.65rem;letter-spacing:.15em;color:var(--mid-gray);flex-shrink:0;padding-top:.25rem;transition:color var(--t)}
+    .project-card:hover .project-link-icon{color:var(--pale-gray)}
+    .project-desc{font-family:var(--serif);font-size:.97rem;color:var(--light-gray);line-height:1.85;max-width:820px}
+    .project-desc p+p{margin-top:.9rem}
+    .project-stack{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:.5rem}
+    .tag{font-family:var(--mono);font-size:.62rem;font-weight:300;letter-spacing:.12em;color:var(--mid-gray);border:1px solid var(--border);padding:.25rem .7rem;text-transform:uppercase}
+
+    /* ACHIEVEMENTS */
+    .achievement-item{display:flex;align-items:baseline;gap:2rem;padding:2rem 0;border-bottom:1px solid var(--border)}
+    .achievement-item:first-child{border-top:1px solid var(--border)}
+    .ach-num{font-family:var(--mono);font-size:.65rem;letter-spacing:.18em;color:var(--mid-gray);flex-shrink:0;width:3rem}
+    .ach-title{font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--heading);margin-bottom:.3rem}
+    .ach-desc{font-family:var(--serif);font-size:.95rem;color:var(--light-gray);line-height:1.7}
+
+    /* CONTACT */
+    .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border:1px solid var(--border)}
+    .contact-item{display:flex;flex-direction:column;gap:.4rem;padding:2rem;border-right:1px solid var(--border);transition:background var(--t)}
+    .contact-item:hover{background:var(--hover-bg)}
+    .contact-item:last-child{border-right:none}
+    .contact-label{font-family:var(--mono);font-size:.62rem;font-weight:400;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase}
+    .contact-value{font-family:var(--serif);font-size:1rem;color:var(--pale-gray);transition:color var(--t)}
+    .contact-item:hover .contact-value{color:var(--heading)}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-name{font-family:var(--mono);font-size:.7rem;font-weight:300;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase}
+    .footer-links{display:flex;gap:2rem;list-style:none}
+    .footer-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;transition:color var(--t)}
+    .footer-links a:hover{color:var(--pale-gray)}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      nav{padding:1.2rem 1.5rem}
+      .nav-links{display:none}
+      #hero,section{padding-left:1.5rem;padding-right:1.5rem}
+      .hero-scroll{left:1.5rem}
+      footer{padding:2rem 1.5rem;flex-direction:column;align-items:flex-start}
+      .project-card{padding:2rem 1.5rem}
+      .project-header{flex-direction:column;gap:.5rem}
+      .contact-item{border-right:none;border-bottom:1px solid var(--border)}
+      .contact-item:last-child{border-bottom:none}
+    }
+    @media(max-width:500px){.skill-block>.skill-items{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">H.U.</span>
+  <ul class="nav-links">
+    <li><a href="#about"        data-i18n="nav_about"></a></li>
+    <li><a href="#skills"       data-i18n="nav_skills"></a></li>
+    <li><a href="#projects"     data-i18n="nav_projects"></a></li>
+    <li><a href="#achievements" data-i18n="nav_achievements"></a></li>
+    <li><a href="#contact"      data-i18n="nav_contact"></a></li>
+  </ul>
+  <div class="nav-controls">
+    <button class="nav-btn theme-btn" id="themeToggle" aria-label="Toggle theme">○</button>
+    <button class="nav-btn" id="langToggle" aria-label="Toggle language">ES</button>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <p class="hero-label" data-i18n="hero_label"></p>
+    <h1 class="hero-name">Haniel Ulises</h1>
+    <p class="hero-subtitle" data-i18n="hero_subtitle"></p>
+    <p class="hero-axiom" data-i18n="hero_axiom"></p>
+  </div>
+  <span class="hero-scroll" data-i18n="hero_scroll"></span>
+</section>
+
+<section id="about">
+  <div class="section-header fade-in">
+    <span class="section-num">01</span>
+    <h2 class="section-title" data-i18n="about_title"></h2>
+  </div>
+  <div class="about-text fade-in">
+    <p data-i18n="about_p1"></p>
+    <p data-i18n="about_p2"></p>
+    <p data-i18n="about_p3"></p>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-header fade-in">
+    <span class="section-num">02</span>
+    <h2 class="section-title" data-i18n="skills_title"></h2>
+  </div>
+  <div class="skills-blocks fade-in">
+    <div class="skill-block">
+      <p class="skill-block-title" data-i18n="sk_systems"></p>
+      <ul class="skill-items">
+        <li>Modern C++ (C++17/20)</li><li>C</li><li>Rust</li><li>Python</li>
+        <li>Systems Programming</li><li>Linux Systems</li><li>CMake · Docker</li>
+        <li>CUDA (C++)</li><li>High-Performance Computing (HPC)</li>
+      </ul>
+    </div>
+    <div class="skill-block">
+      <p class="skill-block-title" data-i18n="sk_ai"></p>
+      <div class="skill-subsections">
+        <div class="skill-sub">
+          <p class="skill-sub-label" data-i18n="sk_ai_robotics"></p>
+          <ul class="skill-items">
+            <li>ROS / ROS2</li><li>Motion &amp; Task Planning</li>
+            <li>PDDL · Automated Planning</li><li>SLAM</li>
+            <li>Multi-Agent Systems</li><li>Distributed Robotic Architectures</li>
+          </ul>
+        </div>
+        <div class="skill-sub">
+          <p class="skill-sub-label" data-i18n="sk_ai_ml"></p>
+          <ul class="skill-items">
+            <li>Supervised &amp; Unsupervised Learning</li><li>Linear Models &amp; Regularization</li>
+            <li>Kernel Methods</li><li>Optimization Methods</li>
+            <li>Model Evaluation &amp; Cross-Validation</li>
+            <li>Graph Neural Networks</li><li>Statistical Learning Foundations</li>
+          </ul>
+        </div>
+        <div class="skill-sub">
+          <p class="skill-sub-label" data-i18n="sk_ai_dl"></p>
+          <ul class="skill-items">
+            <li>Convolutional Neural Networks</li><li>Transformer Architectures</li>
+            <li>Representation Learning</li><li>Sequence Modeling</li>
+            <li>Computer Vision · Real-Time CV</li><li>Training Pipeline Design</li>
+            <li>Edge AI · AI Infrastructure</li><li>Performance-aware Model Deployment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block">
+      <p class="skill-block-title" data-i18n="sk_formal"></p>
+      <ul class="skill-items">
+        <li>Theoretical Computer Science</li><li>Computational Complexity Theory</li>
+        <li>Automata &amp; Formal Languages</li><li>Modal &amp; Epistemic Logic</li>
+        <li>Model Theory</li><li>Type Theory</li><li>Category Theory</li><li>Mathematical Logic</li>
+      </ul>
+    </div>
+    <div class="skill-block">
+      <p class="skill-block-title" data-i18n="sk_perf"></p>
+      <ul class="skill-items">
+        <li>Performance Engineering</li><li>Compiler Fundamentals</li>
+        <li>Low-level Debugging</li><li>Memory &amp; Cache Optimization</li>
+        <li>Digital Signal Processing (DSP)</li><li>Algorithmic Problem Solving</li>
+        <li>Competitive Programming</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-header fade-in">
+    <span class="section-num">03</span>
+    <h2 class="section-title" data-i18n="proj_title"></h2>
+  </div>
+  <div class="projects-grid fade-in" id="projectsGrid"></div>
+</section>
+
+<section id="achievements">
+  <div class="section-header fade-in">
+    <span class="section-num">04</span>
+    <h2 class="section-title" data-i18n="ach_title"></h2>
+  </div>
+  <div class="fade-in">
+    <div class="achievement-item">
+      <span class="ach-num">01</span>
+      <div>
+        <p class="ach-title" data-i18n="ach1_title"></p>
+        <p class="ach-desc"  data-i18n="ach1_desc"></p>
+      </div>
+    </div>
+    <div class="achievement-item">
+      <span class="ach-num">02</span>
+      <div>
+        <p class="ach-title" data-i18n="ach2_title"></p>
+        <p class="ach-desc"  data-i18n="ach2_desc"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-header fade-in">
+    <span class="section-num">05</span>
+    <h2 class="section-title" data-i18n="contact_title"></h2>
+  </div>
+  <div class="contact-grid fade-in">
+    <a class="contact-item" href="mailto:hanielulises@gmail.com">
+      <span class="contact-label" data-i18n="contact_email_label"></span>
+      <span class="contact-value">hanielulises@gmail.com</span>
+    </a>
+    <a class="contact-item" href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">
+      <span class="contact-label">LinkedIn</span>
+      <span class="contact-value">haniel-ulises</span>
+    </a>
+    <a class="contact-item" href="https://github.com/HanielUlises" target="_blank" rel="noopener">
+      <span class="contact-label">GitHub</span>
+      <span class="contact-value">HanielUlises</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-name">Haniel Ulises © 2025</span>
+  <ul class="footer-links">
+    <li><a href="https://github.com/HanielUlises" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">LinkedIn</a></li>
+    <li><a href="mailto:hanielulises@gmail.com">Email</a></li>
+  </ul>
+</footer>
+
+<script>
+const T = {
+  en: {
+    nav_about:"About", nav_skills:"Skills", nav_projects:"Projects",
+    nav_achievements:"Achievements", nav_contact:"Contact",
+    hero_label:"Engineer · Mathematician · Philosopher",
+    hero_subtitle:"Systems engineering, artificial intelligence, and the formal foundations of computation.",
+    hero_axiom:"Abstraction is not an intellectual luxury — it is the condition of possibility for every correct system.",
+    hero_scroll:"Scroll",
+    about_title:"About",
+    about_p1:"I am a Computer Engineer specializing in Artificial Intelligence, with emphasis on embedded systems and cloud architectures. My technical work centers on systems programming, computational performance, and model deployment in resource-constrained environments — from edge platforms to large-scale inference pipelines.",
+    about_p2:"In parallel, I hold a deep interest in theoretical computer science and its logical-formal foundations: type theory, model theory, modal and epistemic logic, and category theory as a unifying language for mathematical structures. These frameworks are not peripheral curiosities for me, but conceptual tools that inform the design of correct and verifiable systems.",
+    about_p3:"I am on a trajectory toward pure mathematics, driven by the conviction that the most rigorous software engineering arises from a deep understanding of its formal foundations. Formal logic, proof theory, and denotational semantics are as relevant to me as performance analysis or compiler architecture.",
+    skills_title:"Skills",
+    sk_systems:"Systems, Languages & High-Performance Computing",
+    sk_ai:"Artificial Intelligence",
+    sk_ai_robotics:"Robotics & Autonomous Systems",
+    sk_ai_ml:"Classical Machine Learning",
+    sk_ai_dl:"Deep Learning & Computer Vision",
+    sk_formal:"Formal & Theoretical CS Foundations",
+    sk_perf:"Performance & Low-Level Engineering",
+    proj_title:"Projects",
+    ach_title:"Achievements",
+    ach1_title:"ICPC México 2024 — National Finalist",
+    ach1_desc:"Ranked 28th among 1,000+ participants. A high-stakes algorithmic programming competition validating mastery of advanced data structures, algorithm design, and problem-solving under pressure.",
+    ach2_title:"Geometric Deep Learning Hackathon — UCSB & UNAM",
+    ach2_desc:"First place at the Geometric Deep Learning hackathon jointly organized by UC Santa Barbara and UNAM. Developed a Graph Neural Network (GNN) system for brain data analysis, modeling the topological structure of the connectome as a graph and applying spectral convolution over neural signals to infer functional patterns.",
+    contact_title:"Contact",
+    contact_email_label:"Email",
+  },
+  es: {
+    nav_about:"Sobre mí", nav_skills:"Habilidades", nav_projects:"Proyectos",
+    nav_achievements:"Logros", nav_contact:"Contacto",
+    hero_label:"Ingeniero · Matemático · Filósofo",
+    hero_subtitle:"Ingeniería de sistemas, inteligencia artificial y los fundamentos formales del cómputo.",
+    hero_axiom:"La abstracción no es un lujo intelectual — es la condición de posibilidad de todo sistema correcto.",
+    hero_scroll:"Desplazar",
+    about_title:"Sobre mí",
+    about_p1:"Soy Ingeniero en Computación con especialización en Inteligencia Artificial, con énfasis en sistemas embebidos y arquitecturas en la nube. Mi trabajo técnico gravita en torno a la programación de sistemas, el rendimiento computacional y el despliegue de modelos en entornos con restricciones de recursos —desde plataformas edge hasta pipelines de inferencia a escala.",
+    about_p2:"Paralelamente, me interesa de manera profunda la ciencia de la computación teórica y su fundamento lógico-formal: la teoría de tipos, la teoría de modelos, la lógica modal y epistémica, y la teoría de categorías como lenguaje unificador de estructuras matemáticas. Estos marcos no son para mí objetos de curiosidad periférica, sino herramientas conceptuales que informan el diseño de sistemas correctos y verificables.",
+    about_p3:"Me encuentro en una trayectoria hacia las matemáticas puras, motivado por la convicción de que la ingeniería de software más rigurosa nace del entendimiento profundo de sus fundamentos formales. La lógica formal, la teoría de la demostración y la semántica denotacional son para mí tan relevantes como el análisis de rendimiento o la arquitectura de compiladores.",
+    skills_title:"Habilidades",
+    sk_systems:"Sistemas, Lenguajes y Cómputo de Alto Rendimiento",
+    sk_ai:"Inteligencia Artificial",
+    sk_ai_robotics:"Robótica y Sistemas Autónomos",
+    sk_ai_ml:"Machine Learning Clásico",
+    sk_ai_dl:"Deep Learning y Visión Computacional",
+    sk_formal:"Fundamentos Formales y Teóricos",
+    sk_perf:"Rendimiento e Ingeniería de Bajo Nivel",
+    proj_title:"Proyectos",
+    ach_title:"Logros",
+    ach1_title:"ICPC México 2024 — Finalista Nacional",
+    ach1_desc:"Puesto 28 entre más de 1000 participantes. Competencia de programación algorítmica de alta exigencia que valida el dominio de estructuras de datos avanzadas, diseño de algoritmos y resolución de problemas bajo presión temporal.",
+    ach2_title:"Hackathon de Geometric Deep Learning — UCSB & UNAM",
+    ach2_desc:"Primer lugar en hackathon de Geometric Deep Learning organizado conjuntamente por la UC Santa Barbara y la UNAM. Se desarrolló un sistema basado en Graph Neural Networks (GNNs) para el análisis de datos cerebrales, modelando la estructura topológica del conectoma como un grafo y aplicando convolución espectral sobre señales neuronales para inferir patrones funcionales.",
+    contact_title:"Contacto",
+    contact_email_label:"Correo",
+  }
+};
+
+const PROJECTS = {
+  en: [
+    { title:"Machine-Learning-Cpp (MLPP)", url:"https://github.com/HanielUlises/Machine-Learning-Cpp", stack:["C++17","CMake","STL","Linear Algebra"],
+      desc:["A modular C++ library of classical machine learning algorithm implementations, with emphasis on clarity, efficiency, and extensibility. The design prioritizes mathematical legibility: each algorithm explicitly exposes its statistical assumptions, convergence parameters, and state invariants.","Includes supervised and unsupervised learning, cross-validation tools, clustering, dimensionality reduction, and supporting mathematical utilities. The architecture precisely separates abstraction layers: data structures, algorithms, and evaluation criteria share no implicit state.","Built on the STL without external dependencies, offering predictable performance and complete control over memory management. CMake-based build system, usable as a standalone library or integrable module."] },
+    { title:"Statistical-Computing", url:"https://github.com/HanielUlises/Statistical-Computing", stack:["C++17","Template Metaprogramming","Generic Design","HPC-ready"],
+      desc:["A C++ statistical computing library grounded in generic programming. The design uses templates to parameterize numeric types, distributions, and data structures, allowing the same code to operate at single, double, or extended precision without modification.","The architecture cleanly separates statistical algorithms from their underlying data structures, enabling modular composition and backend substitution. Special attention is paid to numerical precision: accumulation and reduction routines are designed to minimize cancellation error.","The modular design anticipates extensions toward high-performance computing (HPC), with an interface that imposes no assumptions about the memory model or execution context — sequential or parallel."] },
+    { title:"PolyGraph", url:"https://github.com/HanielUlises/PolyGraph", stack:["C++17","Template Library","Computational Geometry","Graph Theory"],
+      desc:["A modern C++ template library combining computational geometry primitives with graph theory abstractions. The design is mathematically explicit: types expose their topological properties through the interface, and algorithms assume formal contracts on their inputs.","The separation between topology and representation is a central design principle: geometric and graph operations share an algebraic foundation, but their in-memory representations are interchangeable via template parameters.","Generic programming allows structures to be instantiated with different coordinate and edge-weight types without duplicating algorithmic logic, adhering to correctness-by-construction principles."] },
+    { title:"Nature-Inspired-Algorithms", url:"https://github.com/HanielUlises/Nature-Inspired-Algorithms", stack:["Modern C++","PSO","GA","Metaheuristics"],
+      desc:["Modern C++ implementations of bioinspired metaheuristics: Particle Swarm Optimization (PSO), Genetic Algorithms (GA), and related variants. The design is modular and oriented toward systematic experimentation.","The separation between search strategy and evaluation function is a design invariant: variation, selection, and update operators are interchangeable components, enabling configuration comparisons without modifying the framework core.","Extensibility is an explicit goal: new metaheuristics can be incorporated by implementing defined interfaces, without altering logging, recording, or convergence evaluation mechanisms."] },
+    { title:"Image-Processing-C", url:"https://github.com/HanielUlises/Image-Processing-C", stack:["C","Manual Memory","Buffer Ops","WebAssembly-ready"],
+      desc:["A C implementation of classical image processing algorithms with emphasis on manual memory manipulation and explicit control over data structures. Each routine operates directly on pixel buffers, avoiding abstraction layers that would obscure the true cost of each operation.","Buffer-level optimization is a guiding principle: memory access patterns maximize cache locality, and convolution and interpolation operations are written to be predictable by the compiler.","The design is prepared for WebAssembly migration: the absence of external dependencies and complete control over data layout make the code portable to sandboxed execution environments without major refactoring."] },
+    { title:"Digital-Signal-Processing", url:"https://github.com/HanielUlises/Digital-Signal-Processing", stack:["C","FFT","Digital Filters","Embedded-ready"],
+      desc:["C implementations of fundamental digital signal processing algorithms: Discrete and Fast Fourier Transforms (DFT/FFT), FIR and IIR filters, and spectral manipulation. The emphasis is on computational efficiency and explicit memory control.","Each algorithm exposes its time and space complexity through its interface, and avoids dynamic allocations where buffer sizes can be determined at compile time or initialization.","The design serves as a foundation for embedded applications where resources are constrained and deterministic real-time behavior is a requirement, not an aspiration."] },
+    { title:"Landmark Classification with PyTorch", url:"https://github.com/HanielUlises", stack:["PyTorch","CNN","Python","Transfer Learning"],
+      desc:["A custom CNN architecture for geographic landmark classification, with a complete pipeline covering data loading, augmentation, training, validation, and evaluation. The modular design allows substituting the network backbone without rewriting the training pipeline.","Systematic experiments were conducted with different architectural configurations: network depth, regularization strategies, and adaptive learning rates. The focus on generalization motivated explicit decisions about data partitioning and evaluation metrics.","The project illustrates the separation between training logic and model architecture, facilitating reproducibility and fair comparison between configurations."] },
+    { title:"RAG with Ollama", url:"https://github.com/HanielUlises", stack:["Python","Ollama","Vector DB","Embeddings","Local LLM"],
+      desc:["A modular Retrieval-Augmented Generation (RAG) system integrating semantic embeddings, vector retrieval, and a local language model executed via Ollama. The architecture is designed to operate entirely in a local environment, without dependencies on external APIs.","The system precisely separates the three pipeline phases: document ingestion and preprocessing, vector indexing, and retrieval-conditioned generation. This separation allows replacing any component — the embedding model, the vector backend, or the LLM — independently.","The extensible design anticipates scenarios where the document corpus grows dynamically or where different LLMs must be comparatively evaluated under the same retrieval conditions."] }
+  ],
+  es: [
+    { title:"Machine-Learning-Cpp (MLPP)", url:"https://github.com/HanielUlises/Machine-Learning-Cpp", stack:["C++17","CMake","STL","Álgebra Lineal"],
+      desc:["Biblioteca modular de implementaciones en C++ de algoritmos clásicos de aprendizaje automático, con énfasis en claridad, eficiencia y extensibilidad. El diseño prioriza la legibilidad matemática: cada algoritmo expone explícitamente sus supuestos estadísticos, parámetros de convergencia e invariantes de estado.","Incluye aprendizaje supervisado y no supervisado, herramientas de validación cruzada, clustering, reducción de dimensionalidad y utilidades matemáticas de soporte. La arquitectura separa con precisión las capas de abstracción: estructuras de datos, algoritmos y criterios de evaluación no comparten estado implícito.","Construido sobre la STL sin dependencias externas, ofrece rendimiento predecible y control total sobre la gestión de memoria. Sistema de build basado en CMake, integrable como biblioteca standalone o módulo dentro de proyectos más amplios."] },
+    { title:"Statistical-Computing", url:"https://github.com/HanielUlises/Statistical-Computing", stack:["C++17","Template Metaprogramming","Genérico","HPC-ready"],
+      desc:["Biblioteca de cómputo estadístico en C++ basada en programación genérica. El diseño emplea templates para parametrizar tipos numéricos, distribuciones y estructuras de datos, permitiendo que el mismo código opere con precisión simple, doble o extendida sin modificaciones.","La arquitectura separa con claridad los algoritmos estadísticos de las estructuras de datos subyacentes, facilitando la composición modular y la sustitución de backends. Se presta especial atención a la precisión numérica: las rutinas de acumulación y reducción están diseñadas para minimizar error de cancelación.","El diseño modular anticipa extensiones hacia cómputo de alto rendimiento (HPC), con una interfaz que no impone suposiciones sobre el modelo de memoria o el contexto de ejecución."] },
+    { title:"PolyGraph", url:"https://github.com/HanielUlises/PolyGraph", stack:["C++17","Template Library","Geometría Computacional","Teoría de Grafos"],
+      desc:["Template library moderna en C++ que combina primitivas de geometría computacional con abstracciones de teoría de grafos. El diseño es matemáticamente explícito: los tipos exponen sus propiedades topológicas a través de la interfaz, y los algoritmos asumen contratos formales sobre sus entradas.","La separación entre topología y representación es un principio de diseño central: las operaciones geométricas y sobre grafos comparten una base algebraica, pero sus representaciones en memoria son intercambiables mediante parámetros de plantilla.","La programación genérica permite instanciar las estructuras con diferentes tipos de coordenadas y pesos de aristas sin duplicación de lógica algorítmica, respetando principios de corrección por construcción."] },
+    { title:"Nature-Inspired-Algorithms", url:"https://github.com/HanielUlises/Nature-Inspired-Algorithms", stack:["C++ moderno","PSO","GA","Metaheurísticas"],
+      desc:["Implementaciones modernas en C++ de metaheurísticas bioinspiradas: algoritmos de enjambre de partículas (PSO), algoritmos genéticos (GA) y variantes relacionadas. El diseño es modular y orientado a la experimentación sistemática.","La separación entre estrategia de búsqueda y función de evaluación es un invariante de diseño: los operadores de variación, selección y actualización son componentes intercambiables, permitiendo comparar configuraciones sin modificar el núcleo del framework.","La extensibilidad es un objetivo explícito: nuevas metaheurísticas pueden incorporarse implementando las interfaces definidas, sin alterar los mecanismos de logging o evaluación de convergencia."] },
+    { title:"Image-Processing-C", url:"https://github.com/HanielUlises/Image-Processing-C", stack:["C","Memoria Manual","Buffer Ops","WebAssembly-ready"],
+      desc:["Implementación en C de algoritmos clásicos de procesamiento de imágenes con énfasis en manipulación manual de memoria y control explícito de estructuras de datos. Cada rutina opera directamente sobre buffers de píxeles, evitando capas de abstracción que oscurecerían el costo real de cada operación.","La optimización a nivel de buffer es un principio rector: el acceso a memoria sigue patrones que maximizan la localidad de caché, y las operaciones de convolución e interpolación están escritas para ser predecibles por el compilador.","El diseño está preparado para migración a WebAssembly: la ausencia de dependencias externas y el control total sobre el layout de datos hacen que el código sea portable a entornos sandboxed sin refactorizaciones mayores."] },
+    { title:"Digital-Signal-Processing", url:"https://github.com/HanielUlises/Digital-Signal-Processing", stack:["C","FFT","Filtros Digitales","Embedded-ready"],
+      desc:["Implementaciones en C de algoritmos fundamentales de procesamiento digital de señales: transformadas de Fourier discretas y rápidas (DFT/FFT), filtros FIR e IIR, y manipulación espectral. El énfasis es en eficiencia computacional y control explícito de memoria.","Cada algoritmo expone su complejidad temporal y espacial a través de su interfaz, y evita asignaciones dinámicas donde el tamaño de los buffers puede determinarse en tiempo de compilación o inicialización.","El diseño sirve como base para aplicaciones embebidas donde los recursos son limitados y el comportamiento determinista en tiempo real es un requisito, no una aspiración."] },
+    { title:"Landmark Classification con PyTorch", url:"https://github.com/HanielUlises", stack:["PyTorch","CNN","Python","Transfer Learning"],
+      desc:["Arquitectura CNN personalizada para clasificación de landmarks geográficos, con un pipeline completo que abarca carga de datos, augmentación, entrenamiento, validación y evaluación. El diseño modular permite sustituir el backbone de la red sin reescribir el pipeline de entrenamiento.","Se realizaron experimentos sistemáticos con distintas configuraciones arquitectónicas: profundidad de red, estrategias de regularización y tasas de aprendizaje adaptativas. El enfoque en generalización motivó decisiones explícitas sobre partición de datos y métricas de evaluación.","El proyecto ilustra la separación entre la lógica de entrenamiento y la arquitectura del modelo, facilitando la reproducibilidad y la comparación justa entre configuraciones."] },
+    { title:"RAG con Ollama", url:"https://github.com/HanielUlises", stack:["Python","Ollama","Vector DB","Embeddings","LLM Local"],
+      desc:["Sistema de Retrieval-Augmented Generation (RAG) modular que integra embeddings semánticos, recuperación vectorial y un modelo de lenguaje local ejecutado mediante Ollama. La arquitectura está diseñada para operar completamente en entorno local, sin dependencias de APIs externas.","El sistema separa con precisión las tres fases del pipeline: ingesta y preprocesamiento de documentos, indexación vectorial y generación condicionada por recuperación. Esta separación permite reemplazar cualquier componente de manera independiente.","El diseño extensible anticipa escenarios donde el corpus de documentos crece dinámicamente o donde diferentes LLMs deben ser evaluados comparativamente bajo las mismas condiciones de recuperación."] }
+  ]
+};
+
+let lang = 'en';
+let isDark = true;
+
+function apply(l) {
+  const t = T[l];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (t[k] !== undefined) el.textContent = t[k];
+  });
+  document.documentElement.lang = l;
+  renderProjects(l);
+}
+
+function renderProjects(l) {
+  const grid = document.getElementById('projectsGrid');
+  grid.innerHTML = '';
+  PROJECTS[l].forEach(p => {
+    const a = document.createElement('a');
+    a.href = p.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.className = 'project-card';
+    a.innerHTML = `
+      <div class="project-header">
+        <h3 class="project-title">${p.title}</h3>
+        <span class="project-link-icon">↗</span>
+      </div>
+      <div class="project-desc">${p.desc.map(d=>`<p>${d}</p>`).join('')}</div>
+      <div class="project-stack">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div>`;
+    grid.appendChild(a);
+  });
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  lang = lang === 'en' ? 'es' : 'en';
+  document.getElementById('langToggle').textContent = lang === 'en' ? 'ES' : 'EN';
+  apply(lang);
+});
+
+const themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', () => {
+  isDark = !isDark;
+  document.documentElement.classList.toggle('light', !isDark);
+  themeBtn.textContent = isDark ? '○' : '●';
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+apply('en');
+</script>
+</body>
 </html>
