@@ -89,12 +89,7 @@
     .chevron:nth-child(1){width:8px;height:8px;animation-delay:0s}
     .chevron:nth-child(2){width:12px;height:12px;animation-delay:0.18s}
     .chevron:nth-child(3){width:16px;height:16px;animation-delay:0.36s}
-
-    @keyframes chevronFade{
-      0%  {opacity:0.1}
-      50% {opacity:0.7}
-      100%{opacity:0.1}
-    }
+    @keyframes chevronFade{0%{opacity:0.1}50%{opacity:0.7}100%{opacity:0.1}}
 
     /* SECTIONS */
     section{padding:7rem 4rem;max-width:1100px;margin:0 auto}
@@ -145,6 +140,31 @@
     .footer-links{display:flex;gap:2rem;list-style:none}
     .footer-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;transition:color var(--t)}
     .footer-links a:hover{color:var(--pale-gray)}
+    /* FLOATING LOGIC LAYER */
+    #logic-canvas{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      pointer-events:none;z-index:0;overflow:hidden;
+    }
+    .logic-glyph{
+      position:absolute;
+      font-family:var(--mono);
+      font-size:.72rem;
+      font-weight:300;
+      letter-spacing:.04em;
+      color:var(--pale-gray);
+      opacity:0;
+      white-space:nowrap;
+      will-change:transform,opacity;
+      animation:logicFloat linear infinite;
+    }
+
+    @keyframes logicFloat{
+      0%  { opacity:0; transform:translateY(0px) translateX(0px); }
+      8%  { opacity:var(--peak-opacity); }
+      88% { opacity:var(--peak-opacity); }
+      100%{ opacity:0; transform:translateY(var(--drift-y)) translateX(var(--drift-x)); }
+    }
+
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
     .fade-in.visible{opacity:1;transform:translateY(0)}
@@ -337,7 +357,7 @@
   </ul>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const T = {
   en: {
     nav_about:"About", nav_skills:"Skills", nav_projects:"Projects",
@@ -502,6 +522,249 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 apply('en');
+
+
+const GLYPHS = [
+  'M \u22a7 t\u2081 = t\u2082  iff  t\u2081\u1d39 = t\u2082\u1d39',
+  'M \u22a7 R(t\u2081,\u2026,t\u2099)  iff  (t\u2081\u1d39,\u2026,t\u2099\u1d39) \u2208 R\u1d39',
+  'M \u22a7 \u00acφ  iff  M \u22ad φ',
+  'M \u22a7 (φ \u2227 ψ)  iff  M \u22a7 φ  and  M \u22a7 ψ',
+  'M \u22a7 \u2203x.φ  iff  \u2203a \u2208 |M|: M \u22a7 φ[a/x]',
+  'M \u22a7 \u2200x.φ  iff  \u2200a \u2208 |M|: M \u22a7 φ[a/x]',
+  'M \u22a7 (φ \u2192 ψ)  iff  M \u22ad φ  or  M \u22a7 ψ',
+  '\u22a7 φ  iff  \u2200M: M \u22a7 φ',
+  '\u2200x\u2200y(x = y \u2192 y = x)',
+  '\u2200x\u2203y(y > x)',
+  '\u2203!x.φ(x)',
+  '\u2200x(φ \u2192 ψ) \u2192 (\u2200xφ \u2192 \u2200xψ)',
+  '\u00ac\u2203x.φ \u2194 \u2200x.\u00acφ',
+  '\u22a2 \u2200x.φ(x) \u2192 φ(t)',
+  'φ[t/x]',
+  '\u0393 \u22a2 \u22a5',
+  '\u22a5',
+  '\u22a4',
+  '\u25a1p \u2192 p',
+  '\u25a1(p \u2192 q) \u2192 (\u25a1p \u2192 \u25a1q)',
+  '\u25c7p \u2194 \u00ac\u25a1\u00acp',
+  'p \u2192 \u25a1\u25c7p',
+  '\u25c7\u25a1p \u2192 \u25a1\u25c7p',
+  '\u25a1p \u2192 \u25a1\u25a1p',
+  '\u00ac\u25a1p \u2194 \u25c7\u00acp',
+  '\u25a1\u22a4',
+  '\u25c7\u22a4',
+  '\u25a1(φ \u2227 ψ) \u2194 \u25a1φ \u2227 \u25a1ψ',
+  '\u25c7(φ \u2228 ψ) \u2194 \u25c7φ \u2228 \u25c7ψ',
+  'Th(\u1d39) = {φ : \u1d39 \u22a7 φ}',
+  '\u1d39 \u2261 \u2115',
+  '\u1d39 \u227a \u2115',
+  'tp(\u0101/A)',
+  '\u03ba-categorical',
+  '|\u1d39| = \u2135\u2080',
+  'ACF\u2080',
+  'DLO',
+  'dcl(A)',
+  'acl(A)',
+  '\u0393 \u22a2 t : \u03c4',
+  '\u0393, x:A \u22a2 t : B',
+  '\u2200\u03b1.\u03b1 \u2192 \u03b1',
+  'A \u00d7 B',
+  'A + B',
+  '\u03bcX.F(X)',
+  '\u22a2 A \u2228 \u00acA',
+  'Cut',
+  'Weakening',
+  'F \u22a3 G',
+  'Hom(F(A),B) \u2245 Hom(A,G(B))',
+  '\u03b7 : Id \u21d2 GF',
+  '\u03b5 : FG \u21d2 Id',
+  'lim F',
+  'colim F',
+  'Nat(F,G)',
+  '\u2218',
+  'ob(\ud835\udcde)',
+];
+
+const logicLayer = document.createElement('div');
+logicLayer.id = 'logic-canvas';
+document.body.appendChild(logicLayer);
+
+let glyphsActive = 0;
+const MAX_GLYPHS = 10;
+
+function spawnGlyph() {
+  if (glyphsActive >= MAX_GLYPHS) return;
+  const heroBottom = heroSection.offsetHeight;
+  if (window.scrollY + window.innerHeight < heroBottom * 0.6) return;
+  glyphsActive++;
+  const el = document.createElement('span');
+  el.className = 'logic-glyph';
+  el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+  const duration = 16 + Math.random() * 20;
+  const startX   = 3  + Math.random() * 90;
+  const startY   = 8  + Math.random() * 82;
+  const driftY   = (Math.random() - 0.5) * 110;
+  const driftX   = (Math.random() - 0.5) * 70;
+  const peakOp   = 0.16 + Math.random() * 0.12;
+  el.style.cssText = `left:${startX}vw;top:${startY}vh;--drift-y:${driftY}px;--drift-x:${driftX}px;--peak-opacity:${peakOp};animation-duration:${duration}s;`;
+  logicLayer.appendChild(el);
+  el.addEventListener('animationend', () => { el.remove(); glyphsActive--; }, { once:true });
+}
+
+setInterval(spawnGlyph, 2000);
+setTimeout(() => { spawnGlyph(); spawnGlyph(); spawnGlyph(); }, 1600);
+
+const KRIPKE_TEMPLATES = [
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+    edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[1,2],[2,1],[0,2],[2,0]], label: 'S5' },
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['p', 'q'], ['q']],
+    edges: [[0,0],[1,1],[2,2],[0,1],[1,2],[0,2]], label: 'S4' },
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], []],
+    edges: [[0,0],[1,1],[2,2],[0,1],[1,2]], label: 'T' },
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+    edges: [[0,1],[0,2],[1,2]], label: 'K' },
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+    edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[0,2],[2,0]], label: 'B' },
+  { worlds: ['w*', 'w'], props: [['p', 'q'], ['q']],
+    edges: [[0,0],[0,1],[1,1]], label: 'KD45' },
+  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p'], ['q'], ['p'], ['p', 'q']],
+    edges: [[0,1],[0,2],[1,3],[2,3],[0,0],[3,3]], label: 'K4' },
+  { worlds: ['w₀'], props: [['p']],
+    edges: [[0,0]], label: 'Single World (T/S4/S5)' },
+  { worlds: ['w₀', 'w₁'], props: [['p'], []],
+    edges: [[0,1]], label: 'Simple K' },
+  { worlds: ['w₀', 'w₁'], props: [['p'], ['p']],
+    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'Simple S5' },
+  { worlds: ['w₀', 'w₁'], props: [['p'], ['q']],
+    edges: [[0,0],[1,1],[0,1]], label: 'Simple D' },
+  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p'], ['q'], ['p', 'q'], []],
+    edges: [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3],[0,2],[0,3],[1,3]], label: 'Advanced S4' },
+  { worlds: ['w₀', 'w₁', 'w₂', 'w₃', 'w₄'], props: [['p'], ['q'], ['r'], ['p', 'q'], ['q', 'r']],
+    edges: [[0,1],[0,2],[1,3],[2,4],[3,4],[0,0],[1,1],[2,2],[3,3],[4,4],[0,3],[0,4],[1,4],[2,3]], label: 'Complex K4' },
+  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['r']],
+    edges: [[0,1],[1,2],[2,0],[0,0],[1,1],[2,2]], label: 'Cyclic T' },
+  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p', 'q'], ['q'], ['p'], ['r']],
+    edges: [[0,1],[0,2],[1,0],[2,0],[3,3],[0,3],[1,3],[2,3],[0,0],[1,1],[2,2]], label: 'KD45-like' },
+  { worlds: ['w₀', 'w₁', 'w₂', 'w₃', 'w₄'], props: [['p'], [], ['q'], ['r'], ['p', 'q', 'r']],
+    edges: [[0,1],[1,2],[2,3],[3,4],[0,0],[4,4]], label: 'Linear T' },
+];
+
+function circleLayout(n, cx, cy, r) {
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = (2 * Math.PI * i / n) - Math.PI / 2;
+    pts.push({ x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) });
+  }
+  return pts;
+}
+
+function drawArrow(ctx, x, y, angle, color) {
+  const s = 6;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0,0); ctx.lineTo(-s,-s*.5); ctx.lineTo(-s,s*.5);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawKripke(canvas, tpl, dark) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const fg = dark ? 'rgba(210,210,210,' : 'rgba(30,30,30,';
+  const n = tpl.worlds.length;
+  const cx = W/2, cy = H/2;
+  const radius = Math.min(W,H) * (n <= 2 ? 0.22 : 0.30);
+  const pts = n === 1 ? [{x:cx,y:cy}] : circleLayout(n, cx, cy, radius);
+  const nodeR = 17;
+
+  for (const [a,b] of tpl.edges) {
+    const pa = pts[a], pb = pts[b];
+    if (a === b) {
+      const lr = nodeR * 0.85;
+      const lx = pa.x, ly = pa.y - nodeR - lr + 2;
+      ctx.beginPath(); ctx.arc(lx, ly, lr, 0, 2*Math.PI);
+      ctx.strokeStyle = fg+'0.5)'; ctx.lineWidth = 1; ctx.stroke();
+      const aa = Math.PI * 0.1;
+      drawArrow(ctx, lx + lr*Math.cos(aa), ly + lr*Math.sin(aa), aa + Math.PI/2, fg+'0.5)');
+      continue;
+    }
+    const hasBoth = tpl.edges.some(([c,d]) => c===b && d===a);
+    const dx = pb.x-pa.x, dy = pb.y-pa.y, len = Math.hypot(dx,dy);
+    const nx = -dy/len, ny = dx/len;
+    const off = hasBoth ? 7 : 0;
+    const ox = nx*off, oy = ny*off;
+    const ratio = nodeR/len;
+    const sx = pa.x+dx*ratio+ox, sy = pa.y+dy*ratio+oy;
+    const ex = pb.x-dx*ratio+ox, ey = pb.y-dy*ratio+oy;
+    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey);
+    ctx.strokeStyle = fg+'0.45)'; ctx.lineWidth = 1; ctx.stroke();
+    drawArrow(ctx, ex, ey, Math.atan2(ey-sy, ex-sx), fg+'0.45)');
+  }
+
+  ctx.font = "11px 'JetBrains Mono',monospace";
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    ctx.beginPath(); ctx.arc(p.x, p.y, nodeR, 0, 2*Math.PI);
+    ctx.fillStyle = dark ? 'rgba(15,15,15,0)' : 'rgba(247,247,245,0)';
+    ctx.fill();
+    ctx.strokeStyle = fg+'0.7)'; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.fillStyle = fg+'0.9)';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(tpl.worlds[i], p.x, p.y);
+    const propStr = tpl.props[i].length ? tpl.props[i].join(',') : '\u2205';
+    ctx.fillStyle = fg+'0.5)';
+    ctx.font = "8.5px 'JetBrains Mono',monospace";
+    ctx.fillText(propStr, p.x, p.y + nodeR + 9);
+    ctx.font = "11px 'JetBrains Mono',monospace";
+  }
+
+  ctx.fillStyle = fg+'0.28)';
+  ctx.font = "9px 'JetBrains Mono',monospace";
+  ctx.textAlign='right'; ctx.textBaseline='top';
+  ctx.fillText('\u1d39=(W,R,V)\u00b7'+tpl.label, W-5, 4);
+}
+
+let kripkeActive = 0;
+const MAX_KRIPKE = 3;
+
+function spawnKripke() {
+  if (kripkeActive >= MAX_KRIPKE) return;
+  if (window.scrollY + window.innerHeight < heroSection.offsetHeight * 0.8) return;
+  kripkeActive++;
+  const tpl = KRIPKE_TEMPLATES[Math.floor(Math.random() * KRIPKE_TEMPLATES.length)];
+  const size = 170 + Math.random() * 60;
+  const cnv = document.createElement('canvas');
+  cnv.width = size; cnv.height = size;
+  const startX  = 2  + Math.random() * 86;
+  const startY  = 8  + Math.random() * 78;
+  const driftY  = (Math.random() - 0.5) * 100;
+  const driftX  = (Math.random() - 0.5) * 60;
+  const duration = 22 + Math.random() * 24;
+  const peakOp  = 0.60 + Math.random() * 0.28;
+  cnv.style.cssText = `position:absolute;left:${startX}vw;top:${startY}vh;--drift-y:${driftY}px;--drift-x:${driftX}px;--peak-opacity:${peakOp};animation:logicFloat ${duration}s linear forwards;pointer-events:none;will-change:transform,opacity;`;
+  logicLayer.appendChild(cnv);
+  drawKripke(cnv, tpl, !document.documentElement.classList.contains('light'));
+  cnv.addEventListener('animationend', () => { cnv.remove(); kripkeActive--; }, { once:true });
+}
+
+// Redraw Kripke graphs when theme changes (colors need to invert)
+themeBtn.addEventListener('click', () => {
+  logicLayer.querySelectorAll('canvas').forEach(cnv => {
+    const label = cnv.__kripkeLabel;
+    if (!label) return;
+    const tpl = KRIPKE_TEMPLATES.find(t => t.label === label);
+    if (tpl) drawKripke(cnv, tpl, !document.documentElement.classList.contains('light'));
+  });
+});
+
+setInterval(spawnKripke, 5500);
+setTimeout(() => { spawnKripke(); }, 2500);
+setTimeout(() => { spawnKripke(); }, 4800);
+
 </script>
 </body>
 </html>
