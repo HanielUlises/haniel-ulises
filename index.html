@@ -51,8 +51,19 @@
     .hero-name{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.5rem);font-weight:400;line-height:1.05;letter-spacing:-.02em;color:var(--heading);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s ease forwards .4s}
     .hero-subtitle{font-family:var(--serif);font-size:clamp(1rem,2vw,1.3rem);font-weight:400;font-style:italic;color:var(--light-gray);margin-bottom:2.5rem;max-width:680px;opacity:0;animation:fadeUp .8s ease forwards .6s}
     .hero-axiom{font-family:var(--mono);font-size:.78rem;font-weight:300;letter-spacing:.05em;color:var(--mid-gray);border-left:1px solid var(--border-light);padding-left:1.2rem;max-width:560px;line-height:1.9;opacity:0;animation:fadeUp .8s ease forwards .8s}
-    .hero-scroll{position:absolute;bottom:3rem;left:4rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase;opacity:0;animation:fadeUp .8s ease forwards 1.2s;display:flex;align-items:center;gap:.8rem}
-    .hero-scroll::before{content:'';width:2rem;height:1px;background:var(--mid-gray)}
+
+    /* SCROLL CHEVRONS */
+    .hero-scroll{position:absolute;bottom:3rem;left:4rem;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0;animation:fadeUp .8s ease forwards 1.2s}
+    .chevron{display:block;border-right:1.5px solid var(--mid-gray);border-bottom:1.5px solid var(--mid-gray);transform:rotate(45deg);animation:chevronFade 1.6s ease-in-out infinite;}
+    .chevron:nth-child(1){width:8px;height:8px;animation-delay:0s}
+    .chevron:nth-child(2){width:12px;height:12px;animation-delay:0.18s}
+    .chevron:nth-child(3){width:16px;height:16px;animation-delay:0.36s}
+
+    @keyframes chevronFade{
+      0%  {opacity:0.1}
+      50% {opacity:0.7}
+      100%{opacity:0.1}
+    }
 
     /* SECTIONS */
     section{padding:7rem 4rem;max-width:1100px;margin:0 auto}
@@ -160,7 +171,12 @@
     <p class="hero-subtitle" data-i18n="hero_subtitle"></p>
     <p class="hero-axiom" data-i18n="hero_axiom"></p>
   </div>
-  <span class="hero-scroll" data-i18n="hero_scroll"></span>
+  <!-- Animated scroll chevrons replacing the "Scroll" text -->
+  <div class="hero-scroll" aria-label="Scroll down">
+    <span class="chevron"></span>
+    <span class="chevron"></span>
+    <span class="chevron"></span>
+  </div>
 </section>
 
 <section id="about">
@@ -309,7 +325,6 @@ const T = {
     hero_label:"Engineer · Mathematician · Philosopher",
     hero_subtitle:"Systems engineering, artificial intelligence, and the formal foundations of computation.",
     hero_axiom:"Abstraction is not an intellectual luxury — it is the condition of possibility for every correct system.",
-    hero_scroll:"Scroll",
     about_title:"About",
     about_p1:"I am a Computer Engineer specializing in Artificial Intelligence, with emphasis on embedded systems and cloud architectures. My technical work centers on systems programming, computational performance, and model deployment in resource-constrained environments from edge platforms to large-scale inference pipelines.",
     about_p2:"In parallel, I hold a deep interest in theoretical computer science and its logical-formal foundations: type theory, model theory, modal and epistemic logic, and category theory as a unifying language for mathematical structures. These frameworks are not peripheral curiosities for me, but conceptual tools that inform the design of correct and verifiable systems.",
@@ -337,9 +352,8 @@ const T = {
     hero_label:"Ingeniero · Matemático · Filósofo",
     hero_subtitle:"Ingeniería de sistemas, inteligencia artificial y los fundamentos formales del cómputo.",
     hero_axiom:"La abstracción no es un lujo intelectual — es la condición de posibilidad de todo sistema correcto.",
-    hero_scroll:"Desplazar",
     about_title:"Sobre mí",
-    about_p1:"Soy Ingeniero en Computación con especialización en Inteligencia Artificial, con énfasis en sistemas embebidos y arquitecturas en la nube. Mi trabajo técnico gravita en torno a la programación de sistemas, el rendimiento computacional y el despliegue de modelos en entornos con restricciones de recursos —desde plataformas edge hasta pipelines de inferencia a escala.",
+    about_p1:"Soy Ingeniero en Computación con especialización en Inteligencia Artificial, con énfasis en sistemas embebidos y arquitecturas en la nube. Mi trabajo técnico gravita en torno a la programación de sistemas, el rendimiento computacional y el despliegue de modelos en entornos con restricciones de recursos desde plataformas edge hasta pipelines de inferencia a escala.",
     about_p2:"Paralelamente, me interesa de manera profunda la ciencia de la computación teórica y su fundamento lógico-formal: la teoría de tipos, la teoría de modelos, la lógica modal y epistémica, y la teoría de categorías como lenguaje unificador de estructuras matemáticas. Estos marcos no son para mí objetos de curiosidad periférica, sino herramientas conceptuales que informan el diseño de sistemas correctos y verificables.",
     about_p3:"Me encuentro en una trayectoria hacia las matemáticas puras, motivado por la convicción de que la ingeniería de software más rigurosa nace del entendimiento profundo de sus fundamentos formales. La lógica formal, la teoría de la demostración y la semántica denotacional son para mí tan relevantes como el análisis de rendimiento o la arquitectura de compiladores.",
     skills_title:"Habilidades",
