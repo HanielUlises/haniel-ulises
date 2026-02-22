@@ -178,7 +178,12 @@
       .project-header{flex-direction:column;gap:.5rem}
       .contact-item{border-right:none;border-bottom:1px solid var(--border)}
       .contact-item:last-child{border-bottom:none}
-      .hero-portrait{width:60vw;opacity:.35}
+      .hero-portrait{width:75vw;opacity:.18}
+      .hero-portrait img{
+        -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.25) 35%,rgba(0,0,0,0.6) 65%,black 100%),linear-gradient(to top,transparent 0%,black 8%);
+        mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.25) 35%,rgba(0,0,0,0.6) 65%,black 100%),linear-gradient(to top,transparent 0%,black 8%);
+      }
+      .hero-inner{text-shadow:0 0 48px var(--bg),0 0 96px var(--bg),0 2px 4px var(--bg)}
     }
     @media(max-width:500px){.skill-block>.skill-items{grid-template-columns:1fr}}
   </style>
