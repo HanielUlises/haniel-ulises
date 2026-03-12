@@ -1,7 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <meta name="description" content="Haniel Ulises — Systems Engineer focused on C++, AI Infrastructure, Robotics, High-Performance Computing and Formal Foundations of Computer Science." />
   <meta name="keywords" content="Haniel Ulises, Systems Engineer, C++, AI Infrastructure, Robotics, Machine Learning, Deep Learning, SLAM, High Performance Computing, Theoretical Computer Science, Formal Logic" />
   <meta name="author" content="Haniel Ulises" />
@@ -10,7 +11,6 @@
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
       <text y='75' font-size='80'>∀</text>
     </svg>">
-  </head>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -58,31 +58,17 @@
 
     /* PORTRAIT */
     .hero-portrait{
-      position:absolute;
-      right:0;
-      bottom:0;
-      width:clamp(280px, 36vw, 520px);
-      height:100%;
-      z-index:1;
-      pointer-events:none;
-      will-change:opacity,transform;
+      position:absolute;right:0;bottom:0;
+      width:clamp(280px, 36vw, 520px);height:100%;
+      z-index:1;pointer-events:none;will-change:opacity,transform;
     }
     .hero-portrait img{
-      position:absolute;
-      bottom:0;
-      right:0;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:top center;
-      opacity:0;
-      animation:fadeUp .9s ease forwards 1s;
-      /* subtle right-edge fade via mask */
-      -webkit-mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),
-                          linear-gradient(to top, transparent 0%, black 8%);
+      position:absolute;bottom:0;right:0;width:100%;height:100%;
+      object-fit:cover;object-position:top center;
+      opacity:0;animation:fadeUp .9s ease forwards 1s;
+      -webkit-mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),linear-gradient(to top, transparent 0%, black 8%);
       -webkit-mask-composite:destination-in;
-      mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),
-                  linear-gradient(to top, transparent 0%, black 8%);
+      mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),linear-gradient(to top, transparent 0%, black 8%);
       mask-composite:intersect;
       filter:contrast(1.05) brightness(0.92);
     }
@@ -144,34 +130,24 @@
     .footer-links{display:flex;gap:2rem;list-style:none}
     .footer-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;transition:color var(--t)}
     .footer-links a:hover{color:var(--pale-gray)}
-    /* FLOATING LOGIC LAYER */
-    #logic-canvas{
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      pointer-events:none;z-index:0;overflow:hidden;
-    }
-    .logic-glyph{
-      position:absolute;
-      font-family:var(--mono);
-      font-size:.72rem;
-      font-weight:300;
-      letter-spacing:.04em;
-      color:var(--pale-gray);
-      opacity:0;
-      white-space:nowrap;
-      will-change:transform,opacity;
-      animation:logicFloat linear infinite;
-    }
 
+    /* FLOATING LOGIC LAYER */
+    #logic-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+    .logic-glyph{
+      position:absolute;font-family:var(--mono);font-size:.72rem;font-weight:300;
+      letter-spacing:.04em;color:var(--pale-gray);opacity:0;white-space:nowrap;
+      will-change:transform,opacity;animation:logicFloat linear infinite;
+    }
     @keyframes logicFloat{
       0%  { opacity:0; transform:translateY(0px) translateX(0px); }
       8%  { opacity:var(--peak-opacity); }
       88% { opacity:var(--peak-opacity); }
       100%{ opacity:0; transform:translateY(var(--drift-y)) translateX(var(--drift-x)); }
     }
-
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
     .fade-in.visible{opacity:1;transform:translateY(0)}
+
     @media(max-width:768px){
       nav{padding:1.2rem 1.5rem}
       .nav-links{display:none}
@@ -216,11 +192,9 @@
     <p class="hero-subtitle" data-i18n="hero_subtitle"></p>
     <p class="hero-axiom" data-i18n="hero_axiom"></p>
   </div>
-
   <div class="hero-portrait" id="heroPortrait">
     <img src="resources/selfie_lmao.png" alt="Haniel Ulises" />
   </div>
-
   <div class="hero-scroll" aria-label="Scroll down">
     <span class="chevron"></span>
     <span class="chevron"></span>
@@ -342,9 +316,9 @@
     <h2 class="section-title" data-i18n="contact_title"></h2>
   </div>
   <div class="contact-grid fade-in">
-    <a class="contact-item" href="mailto:hanielulises@gmail.com">
+    <a class="contact-item" href="/cdn-cgi/l/email-protection#9df5fcf3f4f8f1e8f1f4eef8eeddfaf0fcf4f1b3fef2f0">
       <span class="contact-label" data-i18n="contact_email_label"></span>
-      <span class="contact-value">hanielulises@gmail.com</span>
+      <span class="contact-value"><span class="__cf_email__" data-cfemail="771f16191e121b021b1e04120437101a161e1b5914181a">[email&#160;protected]</span></span>
     </a>
     <a class="contact-item" href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">
       <span class="contact-label">LinkedIn</span>
@@ -362,11 +336,12 @@
   <ul class="footer-links">
     <li><a href="https://github.com/HanielUlises" target="_blank" rel="noopener">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">LinkedIn</a></li>
-    <li><a href="mailto:hanielulises@gmail.com">Email</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#721a131c1b171e071e1b01170132151f131b1e5c111d1f">Email</a></li>
   </ul>
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── i18n ─────────────────────────────────────────────────────────────────────
 const T = {
   en: {
     nav_about:"About", nav_skills:"Skills", nav_projects:"Projects",
@@ -505,6 +480,9 @@ themeBtn.addEventListener('click', () => {
   isDark = !isDark;
   document.documentElement.classList.toggle('light', !isDark);
   themeBtn.textContent = isDark ? '○' : '●';
+  document.querySelectorAll('#logic-canvas canvas').forEach(cnv => {
+    if (cnv.__kripkeTpl) drawKripke(cnv, cnv.__kripkeTpl, isDark);
+  });
 });
 
 const portrait = document.getElementById('heroPortrait');
@@ -532,65 +510,71 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 apply('en');
 
-
+// ── FLOATING LOGIC GLYPHS ─────────────────────────────────────────────────────
 const GLYPHS = [
-  'M \u22a7 t\u2081 = t\u2082  iff  t\u2081\u1d39 = t\u2082\u1d39',
-  'M \u22a7 R(t\u2081,\u2026,t\u2099)  iff  (t\u2081\u1d39,\u2026,t\u2099\u1d39) \u2208 R\u1d39',
-  'M \u22a7 \u00acφ  iff  M \u22ad φ',
-  'M \u22a7 (φ \u2227 ψ)  iff  M \u22a7 φ  and  M \u22a7 ψ',
-  'M \u22a7 \u2203x.φ  iff  \u2203a \u2208 |M|: M \u22a7 φ[a/x]',
-  'M \u22a7 \u2200x.φ  iff  \u2200a \u2208 |M|: M \u22a7 φ[a/x]',
-  'M \u22a7 (φ \u2192 ψ)  iff  M \u22ad φ  or  M \u22a7 ψ',
-  '\u22a7 φ  iff  \u2200M: M \u22a7 φ',
-  '\u2200x\u2200y(x = y \u2192 y = x)',
-  '\u2200x\u2203y(y > x)',
-  '\u2203!x.φ(x)',
-  '\u2200x(φ \u2192 ψ) \u2192 (\u2200xφ \u2192 \u2200xψ)',
-  '\u00ac\u2203x.φ \u2194 \u2200x.\u00acφ',
-  '\u22a2 \u2200x.φ(x) \u2192 φ(t)',
+  'M ⊧ t₁ = t₂  iff  t₁ᴹ = t₂ᴹ',
+  'M ⊧ R(t₁,…,tₙ)  iff  (t₁ᴹ,…,tₙᴹ) ∈ Rᴹ',
+  'M ⊧ ¬φ  iff  M ⊭ φ',
+  'M ⊧ (φ ∧ ψ)  iff  M ⊧ φ  and  M ⊧ ψ',
+  'M ⊧ ∃x.φ  iff  ∃a ∈ |M|: M ⊧ φ[a/x]',
+  'M ⊧ ∀x.φ  iff  ∀a ∈ |M|: M ⊧ φ[a/x]',
+  'M ⊧ (φ → ψ)  iff  M ⊭ φ  or  M ⊧ ψ',
+  '⊧ φ  iff  ∀M: M ⊧ φ',
+  '∀x∀y(x = y → y = x)',
+  '∀x∃y(y > x)',
+  '∃!x.φ(x)',
+  '∀x(φ → ψ) → (∀xφ → ∀xψ)',
+  '¬∃x.φ ↔ ∀x.¬φ',
+  '⊢ ∀x.φ(x) → φ(t)',
   'φ[t/x]',
-  '\u0393 \u22a2 \u22a5',
-  '\u22a5',
-  '\u22a4',
-  '\u25a1p \u2192 p',
-  '\u25a1(p \u2192 q) \u2192 (\u25a1p \u2192 \u25a1q)',
-  '\u25c7p \u2194 \u00ac\u25a1\u00acp',
-  'p \u2192 \u25a1\u25c7p',
-  '\u25c7\u25a1p \u2192 \u25a1\u25c7p',
-  '\u25a1p \u2192 \u25a1\u25a1p',
-  '\u00ac\u25a1p \u2194 \u25c7\u00acp',
-  '\u25a1\u22a4',
-  '\u25c7\u22a4',
-  '\u25a1(φ \u2227 ψ) \u2194 \u25a1φ \u2227 \u25a1ψ',
-  '\u25c7(φ \u2228 ψ) \u2194 \u25c7φ \u2228 \u25c7ψ',
-  'Th(\u1d39) = {φ : \u1d39 \u22a7 φ}',
-  '\u1d39 \u2261 \u2115',
-  '\u1d39 \u227a \u2115',
-  'tp(\u0101/A)',
-  '\u03ba-categorical',
-  '|\u1d39| = \u2135\u2080',
-  'ACF\u2080',
+  'Γ ⊢ ⊥',
+  '⊥',
+  '⊤',
+  '□p → p',
+  '□(p → q) → (□p → □q)',
+  '◇p ↔ ¬□¬p',
+  'p → □◇p',
+  '◇□p → □◇p',
+  '□p → □□p',
+  '¬□p ↔ ◇¬p',
+  '□⊤',
+  '◇⊤',
+  '□(φ ∧ ψ) ↔ □φ ∧ □ψ',
+  '◇(φ ∨ ψ) ↔ ◇φ ∨ ◇ψ',
+  'Th(ℳ) = {φ : ℳ ⊧ φ}',
+  'ℳ ≡ ℕ',
+  'ℳ ≺ ℕ',
+  'tp(ā/A)',
+  'κ-categorical',
+  '|ℳ| = ℵ₀',
+  'ACF₀',
   'DLO',
   'dcl(A)',
   'acl(A)',
-  '\u0393 \u22a2 t : \u03c4',
-  '\u0393, x:A \u22a2 t : B',
-  '\u2200\u03b1.\u03b1 \u2192 \u03b1',
-  'A \u00d7 B',
+  'Γ ⊢ t : τ',
+  'Γ, x:A ⊢ t : B',
+  '∀α.α → α',
+  'A × B',
   'A + B',
-  '\u03bcX.F(X)',
-  '\u22a2 A \u2228 \u00acA',
+  'μX.F(X)',
+  '⊢ A ∨ ¬A',
   'Cut',
   'Weakening',
-  'F \u22a3 G',
-  'Hom(F(A),B) \u2245 Hom(A,G(B))',
-  '\u03b7 : Id \u21d2 GF',
-  '\u03b5 : FG \u21d2 Id',
+  'F ⊣ G',
+  'Hom(F(A),B) ≅ Hom(A,G(B))',
+  'η : Id ⇒ GF',
+  'ε : FG ⇒ Id',
   'lim F',
   'colim F',
   'Nat(F,G)',
-  '\u2218',
-  'ob(\ud835\udcde)',
+  '∘',
+  'ob(𝒞)',
+  '□□p → □p',
+  '◇p → □◇p',
+  'K(p ∧ q) ↔ Kp ∧ Kq',
+  'Kp → p',
+  'Kp → KKp',
+  '¬Kp → K¬Kp',
 ];
 
 const logicLayer = document.createElement('div');
@@ -602,8 +586,6 @@ const MAX_GLYPHS = 10;
 
 function spawnGlyph() {
   if (glyphsActive >= MAX_GLYPHS) return;
-  const heroBottom = heroSection.offsetHeight;
-  if (window.scrollY + window.innerHeight < heroBottom * 0.6) return;
   glyphsActive++;
   const el = document.createElement('span');
   el.className = 'logic-glyph';
@@ -616,45 +598,109 @@ function spawnGlyph() {
   const peakOp   = 0.16 + Math.random() * 0.12;
   el.style.cssText = `left:${startX}vw;top:${startY}vh;--drift-y:${driftY}px;--drift-x:${driftX}px;--peak-opacity:${peakOp};animation-duration:${duration}s;`;
   logicLayer.appendChild(el);
-  el.addEventListener('animationend', () => { el.remove(); glyphsActive--; }, { once:true });
+  el.addEventListener('animationend', () => { el.remove(); glyphsActive--; }, { once: true });
 }
 
 setInterval(spawnGlyph, 2000);
 setTimeout(() => { spawnGlyph(); spawnGlyph(); spawnGlyph(); }, 1600);
 
+
 const KRIPKE_TEMPLATES = [
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+  // Classic axiom systems
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
     edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[1,2],[2,1],[0,2],[2,0]], label: 'S5' },
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['p', 'q'], ['q']],
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['p','q'],['q']],
     edges: [[0,0],[1,1],[2,2],[0,1],[1,2],[0,2]], label: 'S4' },
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], []],
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],[]],
     edges: [[0,0],[1,1],[2,2],[0,1],[1,2]], label: 'T' },
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
     edges: [[0,1],[0,2],[1,2]], label: 'K' },
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['p', 'q']],
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
     edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[0,2],[2,0]], label: 'B' },
-  { worlds: ['w*', 'w'], props: [['p', 'q'], ['q']],
+  { worlds: ['w*','w'], props: [['p','q'],['q']],
     edges: [[0,0],[0,1],[1,1]], label: 'KD45' },
-  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p'], ['q'], ['p'], ['p', 'q']],
+  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['p'],['p','q']],
     edges: [[0,1],[0,2],[1,3],[2,3],[0,0],[3,3]], label: 'K4' },
-  { worlds: ['w₀'], props: [['p']],
-    edges: [[0,0]], label: 'Single World (T/S4/S5)' },
-  { worlds: ['w₀', 'w₁'], props: [['p'], []],
-    edges: [[0,1]], label: 'Simple K' },
-  { worlds: ['w₀', 'w₁'], props: [['p'], ['p']],
-    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'Simple S5' },
-  { worlds: ['w₀', 'w₁'], props: [['p'], ['q']],
-    edges: [[0,0],[1,1],[0,1]], label: 'Simple D' },
-  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p'], ['q'], ['p', 'q'], []],
-    edges: [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3],[0,2],[0,3],[1,3]], label: 'Advanced S4' },
-  { worlds: ['w₀', 'w₁', 'w₂', 'w₃', 'w₄'], props: [['p'], ['q'], ['r'], ['p', 'q'], ['q', 'r']],
-    edges: [[0,1],[0,2],[1,3],[2,4],[3,4],[0,0],[1,1],[2,2],[3,3],[4,4],[0,3],[0,4],[1,4],[2,3]], label: 'Complex K4' },
-  { worlds: ['w₀', 'w₁', 'w₂'], props: [['p'], ['q'], ['r']],
-    edges: [[0,1],[1,2],[2,0],[0,0],[1,1],[2,2]], label: 'Cyclic T' },
-  { worlds: ['w₀', 'w₁', 'w₂', 'w₃'], props: [['p', 'q'], ['q'], ['p'], ['r']],
-    edges: [[0,1],[0,2],[1,0],[2,0],[3,3],[0,3],[1,3],[2,3],[0,0],[1,1],[2,2]], label: 'KD45-like' },
-  { worlds: ['w₀', 'w₁', 'w₂', 'w₃', 'w₄'], props: [['p'], [], ['q'], ['r'], ['p', 'q', 'r']],
+
+  // Two-world models
+  { worlds: ['w₀','w₁'], props: [['p'],[]],
+    edges: [[0,1]], label: 'K (2W)' },
+  { worlds: ['w₀','w₁'], props: [['p'],['p']],
+    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'S5 (2W)' },
+  { worlds: ['w₀','w₁'], props: [['p'],['q']],
+    edges: [[0,0],[1,1],[0,1]], label: 'D (2W)' },
+  { worlds: ['w₀','w₁'], props: [['p'],['¬p']],
+    edges: [[0,1],[1,0]], label: 'Sym' },
+  { worlds: ['w₀','w₁'], props: [['p'],['q']],
+    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'S4 (2W)' },
+
+  // Linear / chain
+  { worlds: ['t₀','t₁','t₂','t₃'], props: [['p'],['q'],['p','q'],['r']],
+    edges: [[0,1],[1,2],[2,3],[0,0],[1,1],[2,2],[3,3],[0,2],[0,3],[1,3]], label: 'CTL-like' },
+  { worlds: ['now','soon','later'], props: [['p'],['p','q'],['q']],
+    edges: [[0,1],[1,2],[0,0],[1,1],[2,2]], label: 'LTL-like' },
+  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],[],['q'],['r'],['p','q','r']],
     edges: [[0,1],[1,2],[2,3],[3,4],[0,0],[4,4]], label: 'Linear T' },
+
+  // Cyclic
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['r']],
+    edges: [[0,1],[1,2],[2,0],[0,0],[1,1],[2,2]], label: 'Cyclic T' },
+  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['r'],['s']],
+    edges: [[0,1],[1,2],[2,3],[3,0]], label: 'Cyclic K' },
+  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],['q'],['r'],['p','q'],['q','r']],
+    edges: [[0,1],[1,2],[2,3],[3,4],[4,0],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Pentagon T' },
+  { worlds: ['α','β','γ'], props: [['p'],['q'],['r']],
+    edges: [[0,1],[1,2],[2,0]], label: 'Triangle K' },
+
+  // Diamond / lattice
+  { worlds: ['⊤','a','b','⊥'], props: [['p','q'],['p'],['q'],[]],
+    edges: [[0,1],[0,2],[1,3],[2,3]], label: 'Diamond K' },
+  { worlds: ['⊤','a','b','⊥'], props: [['p','q'],['p'],['q'],[]],
+    edges: [[0,0],[1,1],[2,2],[3,3],[0,1],[0,2],[1,3],[2,3],[0,3]], label: 'Diamond S4' },
+  { worlds: ['w₀','w₁','w₂','w₃','w₄','w₅'], props: [['p','q'],['p'],['q'],['p'],['q'],[]],
+    edges: [[0,1],[0,2],[1,3],[2,4],[3,5],[4,5],[0,0],[5,5]], label: 'Hexagonal' },
+
+  // Trees
+  { worlds: ['r','a','b','c','d'], props: [['p','q'],['p'],['q'],['p'],['q']],
+    edges: [[0,1],[0,2],[1,3],[2,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Binary Tree T' },
+  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],['q'],['r'],['p','q'],['q','r']],
+    edges: [[0,1],[0,2],[1,3],[1,4],[2,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Tree K4' },
+
+  // Epistemic / Multi-agent
+  { worlds: ['wₐ','w_b','w_c'], props: [['Kₐp'],['K_bq'],['Kₐp','K_bq']],
+    edges: [[0,0],[1,1],[2,2],[0,2],[2,0],[1,2],[2,1]], label: 'S5 Epistemic' },
+  { worlds: ['α','β','γ','δ'], props: [['p'],['q'],['p','q'],['¬p']],
+    edges: [[0,2],[2,0],[1,2],[2,1],[3,1],[0,0],[1,1],[2,2],[3,3]], label: 'Multi-Agent' },
+  { worlds: ['α','β'], props: [['Bp'],['¬p']],
+    edges: [[0,1],[0,0]], label: 'KD Belief' },
+  { worlds: ['α','β','γ'], props: [['Bp','Bq'],['p'],['q']],
+    edges: [[0,1],[0,2],[0,0]], label: 'KD45 Belief' },
+
+  // Complete graphs (S5 variants)
+  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['r'],['p','q','r']],
+    edges: [[0,0],[1,1],[2,2],[3,3],
+            [0,1],[1,0],[0,2],[2,0],[0,3],[3,0],
+            [1,2],[2,1],[1,3],[3,1],[2,3],[3,2]], label: 'S5 K₄' },
+
+  // Counterexamples
+  { worlds: ['w₀','w₁'], props: [['p'],['¬p']],
+    edges: [[0,1],[1,0],[0,0],[1,1]], label: '¬(□p→p) fails' },
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['¬p','¬q']],
+    edges: [[0,1],[1,2],[2,0]], label: '◇□p fails K4' },
+  { worlds: ['u','v','w'], props: [['p'],[],['q']],
+    edges: [[0,1],[0,2],[1,0]], label: 'Non-det B' },
+
+  // Doxastic
+  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['r']],
+    edges: [[0,1],[1,2],[0,2],[0,0]], label: 'K4 Doxastic' },
+
+  // Pentagonal / star
+  { worlds: ['c','n','e','s','w'], props: [['p'],['q'],['r'],['s'],['t']],
+    edges: [[0,1],[0,2],[0,3],[0,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Star K' },
+
+  // Bipartite-like
+  { worlds: ['a₀','a₁','b₀','b₁'], props: [['p'],['p'],['q'],['q']],
+    edges: [[0,2],[0,3],[1,2],[1,3],[2,0],[3,1]], label: 'Bipartite' },
 ];
 
 function circleLayout(n, cx, cy, r) {
@@ -666,13 +712,22 @@ function circleLayout(n, cx, cy, r) {
   return pts;
 }
 
-function drawArrow(ctx, x, y, angle, color) {
-  const s = 6;
+function layoutNodes(n, cx, cy, W, H, nodeR) {
+  if (n === 1) return [{ x: cx, y: cy }];
+  if (n === 2) return [{ x: cx - W * 0.20, y: cy }, { x: cx + W * 0.20, y: cy }];
+  const maxR = Math.min(W, H) * 0.5 - nodeR * 2 - 14;
+  const r = Math.max(28, maxR * (n <= 4 ? 0.68 : n <= 6 ? 0.78 : 0.86));
+  return circleLayout(n, cx, cy, r);
+}
+
+function drawArrowHead(ctx, x, y, angle, color, size) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);
   ctx.beginPath();
-  ctx.moveTo(0,0); ctx.lineTo(-s,-s*.5); ctx.lineTo(-s,s*.5);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-size, -size * 0.48);
+  ctx.lineTo(-size, size * 0.48);
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
@@ -683,58 +738,129 @@ function drawKripke(canvas, tpl, dark) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0, 0, W, H);
-  const fg = dark ? 'rgba(210,210,210,' : 'rgba(30,30,30,';
-  const n = tpl.worlds.length;
-  const cx = W/2, cy = H/2;
-  const radius = Math.min(W,H) * (n <= 2 ? 0.22 : 0.30);
-  const pts = n === 1 ? [{x:cx,y:cy}] : circleLayout(n, cx, cy, radius);
-  const nodeR = 17;
 
-  for (const [a,b] of tpl.edges) {
+  const fgRgb = dark ? '210,210,210' : '30,30,30';
+  const fg = (a) => `rgba(${fgRgb},${a})`;
+
+  const n = tpl.worlds.length;
+  const cx = W / 2, cy = H / 2;
+  const nodeR = Math.max(11, Math.min(17, (Math.min(W, H) * 0.13) / Math.max(1, Math.sqrt(n * 0.6))));
+  const pts = layoutNodes(n, cx, cy, W, H, nodeR);
+
+  const bidiSet = new Set();
+  for (const [a, b] of tpl.edges) {
+    if (a === b) continue;
+    if (tpl.edges.some(([c, d]) => c === b && d === a)) {
+      bidiSet.add(`${Math.min(a,b)}-${Math.max(a,b)}`);
+    }
+  }
+
+  const drawnPairs = new Set();
+
+  for (const [a, b] of tpl.edges) {
     const pa = pts[a], pb = pts[b];
+
     if (a === b) {
-      const lr = nodeR * 0.85;
-      const lx = pa.x, ly = pa.y - nodeR - lr + 2;
-      ctx.beginPath(); ctx.arc(lx, ly, lr, 0, 2*Math.PI);
-      ctx.strokeStyle = fg+'0.5)'; ctx.lineWidth = 1; ctx.stroke();
-      const aa = Math.PI * 0.1;
-      drawArrow(ctx, lx + lr*Math.cos(aa), ly + lr*Math.sin(aa), aa + Math.PI/2, fg+'0.5)');
+      const dx = pa.x - cx, dy = pa.y - cy;
+      const dlen = Math.hypot(dx, dy) || 1;
+      const outX = dx / dlen, outY = dy / dlen;
+
+      const loopR = nodeR * 0.82;
+      const lx = pa.x + outX * (nodeR + loopR - 2);
+      const ly = pa.y + outY * (nodeR + loopR - 2);
+
+      ctx.beginPath();
+      ctx.arc(lx, ly, loopR, 0, 2 * Math.PI);
+      ctx.strokeStyle = fg(0.46);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      const contactAngle = Math.atan2(pa.y - ly, pa.x - lx);
+      const arrowAngle = contactAngle - 1.05;
+      const ax = lx + loopR * Math.cos(arrowAngle);
+      const ay = ly + loopR * Math.sin(arrowAngle);
+      const tangentAngle = Math.atan2(-Math.cos(arrowAngle), Math.sin(arrowAngle));
+      drawArrowHead(ctx, ax, ay, tangentAngle, fg(0.46), 4.5);
       continue;
     }
-    const hasBoth = tpl.edges.some(([c,d]) => c===b && d===a);
-    const dx = pb.x-pa.x, dy = pb.y-pa.y, len = Math.hypot(dx,dy);
-    const nx = -dy/len, ny = dx/len;
-    const off = hasBoth ? 7 : 0;
-    const ox = nx*off, oy = ny*off;
-    const ratio = nodeR/len;
-    const sx = pa.x+dx*ratio+ox, sy = pa.y+dy*ratio+oy;
-    const ex = pb.x-dx*ratio+ox, ey = pb.y-dy*ratio+oy;
-    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(ex,ey);
-    ctx.strokeStyle = fg+'0.45)'; ctx.lineWidth = 1; ctx.stroke();
-    drawArrow(ctx, ex, ey, Math.atan2(ey-sy, ex-sx), fg+'0.45)');
+
+    const pairKey = `${a}-${b}`;
+    const isBidi = bidiSet.has(`${Math.min(a,b)}-${Math.max(a,b)}`);
+
+    const dx = pb.x - pa.x, dy = pb.y - pa.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 1) continue;
+
+    const ux = dx / len, uy = dy / len;
+    const px = -uy, py = ux;
+
+    const sign = (a < b) ? 1 : -1;
+    const off = isBidi ? 5.5 * sign : 0;
+    const ox = px * off, oy = py * off;
+
+    const ratio = nodeR / len;
+    const sx = pa.x + ux * nodeR + ox;
+    const sy = pa.y + uy * nodeR + oy;
+    const ex = pb.x - ux * nodeR + ox;
+    const ey = pb.y - uy * nodeR + oy;
+
+    if (isBidi) {
+      const bowAmt = Math.min(len * 0.18, 22);
+      const midX = (sx + ex) / 2 + px * bowAmt * sign;
+      const midY = (sy + ey) / 2 + py * bowAmt * sign;
+
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.quadraticCurveTo(midX, midY, ex, ey);
+      ctx.strokeStyle = fg(0.44);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      const t = 0.88;
+      const tgx = 2 * (1 - t) * (midX - sx) + 2 * t * (ex - midX);
+      const tgy = 2 * (1 - t) * (midY - sy) + 2 * t * (ey - midY);
+      drawArrowHead(ctx, ex, ey, Math.atan2(tgy, tgx), fg(0.44), 4.5);
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = fg(0.44);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      drawArrowHead(ctx, ex, ey, Math.atan2(ey - sy, ex - sx), fg(0.44), 4.5);
+    }
   }
 
-  ctx.font = "11px 'JetBrains Mono',monospace";
+  // Draw nodes
+  const fontSize = Math.round(nodeR * 0.70);
+  const propFontSize = Math.round(nodeR * 0.54);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
   for (let i = 0; i < n; i++) {
     const p = pts[i];
-    ctx.beginPath(); ctx.arc(p.x, p.y, nodeR, 0, 2*Math.PI);
-    ctx.fillStyle = dark ? 'rgba(15,15,15,0)' : 'rgba(247,247,245,0)';
-    ctx.fill();
-    ctx.strokeStyle = fg+'0.7)'; ctx.lineWidth = 1.2; ctx.stroke();
-    ctx.fillStyle = fg+'0.9)';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, nodeR, 0, 2 * Math.PI);
+    ctx.strokeStyle = fg(0.70);
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    ctx.fillStyle = fg(0.90);
+    ctx.font = `${fontSize}px 'JetBrains Mono',monospace`;
     ctx.fillText(tpl.worlds[i], p.x, p.y);
-    const propStr = tpl.props[i].length ? tpl.props[i].join(',') : '\u2205';
-    ctx.fillStyle = fg+'0.5)';
-    ctx.font = "8.5px 'JetBrains Mono',monospace";
+
+    const propStr = (tpl.props[i] && tpl.props[i].length) ? tpl.props[i].join(',') : '∅';
+    ctx.fillStyle = fg(0.44);
+    ctx.font = `${propFontSize}px 'JetBrains Mono',monospace`;
     ctx.fillText(propStr, p.x, p.y + nodeR + 9);
-    ctx.font = "11px 'JetBrains Mono',monospace";
   }
 
-  ctx.fillStyle = fg+'0.28)';
-  ctx.font = "9px 'JetBrains Mono',monospace";
-  ctx.textAlign='right'; ctx.textBaseline='top';
-  ctx.fillText('\u1d39=(W,R,V)\u00b7'+tpl.label, W-5, 4);
+  ctx.fillStyle = fg(0.26);
+  ctx.font = "8px 'JetBrains Mono',monospace";
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('ℳ=(W,R,V)·' + tpl.label, W - 4, 3);
 }
 
 let kripkeActive = 0;
@@ -742,37 +868,49 @@ const MAX_KRIPKE = 3;
 
 function spawnKripke() {
   if (kripkeActive >= MAX_KRIPKE) return;
-  if (window.scrollY + window.innerHeight < heroSection.offsetHeight * 0.8) return;
   kripkeActive++;
+
   const tpl = KRIPKE_TEMPLATES[Math.floor(Math.random() * KRIPKE_TEMPLATES.length)];
-  const size = 170 + Math.random() * 60;
+  const n = tpl.worlds.length;
+
+  const base = 160 + n * 14 + Math.random() * 40;
+  const size = Math.round(Math.min(base, 260));
+
   const cnv = document.createElement('canvas');
-  cnv.width = size; cnv.height = size;
-  const startX  = 2  + Math.random() * 86;
-  const startY  = 8  + Math.random() * 78;
-  const driftY  = (Math.random() - 0.5) * 100;
-  const driftX  = (Math.random() - 0.5) * 60;
-  const duration = 22 + Math.random() * 24;
-  const peakOp  = 0.60 + Math.random() * 0.28;
-  cnv.style.cssText = `position:absolute;left:${startX}vw;top:${startY}vh;--drift-y:${driftY}px;--drift-x:${driftX}px;--peak-opacity:${peakOp};animation:logicFloat ${duration}s linear forwards;pointer-events:none;will-change:transform,opacity;`;
+  cnv.width = size;
+  cnv.height = size;
+
+  const startX   = 2  + Math.random() * 86;
+  const startY   = 8  + Math.random() * 78;
+  const driftY   = (Math.random() - 0.5) * 100;
+  const driftX   = (Math.random() - 0.5) * 60;
+  const duration = 22 + Math.random() * 26;
+  const peakOp   = 0.55 + Math.random() * 0.30;
+
+  cnv.style.cssText = `
+    position:absolute;
+    left:${startX}vw;
+    top:${startY}vh;
+    --drift-y:${driftY}px;
+    --drift-x:${driftX}px;
+    --peak-opacity:${peakOp};
+    animation:logicFloat ${duration}s linear forwards;
+    pointer-events:none;
+    will-change:transform,opacity;
+  `;
+
+  cnv.__kripkeTpl = tpl;
+
   logicLayer.appendChild(cnv);
-  drawKripke(cnv, tpl, !document.documentElement.classList.contains('light'));
-  cnv.addEventListener('animationend', () => { cnv.remove(); kripkeActive--; }, { once:true });
+  drawKripke(cnv, tpl, isDark);
+
+  cnv.addEventListener('animationend', () => { cnv.remove(); kripkeActive--; }, { once: true });
 }
 
-// Redraw Kripke graphs when theme changes (colors need to invert)
-themeBtn.addEventListener('click', () => {
-  logicLayer.querySelectorAll('canvas').forEach(cnv => {
-    const label = cnv.__kripkeLabel;
-    if (!label) return;
-    const tpl = KRIPKE_TEMPLATES.find(t => t.label === label);
-    if (tpl) drawKripke(cnv, tpl, !document.documentElement.classList.contains('light'));
-  });
-});
-
-setInterval(spawnKripke, 5500);
-setTimeout(() => { spawnKripke(); }, 2500);
-setTimeout(() => { spawnKripke(); }, 4800);
+setInterval(spawnKripke, 5000);
+setTimeout(() => { spawnKripke(); }, 2400);
+setTimeout(() => { spawnKripke(); }, 4600);
+setTimeout(() => { spawnKripke(); }, 6800);
 
 </script>
 </body>
