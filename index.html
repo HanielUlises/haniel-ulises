@@ -3,915 +3,1235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Haniel Ulises — Systems Engineer focused on C++, AI Infrastructure, Robotics, High-Performance Computing and Formal Foundations of Computer Science." />
-  <meta name="keywords" content="Haniel Ulises, Systems Engineer, C++, AI Infrastructure, Robotics, Machine Learning, Deep Learning, SLAM, High Performance Computing, Theoretical Computer Science, Formal Logic" />
+  <meta name="description" content="Haniel Ulises, AI research engineer working on autonomous systems, formal methods and high-performance computing. Undergraduate researcher at UNAM Faculty of Engineering, in research collaboration with the Microsoft AI Lab." />
+  <meta name="keywords" content="Haniel Ulises, autonomous systems, formal verification, epistemic planning, neuro-symbolic AI, robotics, ROS 2, SLAM, computer vision, point cloud processing, digital twins, sensor fusion, CUDA, high performance computing, Groebner bases, model checking, philosophy of geometry" />
   <meta name="author" content="Haniel Ulises" />
   <title>Haniel Ulises</title>
+  <link rel="canonical" href="https://hanielulises.github.io/haniel-ulises/" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
       <text y='75' font-size='80'>∀</text>
     </svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --bg:#0a0a0a;--mid-gray:#555;--light-gray:#999;--pale-gray:#ccc;
-      --text:#f0f0f0;--heading:#fafafa;
-      --border:rgba(255,255,255,0.07);--border-light:rgba(255,255,255,0.12);
-      --nav-bg:rgba(10,10,10,0.93);--hover-bg:rgba(255,255,255,0.018);--skill-hover:rgba(255,255,255,0.025);
-      --serif:'EB Garamond',Georgia,serif;--mono:'JetBrains Mono','Courier New',monospace;
-      --t:0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+      --bg:#0a0a0a;--mid-gray:#7e7e7e;--light-gray:#a3a3a3;--pale-gray:#d0d0d0;
+      --text:#e8e8e8;--heading:#fafafa;
+      --border:rgba(255,255,255,0.10);--border-light:rgba(255,255,255,0.18);
+      --nav-bg:rgba(10,10,10,0.93);--hover-bg:rgba(255,255,255,0.03);
+      --link:#e8e8e8;--focus:#8ab4f8;
+      --serif:'EB Garamond',Georgia,'Times New Roman',serif;
+      --mono:'JetBrains Mono',ui-monospace,'Courier New',monospace;
+      --t:0.18s ease;
+      --measure:70ch;
     }
     html.light{
-      --bg:#f7f7f5;--mid-gray:#888;--light-gray:#555;--pale-gray:#222;
+      --bg:#f7f7f5;--mid-gray:#6b6b6b;--light-gray:#4a4a4a;--pale-gray:#1f1f1f;
       --text:#1a1a1a;--heading:#080808;
-      --border:rgba(0,0,0,0.08);--border-light:rgba(0,0,0,0.16);
-      --nav-bg:rgba(247,247,245,0.94);--hover-bg:rgba(0,0,0,0.025);--skill-hover:rgba(0,0,0,0.03);
+      --border:rgba(0,0,0,0.13);--border-light:rgba(0,0,0,0.22);
+      --nav-bg:rgba(247,247,245,0.94);--hover-bg:rgba(0,0,0,0.035);
+      --link:#1a1a1a;--focus:#1a5fb4;
     }
-    html{scroll-behavior:smooth;font-size:16px}
-    body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background var(--t),color var(--t)}
-    ::selection{background:rgba(128,128,128,0.2)}
-    a{color:inherit;text-decoration:none}
+    html{font-size:16px;-webkit-text-size-adjust:100%}
+    body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+    ::selection{background:rgba(128,128,128,0.25)}
+    :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+    a{color:var(--link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;text-decoration-color:var(--border-light);transition:text-decoration-color var(--t)}
+    a:hover{text-decoration-color:currentColor}
+    img,svg{max-width:100%;height:auto;display:block}
+    h1,h2,h3,h4{font-weight:400;line-height:1.2;color:var(--heading)}
+    .mono{font-family:var(--mono)}
+    .skip{position:absolute;left:-9999px;top:0;background:var(--bg);color:var(--text);padding:.6rem 1rem;border:1px solid var(--border-light);z-index:200}
+    .skip:focus{left:.5rem;top:.5rem}
 
     /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 4rem;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background var(--t),border-color var(--t)}
-    .nav-logo{font-family:var(--mono);font-size:.8rem;font-weight:300;letter-spacing:.15em;color:var(--pale-gray);text-transform:uppercase}
-    .nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none}
-    .nav-links a{font-family:var(--mono);font-size:.72rem;font-weight:300;letter-spacing:.12em;color:var(--light-gray);text-transform:uppercase;transition:color var(--t);position:relative}
-    .nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--pale-gray);transition:width var(--t)}
-    .nav-links a:hover{color:var(--text)}
-    .nav-links a:hover::after{width:100%}
-    .nav-controls{display:flex;align-items:center;gap:.6rem}
-    .nav-btn{font-family:var(--mono);font-size:.72rem;font-weight:400;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;border:1px solid var(--border-light);padding:.35rem .85rem;cursor:pointer;background:transparent;transition:all var(--t);user-select:none;line-height:1}
-    .nav-btn:hover{border-color:var(--pale-gray);color:var(--pale-gray)}
-    .theme-btn{width:2.2rem;height:2.2rem;padding:0;letter-spacing:0;font-size:.9rem;display:flex;align-items:center;justify-content:center}
+    nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+        padding:.7rem clamp(1.1rem,5vw,4rem);background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;color:var(--pale-gray);text-transform:uppercase;text-decoration:none}
+    .nav-links{display:flex;align-items:center;gap:clamp(.9rem,2.2vw,2rem);list-style:none;overflow-x:auto;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--light-gray);text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:color var(--t)}
+    .nav-links a:hover{color:var(--heading)}
+    .nav-controls{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+    .nav-btn{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--light-gray);text-transform:uppercase;
+             border:1px solid var(--border-light);padding:.3rem .6rem;cursor:pointer;background:transparent;transition:color var(--t),border-color var(--t);line-height:1.4}
+    .nav-btn:hover{border-color:var(--pale-gray);color:var(--heading)}
+    .theme-btn{width:1.9rem;height:1.9rem;padding:0;letter-spacing:0;font-size:.82rem;
+               display:flex;align-items:center;justify-content:center}
+
+    /* LAYOUT */
+    main{max-width:64rem;margin:0 auto;padding:0 clamp(1.1rem,5vw,4rem)}
+    section{padding:3.25rem 0;border-top:1px solid var(--border)}
+    section:first-of-type{border-top:none}
+    .section-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.75rem}
+    .section-num{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--mid-gray);flex-shrink:0}
+    h2{font-size:clamp(1.35rem,3vw,1.75rem);letter-spacing:-.01em}
+    .prose{max-width:var(--measure)}
+    .prose p+p{margin-top:.85rem}
+    .prose a{color:var(--heading)}
 
     /* HERO */
-    #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 4rem;padding-top:5rem;position:relative;overflow:hidden;max-width:unset}
-    .hero-inner{max-width:900px;position:relative;z-index:2}
-    .hero-label{font-family:var(--mono);font-size:.7rem;font-weight:300;letter-spacing:.25em;color:var(--mid-gray);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp .8s ease forwards .2s}
-    .hero-name{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.5rem);font-weight:400;line-height:1.05;letter-spacing:-.02em;color:var(--heading);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s ease forwards .4s}
-    .hero-subtitle{font-family:var(--serif);font-size:clamp(1rem,2vw,1.3rem);font-weight:400;font-style:italic;color:var(--light-gray);margin-bottom:2.5rem;max-width:680px;opacity:0;animation:fadeUp .8s ease forwards .6s}
-    .hero-axiom{font-family:var(--mono);font-size:.78rem;font-weight:300;letter-spacing:.05em;color:var(--mid-gray);border-left:1px solid var(--border-light);padding-left:1.2rem;max-width:560px;line-height:1.9;opacity:0;animation:fadeUp .8s ease forwards .8s}
+    #intro{padding:3.5rem 0 3rem}
+    .intro-grid{display:grid;grid-template-columns:minmax(0,1fr) 148px;gap:clamp(1.5rem,4vw,3rem);align-items:start}
+    .eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase;margin-bottom:1rem}
+    h1{font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:-.02em;margin-bottom:.6rem}
+    .tagline{font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--pale-gray);max-width:34ch;margin-bottom:1.1rem}
+    .thesis{max-width:60ch;color:var(--text)}
+    .portrait{align-self:start}
+    .portrait img{width:100%}
+    .affil{margin-top:1.6rem;font-family:var(--mono);font-size:.7rem;line-height:1.9;letter-spacing:.04em;color:var(--light-gray)}
+    .affil span{display:block}
 
-    /* PORTRAIT */
-    .hero-portrait{
-      position:absolute;right:0;bottom:0;
-      width:clamp(280px, 36vw, 520px);height:100%;
-      z-index:1;pointer-events:none;will-change:opacity,transform;
-    }
-    .hero-portrait img{
-      position:absolute;bottom:0;right:0;width:100%;height:100%;
-      object-fit:cover;object-position:top center;
-      opacity:0;animation:fadeUp .9s ease forwards 1s;
-      -webkit-mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),linear-gradient(to top, transparent 0%, black 8%);
-      -webkit-mask-composite:destination-in;
-      mask-image:linear-gradient(to right, transparent 0%, rgba(0,0,0,0.05) 8%, rgba(0,0,0,0.55) 22%, black 40%),linear-gradient(to top, transparent 0%, black 8%);
-      mask-composite:intersect;
-      filter:contrast(1.05) brightness(0.92);
-    }
+    /* ABOUT */
+    .areas{margin-top:1.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1.25rem 2.5rem}
+    .area-label{font-family:var(--mono);font-size:.63rem;letter-spacing:.16em;color:var(--mid-gray);text-transform:uppercase;
+                padding-bottom:.45rem;margin-bottom:.55rem;border-bottom:1px solid var(--border)}
+    .area-list{font-size:.98rem;color:var(--pale-gray);line-height:1.75}
 
-    /* SCROLL CHEVRONS */
-    .hero-scroll{position:absolute;bottom:3rem;left:4rem;display:flex;flex-direction:column;align-items:center;gap:2px;opacity:0;animation:fadeUp .8s ease forwards 1.2s;z-index:2}
-    .chevron{display:block;border-right:1.5px solid var(--mid-gray);border-bottom:1.5px solid var(--mid-gray);transform:rotate(45deg);animation:chevronFade 1.6s ease-in-out infinite;}
-    .chevron:nth-child(1){width:8px;height:8px;animation-delay:0s}
-    .chevron:nth-child(2){width:12px;height:12px;animation-delay:0.18s}
-    .chevron:nth-child(3){width:16px;height:16px;animation-delay:0.36s}
-    @keyframes chevronFade{0%{opacity:0.1}50%{opacity:0.7}100%{opacity:0.1}}
+    /* RESEARCH */
+    .rec{padding:1.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:8.5rem 1fr;gap:.4rem 1.5rem}
+    .rec:first-of-type{border-top:1px solid var(--border)}
+    .rec-when{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:var(--mid-gray);padding-top:.28rem}
+    .rec-title{font-size:1.05rem;color:var(--heading);margin-bottom:.25rem}
+    .rec-desc{font-size:.98rem;color:var(--light-gray);max-width:66ch}
 
-    /* SECTIONS */
-    section{padding:7rem 4rem;max-width:1100px;margin:0 auto}
-    .section-header{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:4rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
-    .section-num{font-family:var(--mono);font-size:.65rem;font-weight:300;letter-spacing:.2em;color:var(--mid-gray)}
-    .section-title{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:400;letter-spacing:-.01em;color:var(--heading)}
-    .about-text{font-size:1.05rem;color:var(--text);max-width:780px;line-height:1.9}
-    .about-text p+p{margin-top:1.4rem}
-    .about-text em{color:var(--pale-gray);font-style:italic}
-    .skills-blocks{display:flex;flex-direction:column;border:1px solid var(--border)}
-    .skill-block{padding:2.2rem 2.4rem;border-bottom:1px solid var(--border);transition:background var(--t)}
-    .skill-block:last-child{border-bottom:none}
-    .skill-block:hover{background:var(--skill-hover)}
-    .skill-block-title{font-family:var(--mono);font-size:.65rem;font-weight:400;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase;margin-bottom:1.4rem}
-    .skill-subsections{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem 3rem}
-    .skill-sub-label{font-family:var(--mono);font-size:.6rem;font-weight:300;letter-spacing:.18em;color:var(--light-gray);text-transform:uppercase;margin-bottom:.9rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
-    .skill-items{list-style:none;display:flex;flex-direction:column;gap:.35rem}
-    .skill-items li{font-family:var(--serif);font-size:.95rem;color:var(--pale-gray)}
-    .skill-block>.skill-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.35rem 2rem}
-    .projects-grid{display:grid;grid-template-columns:1fr;border:1px solid var(--border)}
-    .project-card{padding:2.8rem;border-bottom:1px solid var(--border);position:relative;transition:background var(--t);cursor:pointer;display:block}
-    .project-card:last-child{border-bottom:none}
-    .project-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent;transition:background var(--t)}
-    .project-card:hover{background:var(--hover-bg)}
-    .project-card:hover::before{background:var(--pale-gray)}
-    .project-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.2rem}
-    .project-title{font-family:var(--serif);font-size:1.25rem;font-weight:500;color:var(--heading);letter-spacing:-.01em}
-    .project-link-icon{font-family:var(--mono);font-size:.65rem;letter-spacing:.15em;color:var(--mid-gray);flex-shrink:0;padding-top:.25rem;transition:color var(--t)}
-    .project-card:hover .project-link-icon{color:var(--pale-gray)}
-    .project-desc{font-family:var(--serif);font-size:.97rem;color:var(--light-gray);line-height:1.85;max-width:820px}
-    .project-desc p+p{margin-top:.9rem}
-    .project-stack{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:.5rem}
-    .tag{font-family:var(--mono);font-size:.62rem;font-weight:300;letter-spacing:.12em;color:var(--mid-gray);border:1px solid var(--border);padding:.25rem .7rem;text-transform:uppercase}
-    .achievement-item{display:flex;align-items:baseline;gap:2rem;padding:2rem 0;border-bottom:1px solid var(--border)}
-    .achievement-item:first-child{border-top:1px solid var(--border)}
-    .ach-num{font-family:var(--mono);font-size:.65rem;letter-spacing:.18em;color:var(--mid-gray);flex-shrink:0;width:3rem}
-    .ach-title{font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--heading);margin-bottom:.3rem}
-    .ach-desc{font-family:var(--serif);font-size:.95rem;color:var(--light-gray);line-height:1.7}
-    .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border:1px solid var(--border)}
-    .contact-item{display:flex;flex-direction:column;gap:.4rem;padding:2rem;border-right:1px solid var(--border);transition:background var(--t)}
-    .contact-item:hover{background:var(--hover-bg)}
-    .contact-item:last-child{border-right:none}
-    .contact-label{font-family:var(--mono);font-size:.62rem;font-weight:400;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase}
-    .contact-value{font-family:var(--serif);font-size:1rem;color:var(--pale-gray);transition:color var(--t)}
-    .contact-item:hover .contact-value{color:var(--heading)}
-    footer{border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-    .footer-name{font-family:var(--mono);font-size:.7rem;font-weight:300;letter-spacing:.2em;color:var(--mid-gray);text-transform:uppercase}
-    .footer-links{display:flex;gap:2rem;list-style:none}
-    .footer-links a{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--mid-gray);text-transform:uppercase;transition:color var(--t)}
-    .footer-links a:hover{color:var(--pale-gray)}
+    /* PROJECTS */
+    .projects{border-top:1px solid var(--border)}
+    .project{border-bottom:1px solid var(--border);padding:1.8rem 0}
+    .p-head{display:grid;grid-template-columns:2.25rem 1fr;gap:.9rem;align-items:start}
+    .p-num{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;color:var(--mid-gray);padding-top:.4rem}
+    .p-title{font-size:1.15rem;color:var(--heading);margin-bottom:.2rem}
+    .p-line{font-size:.97rem;color:var(--light-gray);max-width:64ch}
+    .p-stack{list-style:none;display:flex;flex-wrap:wrap;gap:.3rem .5rem;margin-top:.55rem}
+    .p-stack li{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--mid-gray);text-transform:uppercase;
+                border:1px solid var(--border);padding:.15rem .45rem}
+    .p-visual{margin:1.15rem 0 0 3.15rem;max-width:44rem}
+    .p-visual figure{margin-top:0}
+    .p-more{margin:.9rem 0 0 3.15rem}
+    .p-more>summary{display:inline-block;cursor:pointer;list-style:none;padding:.1rem 0}
+    .p-more>summary::-webkit-details-marker{display:none}
+    .more-tag{font-family:var(--mono);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--light-gray);
+              border-bottom:1px solid var(--border-light);padding-bottom:.15rem;transition:color var(--t)}
+    .p-more>summary:hover .more-tag{color:var(--heading)}
+    .p-more[open]>summary .more-tag::after{content:' \2212'}
+    .more-tag::after{content:' +'}
+    .p-body{padding-top:1rem;max-width:var(--measure)}
+    .p-body p+p{margin-top:.8rem}
+    .p-body p{font-size:1rem;color:var(--text)}
+    .p-repo{margin-top:1.1rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.05em;overflow-wrap:anywhere;line-height:1.9}
+    .p-repo a{color:var(--light-gray)}
+    .p-repo a:hover{color:var(--heading)}
 
-    /* FLOATING LOGIC LAYER */
-    #logic-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-    .logic-glyph{
-      position:absolute;font-family:var(--mono);font-size:.72rem;font-weight:300;
-      letter-spacing:.04em;color:var(--pale-gray);opacity:0;white-space:nowrap;
-      will-change:transform,opacity;animation:logicFloat linear infinite;
-    }
-    @keyframes logicFloat{
-      0%  { opacity:0; transform:translateY(0px) translateX(0px); }
-      8%  { opacity:var(--peak-opacity); }
-      88% { opacity:var(--peak-opacity); }
-      100%{ opacity:0; transform:translateY(var(--drift-y)) translateX(var(--drift-x)); }
-    }
-    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    .fade-in{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
-    .fade-in.visible{opacity:1;transform:translateY(0)}
+    table.metrics{width:100%;border-collapse:collapse;margin-top:1.1rem;font-size:.93rem}
+    table.metrics caption{text-align:left;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:var(--mid-gray);
+                          text-transform:uppercase;padding-bottom:.5rem}
+    table.metrics th,table.metrics td{text-align:left;padding:.42rem .8rem .42rem 0;border-bottom:1px solid var(--border);vertical-align:baseline}
+    table.metrics thead th{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;color:var(--mid-gray);text-transform:uppercase;font-weight:400}
+    table.metrics tbody th{font-weight:400;color:var(--light-gray);max-width:22rem}
+    table.metrics td{font-family:var(--mono);font-size:.85rem;color:var(--pale-gray);white-space:nowrap}
+    .askable-img{cursor:pointer}
+    .p-out{font-family:var(--mono);font-size:.74rem;margin-left:.5rem;color:var(--mid-gray);
+           text-decoration:none;vertical-align:.1em;transition:color var(--t)}
+    .p-out:hover,.p-out:focus-visible{color:var(--heading)}
+    .repo-ask{margin-top:.65rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .9rem;
+              font-size:.92rem;color:var(--light-gray)}
+    .repo-ask button{font-family:var(--mono);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
+                     background:transparent;border:1px solid var(--border-light);color:var(--light-gray);
+                     padding:.28rem .6rem;cursor:pointer;line-height:1.4;
+                     transition:color var(--t),border-color var(--t)}
+    .repo-ask button:hover{color:var(--heading);border-color:var(--pale-gray)}
+    .table-wrap{overflow-x:auto}
 
-    @media(max-width:768px){
-      nav{padding:1.2rem 1.5rem}
-      .nav-links{display:none}
-      #hero,section{padding-left:1.5rem;padding-right:1.5rem}
-      .hero-scroll{left:1.5rem}
-      footer{padding:2rem 1.5rem;flex-direction:column;align-items:flex-start}
-      .project-card{padding:2rem 1.5rem}
-      .project-header{flex-direction:column;gap:.5rem}
-      .contact-item{border-right:none;border-bottom:1px solid var(--border)}
-      .contact-item:last-child{border-bottom:none}
-      .hero-portrait{width:75vw;opacity:.18}
-      .hero-portrait img{
-        -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.25) 35%,rgba(0,0,0,0.6) 65%,black 100%),linear-gradient(to top,transparent 0%,black 8%);
-        mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.25) 35%,rgba(0,0,0,0.6) 65%,black 100%),linear-gradient(to top,transparent 0%,black 8%);
-      }
-      .hero-inner{text-shadow:0 0 48px var(--bg),0 0 96px var(--bg),0 2px 4px var(--bg)}
+    figure{margin-top:1.4rem}
+    figure img{border:1px solid var(--border);background:var(--hover-bg)}
+    figcaption{margin-top:.5rem;font-size:.88rem;color:var(--mid-gray);line-height:1.6;max-width:60ch}
+    .demo{margin-top:1.4rem}
+    .demo-btn{display:block;width:100%;padding:0;border:none;background:none;cursor:pointer;text-align:left;font:inherit;color:inherit}
+    .demo-btn img{border:1px solid var(--border)}
+    .demo-tag{display:inline-block;margin-top:.5rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;
+              text-transform:uppercase;color:var(--light-gray);border-bottom:1px solid var(--border-light);padding-bottom:.15rem}
+    .demo-btn:hover .demo-tag{color:var(--heading)}
+
+    /* MINOR PROJECTS */
+    .minor{margin-top:2.25rem}
+    .minor-label{font-family:var(--mono);font-size:.63rem;letter-spacing:.16em;color:var(--mid-gray);text-transform:uppercase;
+                 padding-bottom:.5rem;border-bottom:1px solid var(--border);margin-bottom:.9rem}
+    .minor-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:.5rem 2.5rem}
+    .minor-list li{font-size:.97rem;color:var(--light-gray);padding:.15rem 0}
+    .minor-list a{color:var(--pale-gray)}
+    .minor-list a:hover{color:var(--heading)}
+
+    /* CONTACT */
+    .contact-list{list-style:none;border-top:1px solid var(--border)}
+    .contact-list li{border-bottom:1px solid var(--border)}
+    .contact-list a{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1.5rem;padding:.85rem .25rem;text-decoration:none;transition:background var(--t)}
+    .contact-list a:hover{background:var(--hover-bg)}
+    .contact-label{font-family:var(--mono);font-size:.63rem;letter-spacing:.16em;color:var(--mid-gray);text-transform:uppercase;width:5.5rem;flex-shrink:0}
+    .contact-value{color:var(--pale-gray)}
+    .contact-list a:hover .contact-value{color:var(--heading);text-decoration:underline;text-underline-offset:2px}
+
+    footer{max-width:64rem;margin:0 auto;padding:1.75rem clamp(1.1rem,5vw,4rem) 2.5rem;border-top:1px solid var(--border);
+           display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+    .foot-note{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;color:var(--mid-gray);text-transform:uppercase}
+
+    @media(max-width:720px){
+      body{font-size:1rem}
+      .intro-grid{grid-template-columns:1fr}
+      .portrait{width:118px;order:-1;justify-self:center}
+      .rec{grid-template-columns:1fr;gap:.15rem}
+      .rec-when{padding-top:0}
+      .p-head{grid-template-columns:1.6rem 1fr;gap:.6rem}
+      .p-visual,.p-more{margin-left:0}
+      .minor-list{grid-template-columns:1fr}
+      nav{padding-top:.55rem;padding-bottom:.55rem}
+      .nav-links{gap:.85rem}
     }
-    @media(max-width:500px){.skill-block>.skill-items{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){
+      *{transition:none!important;animation:none!important}
+      html{scroll-behavior:auto}
+    }
   </style>
 </head>
 <body>
 
-<nav>
-  <span class="nav-logo">H.U.</span>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+
+<nav aria-label="Primary">
+  <a class="nav-logo" href="#intro">H.U.</a>
   <ul class="nav-links">
-    <li><a href="#about"        data-i18n="nav_about"></a></li>
-    <li><a href="#skills"       data-i18n="nav_skills"></a></li>
-    <li><a href="#projects"     data-i18n="nav_projects"></a></li>
-    <li><a href="#achievements" data-i18n="nav_achievements"></a></li>
-    <li><a href="#contact"      data-i18n="nav_contact"></a></li>
+    <li><a href="#about"      data-i18n="nav_about">About</a></li>
+    <li><a href="#research"   data-i18n="nav_research">Research</a></li>
+    <li><a href="#projects"   data-i18n="nav_projects">Projects</a></li>
+    <li><a href="#philosophy" data-i18n="nav_philosophy">Philosophy</a></li>
+    <li><a href="#contact"    data-i18n="nav_contact">Contact</a></li>
   </ul>
   <div class="nav-controls">
-    <button class="nav-btn theme-btn" id="themeToggle" aria-label="Toggle theme">○</button>
-    <button class="nav-btn" id="langToggle" aria-label="Toggle language">ES</button>
+    <button class="nav-btn theme-btn" id="themeToggle" aria-pressed="false" aria-label="Switch to light theme">○</button>
+    <button class="nav-btn" id="langToggle" lang="es">Español</button>
   </div>
 </nav>
 
-<section id="hero">
-  <div class="hero-inner">
-    <p class="hero-label" data-i18n="hero_label"></p>
-    <h1 class="hero-name">Haniel Ulises</h1>
-    <p class="hero-subtitle" data-i18n="hero_subtitle"></p>
-    <p class="hero-axiom" data-i18n="hero_axiom"></p>
-  </div>
-  <div class="hero-portrait" id="heroPortrait">
-    <img src="resources/selfie_lmao.png" alt="Haniel Ulises" />
-  </div>
-  <div class="hero-scroll" aria-label="Scroll down">
-    <span class="chevron"></span>
-    <span class="chevron"></span>
-    <span class="chevron"></span>
+<main id="main">
+
+<section id="intro" aria-labelledby="name">
+  <div class="intro-grid">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow">AI Research Engineer · Philosopher · Aspiring Mathematician</p>
+      <h1 id="name">Haniel Ulises</h1>
+      <p class="tagline" data-i18n="tagline">Autonomous systems, formal methods, and high-performance computing.</p>
+      <p class="thesis" data-i18n="thesis">I care about what can be proved about the behaviour of an autonomous system, and the tools for proving it come as much from logic as from geometry.</p>
+      <p class="affil">
+        <span data-i18n="affil1">Undergraduate researcher, UNAM Faculty of Engineering</span>
+        <span data-i18n="affil2">Research collaboration with the Microsoft AI Lab</span>
+        <span data-i18n="affil3">AI Engineering, ESCOM-IPN · Philosophy, FFyL-UNAM</span>
+      </p>
+    </div>
+    <div class="portrait">
+      <picture>
+        <source srcset="resources/selfie_lmao@2x.webp" type="image/webp">
+        <img src="resources/selfie_lmao.png" width="148" height="197"
+             alt="Portrait of Haniel Ulises, black and white, facing the camera" />
+      </picture>
+    </div>
   </div>
 </section>
 
-<section id="about">
-  <div class="section-header fade-in">
+<section id="about" aria-labelledby="h-about">
+  <div class="section-head">
     <span class="section-num">01</span>
-    <h2 class="section-title" data-i18n="about_title"></h2>
+    <h2 id="h-about" data-i18n="about_h">About</h2>
   </div>
-  <div class="about-text fade-in">
-    <p data-i18n="about_p1"></p>
-    <p data-i18n="about_p2"></p>
-    <p data-i18n="about_p3"></p>
+  <div class="prose">
+    <p data-i18n="about_p1">I am a researcher and engineer working where high-performance computing, formal methods, and autonomous systems meet. My work spans robotics, autonomous perception, computer vision, point cloud processing, sensor fusion, automated and epistemic planning, formal verification, digital twins, and neuro-symbolic AI. The common thread is building autonomous systems that perceive, reason, plan, and act reliably, where reliably means something a proof can underwrite.</p>
+    <p data-i18n="about_p2">I enjoy working close to the metal as much as at the algorithmic level, with a strong focus on C++ and Python, parallel computing, GPU acceleration, and low-latency systems. Sophisticated reasoning methods are often dismissed as impractical for real systems; I am interested in the computational architectures that make them practical.</p>
+    <p data-i18n="about_p3">I study AI Engineering at ESCOM-IPN and Philosophy at the FFyL-UNAM. The two are not separate tracks. Questions about what a formal structure is, and what it means for one to represent a space or a state of knowledge, arrive in both.</p>
+    <div class="areas">
+      <div>
+        <p class="area-label" data-i18n="g1_l">Research interests</p>
+        <p class="area-list" data-i18n="g1_v">Formal methods · Autonomous systems · Robotics · AI planning · Epistemic logic · Neuro-symbolic AI · Computer vision · Point cloud processing · Sensor fusion · SLAM · Digital twins · HPC · GPU computing · Low-latency systems · Computational algebraic geometry</p>
+      </div>
+      <div>
+        <p class="area-label" data-i18n="g2_l">Languages</p>
+        <p class="area-list" data-i18n="g2_v">C++ (17/20/23) · C · Python · CUDA · Rust · Lean 4 · Haskell · Prolog · R · Java · Verilog · VHDL · Bash</p>
+      </div>
+      <div>
+        <p class="area-label" data-i18n="g3_l">Parallel and systems</p>
+        <p class="area-list" data-i18n="g3_v">CUDA · OpenCL · OpenMP · MPI · SIMD intrinsics · RDMA · WebAssembly · LLVM · Bare-metal ARM Cortex-M · Linux systems programming · Performance and cache optimisation</p>
+      </div>
+      <div>
+        <p class="area-label" data-i18n="g4_l">Robotics and perception</p>
+        <p class="area-list" data-i18n="g4_v">ROS 2 and ROS · Gazebo · PlanSys2 · KDL · PCL · Open3D · OpenCV · TensorRT · ONNX Runtime · LiDAR point clouds, segmentation and clustering · Kalman filtering and sensor fusion · Pose-graph SLAM · Digital twins and simulation · PDDL and EPDDL</p>
+      </div>
+      <div>
+        <p class="area-label" data-i18n="g5_l">Numerics and learning</p>
+        <p class="area-list" data-i18n="g5_v">PyTorch · PyTorch Geometric · JAX · Eigen · Armadillo · GMP · BLAS · NumPy · Graph neural networks · Physics-informed networks · Gröbner bases and symbolic computation</p>
+      </div>
+      <div>
+        <p class="area-label" data-i18n="g6_l">Formal tools and build</p>
+        <p class="area-list" data-i18n="g6_v">Lean 4 · SAT and SMT solving · Explicit-state model checking · Bisimulation · CMake · Docker · Git · CTest · GitHub Actions</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section id="skills">
-  <div class="section-header fade-in">
+<section id="research" aria-labelledby="h-research">
+  <div class="section-head">
     <span class="section-num">02</span>
-    <h2 class="section-title" data-i18n="skills_title"></h2>
+    <h2 id="h-research" data-i18n="research_h">Research</h2>
   </div>
-  <div class="skills-blocks fade-in">
-    <div class="skill-block">
-      <p class="skill-block-title" data-i18n="sk_systems"></p>
-      <ul class="skill-items">
-        <li>Modern C++ (C++17/20)</li><li>C</li><li>Rust</li><li>Python</li>
-        <li>Systems Programming</li><li>Linux Systems</li><li>CMake · Docker</li>
-        <li>CUDA · OpenCL · MPI (C++)</li><li>High-Performance Computing (HPC)</li>
-      </ul>
+  <div class="rec">
+    <p class="rec-when" data-i18n="r1_when">Since Jan 2026</p>
+    <div>
+      <h3 class="rec-title" data-i18n="r1_title">Undergraduate Researcher, UNAM Faculty of Engineering</h3>
+      <p class="rec-desc" data-i18n="r1_desc">Affiliated with the Microsoft AI Lab through a research collaboration. I lead projects in formal verification, automated planning, neuro-symbolic AI, and autonomous perception, developing computational methods for reasoning about and verifying intelligent autonomous behaviour in complex environments.</p>
     </div>
-    <div class="skill-block">
-      <p class="skill-block-title" data-i18n="sk_ai"></p>
-      <div class="skill-subsections">
-        <div class="skill-sub">
-          <p class="skill-sub-label" data-i18n="sk_ai_robotics"></p>
-          <ul class="skill-items">
-            <li>ROS / ROS2</li><li>Motion &amp; Task Planning</li>
-            <li>PDDL · Automated Planning</li><li>SLAM</li>
-            <li>Multi-Agent Systems</li><li>Distributed Robotic Architectures</li>
-          </ul>
-        </div>
-        <div class="skill-sub">
-          <p class="skill-sub-label" data-i18n="sk_ai_ml"></p>
-          <ul class="skill-items">
-            <li>Supervised &amp; Unsupervised Learning</li><li>Linear Models &amp; Regularization</li>
-            <li>Kernel Methods</li><li>Optimization Methods</li>
-            <li>Model Evaluation &amp; Cross-Validation</li>
-            <li>Graph Neural Networks</li><li>Statistical Learning Foundations</li>
-          </ul>
-        </div>
-        <div class="skill-sub">
-          <p class="skill-sub-label" data-i18n="sk_ai_dl"></p>
-          <ul class="skill-items">
-            <li>Convolutional Neural Networks</li><li>Transformer Architectures</li>
-            <li>Representation Learning</li><li>Sequence Modeling</li>
-            <li>Computer Vision · Real-Time CV</li><li>Training Pipeline Design</li>
-            <li>Edge AI · AI Infrastructure</li><li>Performance-aware Model Deployment</li>
-          </ul>
-        </div>
-      </div>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="r2_when">Jun 2026</p>
+    <div>
+      <h3 class="rec-title" data-i18n="r2_title">ICAPS 2026, PR-BGI workshop</h3>
+      <p class="rec-desc" data-i18n="r2_desc">Presented <em>ALETHEIA: Adaptive Epistemic Planning over Kripke Models with DEL Product-Update Semantics</em> in the afternoon session of the workshop on Planning and Reasoning for Beliefs, Goals and Intentions. <a href="https://mrlab.ai/icaps26-workshops/index.html" rel="noopener">Programme</a>.</p>
     </div>
-    <div class="skill-block">
-      <p class="skill-block-title" data-i18n="sk_formal"></p>
-      <ul class="skill-items">
-        <li>Theoretical Computer Science</li><li>Computational Complexity Theory</li>
-        <li>Automata &amp; Formal Languages</li><li>Modal &amp; Epistemic Logic</li>
-        <li>Model Theory</li><li>Type Theory</li><li>Category Theory</li><li>Mathematical Logic</li>
-      </ul>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="r4_when">Ongoing</p>
+    <div>
+      <h3 class="rec-title" data-i18n="r4_title">Editor, high-performance C++ blog</h3>
+      <p class="rec-desc" data-i18n="r4_desc">I write and edit <a href="https://hanielulises.github.io/high-performance-cpp/" rel="noopener">high-performance-cpp</a>, on modern C++ for HPC, covering the optimisation work that separates a correct implementation from a fast one.</p>
     </div>
-    <div class="skill-block">
-      <p class="skill-block-title" data-i18n="sk_perf"></p>
-      <ul class="skill-items">
-        <li>Performance Engineering</li><li>Compiler Fundamentals</li>
-        <li>Low-level Debugging</li><li>Memory &amp; Cache Optimization</li>
-        <li>Digital Signal Processing (DSP)</li><li>Algorithmic Problem Solving</li>
-        <li>Competitive Programming</li>
-      </ul>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="r3_when">In progress</p>
+    <div>
+      <h3 class="rec-title" data-i18n="r3_title">Engineering degree thesis</h3>
+      <p class="rec-desc" data-i18n="r3_desc">Integrates collaborative SLAM and multi-robot planning on ROS 2. A fleet of ground vehicles explores an unknown planar environment under intermittent connectivity, so the fleet map is not the union of what the agents know but the union of what has actually been delivered. That divergence is measured directly, and it is what the epistemic planning layer is built to reason about.</p>
     </div>
   </div>
 </section>
 
-<section id="projects">
-  <div class="section-header fade-in">
+<section id="projects" aria-labelledby="h-projects">
+  <div class="section-head">
     <span class="section-num">03</span>
-    <h2 class="section-title" data-i18n="proj_title"></h2>
+    <h2 id="h-projects" data-i18n="projects_h">Projects</h2>
   </div>
-  <div class="projects-grid fade-in" id="projectsGrid"></div>
+  <p class="prose" data-i18n="projects_intro" style="margin-bottom:1.5rem;color:var(--light-gray)">18 projects. Each one opens for the detail, the figures, and the repository.</p>
+
+  <div class="projects">
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">01</span>
+        <span>
+          <h3 class="p-title">ALETHEIA<span class="p-line" style="display:inline" data-i18n="p3_sub">, epistemic planner</span></h3>
+          <span class="p-line" data-i18n="p3_line">Planning over dynamic epistemic logic in S5<sub>n</sub> and KD45<sub>n</sub> frames. Presented at ICAPS 2026.</span>
+          <ul class="p-stack"><li>C++23</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p3_a">Classical planning assumes the agent knows which propositions hold. Epistemic planning drops that. The search space is not a set of valuations but a set of pointed Kripke models, each of which must be updated, minimised, and compared in full at every node, and goals may be irreducibly modal: not that the door is open but that an agent <em>knows</em> it is. Performance therefore reduces to three questions, namely how a Kripke model is represented, how modal formulas are evaluated over it, and how two models are recognised as the same epistemic situation.</p>
+        <p data-i18n="p3_b">Three answers dominate the design. A model is three flat arrays of 64-bit words for valuation, accessibility, and designation, so modal operators become word-parallel set operations rather than pointer traversals. Formulas are evaluated as extensions rather than pointwise, computing for each subformula the set of worlds where it holds, bottom-up and memoised on hash-consed formula identity, which turns common knowledge into a single greatest fixpoint instead of one graph search per world. Bisimulation contraction assigns world indices in an order fixed by the model's structure alone, so bisimilar states serialise identically and duplicate detection becomes a comparison of 128-bit fingerprints.</p>
+        <div class="table-wrap">
+        <table class="metrics">
+          <caption data-i18n="p3_tcap">Against the previous implementation, same benchmark set</caption>
+          <thead><tr><th scope="col"></th><th scope="col" data-i18n="p3_th1">Before</th><th scope="col" data-i18n="p3_th2">After</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" data-i18n="p3_m1">Largest solved instance, wall clock</th><td>151 s</td><td>40 ms</td></tr>
+            <tr><th scope="row" data-i18n="p3_m2">Resident memory on that instance</th><td>21 GB</td><td>7.3 MB</td></tr>
+            <tr><th scope="row" data-i18n="p3_m3">AND-OR search throughput</th><td>n/a</td><td>19.8×</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p data-i18n="p3_c">Validated against the I&epsilon;PC 2026 benchmarks, Tracks Basic and Intermediate. Built at UNAM-FI and IPN-ESCOM.</p>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/Aletheia" rel="noopener">github.com/HanielUlises/Aletheia</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">02</span>
+        <span>
+          <h3 class="p-title" data-i18n="p1_title">Control-oriented lane perception</h3>
+          <span class="p-line" data-i18n="p1_line">Monocular segmentation scored on the geometry an MPC controller consumes, not on mask overlap.</span>
+          <ul class="p-stack"><li>Python</li><li>PyTorch</li><li>C++</li><li>TensorRT</li><li>ONNX Runtime</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/curvature-aware-lane-seg/main/docs/assets/control_demo.gif">
+            <img src="resources/figures/control_poster.jpg" width="760" height="350" loading="lazy"
+                 alt="Camera view with the fitted lane geometry overlaid, beside a bird's-eye metric plot reporting lateral offset, heading and curvature" />
+            <span class="demo-tag" data-i18n="p1_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="p1_cap1">The quantities the controller actually consumes. Camera view on the left with the fitted lane, bird's-eye metric view on the right reporting lateral offset, heading and curvature, raw against filtered.</figcaption>
+        </figure></div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p1_a">A lane segmenter is usually judged by how well its mask overlaps the annotation. A model predictive controller does not consume masks. It consumes the vehicle's lateral offset within the lane and the curvature of the road ahead, so those are the quantities measured here. Averaging overlap over the natural frame distribution is insensitive to exactly the frames a controller cares about, which are the tight curves.</p>
+        <p data-i18n="p1_b">Training uses a curvature-stratified subset of CurveLanes with a curvature-sensitive cost, which flattens the distribution and lifts the tails. The detection gap between straight road and tight curve was 21.6 points before this; it is now 3.9. Calibration is a pinhole model fitted by lane parallelism and then checked independently against the vanishing point, an arrangement where the validation does not reuse the assumption being validated.</p>
+        <p data-i18n="p1_c">The full chain was ported to C++, including preprocessing, the network through ONNX Runtime on a half-precision TensorRT engine, and all of the geometry. The port is pinned to the Python reference by golden vectors rather than trusted. It generalises to KITTI without retraining, recovering the lane in 94.7% of frames.</p>
+        <div class="table-wrap">
+        <table class="metrics">
+          <caption data-i18n="p1_tcap">Measured on the ported chain</caption>
+          <tbody>
+            <tr><th scope="row" data-i18n="p1_m1">End-to-end throughput</th><td>216 fps</td></tr>
+            <tr><th scope="row" data-i18n="p1_m2">Geometry module against the Python reference</th><td>51×</td></tr>
+            <tr><th scope="row" data-i18n="p1_m3">Agreement with that reference</th><td>1.3 × 10⁻¹¹</td></tr>
+            <tr><th scope="row" data-i18n="p1_m4">Straight against tight curve, before</th><td>21.6 pts</td></tr>
+            <tr><th scope="row" data-i18n="p1_m5">Straight against tight curve, after</th><td>3.9 pts</td></tr>
+            <tr><th scope="row" data-i18n="p1_m6">KITTI frames with lane recovered, no retraining</th><td>94.7%</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <figure>
+          <img src="resources/figures/lane_iou.png" width="745" height="512" loading="lazy"
+               alt="Bar chart of intersection-over-union per curvature bin, showing accuracy holding steady across bins" />
+          <figcaption data-i18n="p1_cap2">IoU per curvature bin. Accuracy does not fall off as curvature rises; the near-straight bin is the weakest, for a geometric reason rather than a modelling one.</figcaption>
+        </figure>
+        <figure class="demo">
+            <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/curvature-aware-lane-seg/main/docs/assets/lane_demo.gif">
+              <img src="resources/figures/lane_poster.jpg" width="700" height="394" loading="lazy"
+                   alt="Frame from a highway clip with the predicted lane mask overlaid in red" />
+              <span class="demo-tag" data-i18n="p1_play_seg">Play segmentation demo</span>
+            </button>
+            <figcaption data-i18n="p1_cap1_seg">Held-out TuSimple footage, a different camera from the training data, run frame by frame with no temporal model.</figcaption>
+          </figure>
+        <figure class="demo">
+            <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/curvature-aware-lane-seg/main/docs/assets/kitti_demo.gif">
+              <img src="resources/figures/kitti_poster.jpg" width="700" height="323" loading="lazy" alt="Lane prediction overlaid on a KITTI sequence" />
+              <span class="demo-tag" data-i18n="p1_play2">Play KITTI demo</span>
+            </button>
+            <figcaption data-i18n="p1_cap3">KITTI, with no retraining. The lane is recovered in 94.7% of frames.</figcaption>
+          </figure>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/curvature-aware-lane-seg" rel="noopener">github.com/HanielUlises/curvature-aware-lane-seg</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">03</span>
+        <span>
+          <h3 class="p-title">varietas<span class="p-line" style="display:inline" data-i18n="p2_sub">, algebraic kinematics for ROS 2</span></h3>
+          <span class="p-line" data-i18n="p2_line">Exact inverse kinematics by Gröbner bases, with completeness certified by the structure of the ideal.</span>
+          <ul class="p-stack"><li>C++</li><li>Eigen</li><li>GMP</li><li>ROS 2</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure>
+          <img src="resources/figures/varietas_kinematics.png" width="1723" height="1116" loading="lazy"
+               alt="Diagram of a planar serial chain with revolute joints beside its formulation as a zero-dimensional polynomial system" />
+          <figcaption data-i18n="p2_cap">A planar serial chain and its algebraic formulation. Forward kinematics evaluates the map; inverse kinematics computes the fibre, realised as the variety of an ideal in a finite-dimensional quotient ring.</figcaption>
+        </figure>
+        <figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/varietas/main/docs/figures/urdf_sweep.gif">
+            <img src="resources/figures/varietas_sweep_poster.jpg" width="700" height="500" loading="lazy" alt="Robot arm sweeping through joint configurations read from a URDF description" />
+            <span class="demo-tag" data-i18n="p2_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="p2_cap0">A URDF sweep through joint space, the front end reading exact geometry over the rationals.</figcaption>
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p2_a">Robot kinematics is a system of polynomial equations over a finite-dimensional quotient ring, and varietas solves it as one, using elimination theory rather than numerical iteration or structural pattern matching. The tangent half-angle substitution rationalises the forward kinematics map, a Gröbner basis of the resulting ideal is computed offline, and the inverse kinematics is resolved at runtime by eigendecomposition of a fixed-size action matrix.</p>
+        <p data-i18n="p2_b">Completeness is not asserted, it is certified. By the Finiteness Theorem the quotient algebra is finite dimensional exactly when the variety is finite, a condition decidable from the leading terms of the basis alone, and its dimension bounds the number of solutions counted with multiplicity. Where IKFast pattern-matches known kinematic structures and fails silently outside them, varietas either returns a solution set with that guarantee or names precisely which hypothesis of the Extension Theorem was violated.</p>
+        <p data-i18n="p2_c">Exactness is enforced where geometry enters rather than assumed. Buchberger's algorithm discards a critical pair when the S-polynomial reduces to zero, which is a structural test on an empty term list; over floating point, cancellation leaves a residue, the pair survives, and the finiteness verdict read off the leading monomials then describes a different ideal. The offline half therefore runs over ℚ with GMP-backed rationals. The same consideration governs the URDF front end, which recovers exact geometry over the rationals by projective approximation of quaternions, since a URDF writes π/2 as 1.57079632679 and reading that literal as a rational yields an exact answer about a robot nobody built. Validated against KDL on a KUKA iiwa.</p>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/varietas" rel="noopener">github.com/HanielUlises/varietas</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">04</span>
+        <span>
+          <h3 class="p-title">KripCUDA<span class="p-line" style="display:inline" data-i18n="p4_sub">, model checking on the GPU</span></h3>
+          <span class="p-line" data-i18n="p4_line">Explicit-state model checking of Kripke structures, with CTL as a fixpoint computation over the boolean semiring.</span>
+          <ul class="p-stack"><li>C++20</li><li>CUDA</li></ul>
+        </span>
+      </div>
+      <div class="p-visual">
+        <figure>
+          <img src="resources/figures/kripcuda_logo.svg" width="623" height="368" loading="lazy"
+               alt="KripCUDA logo: a directed state graph feeding into a GPU die" />
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p4_a">Model checking a branching-time logic is a fixpoint computation over the powerset lattice, which is complete and of finite height, so by Knaster and Tarski the modal operators reach their least and greatest fixpoints by Kleene iteration in at most |S| steps. Every CTL operator is then a sequence of existential pre-image applications interleaved with set operations, and the existential pre-image is exactly a sparse matrix-vector product over the boolean semiring against the transposed transition relation. That is the observation the whole implementation rests on, because it is a shape a GPU is built for.</p>
+        <p data-i18n="p4_b">The transition relation lives on the device in compressed sparse row form, state sets are bitmaps assembled by warp ballot without atomics, and model products are constructed entirely on the GPU rather than staged through the host. Fair cycles need strongly connected components, which are found by parallel colouring. Structural invariants are enforced at construction rather than trusted, so totality of the relation is checked and successor lists are sorted, which makes the CSR layout a function of the model alone and not of the order the caller supplied its transitions.</p>
+        <p data-i18n="p4_c">Every device computation has a sequential counterpart verified step by step against it.</p>
+        <figure>
+            <img src="resources/figures/kripcuda_model.svg" width="824" height="754" loading="lazy"
+                 alt="State graph of a two-process mutual exclusion model, showing states labelled with their atomic propositions and the transitions between them" />
+            <figcaption data-i18n="p4_cap">The two-process mutual exclusion model, one of the worked examples. States carry their atomic propositions; the transition relation is the sparse boolean matrix the kernels multiply against.</figcaption>
+          </figure>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/KripCUDA" rel="noopener">github.com/HanielUlises/KripCUDA</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">05</span>
+        <span>
+          <h3 class="p-title">ePlanSys<span class="p-line" style="display:inline" data-i18n="p5_sub">, epistemic planning for ROS 2</span></h3>
+          <span class="p-line" data-i18n="p5_line">EPDDL-based planning with dynamic epistemic logic reasoning, built on PlanSys2.</span>
+          <ul class="p-stack"><li>C++</li><li>ROS 2</li></ul>
+        </span>
+      </div>
+      <div class="p-visual">
+        <figure>
+          <img src="resources/figures/eplansys.png" width="700" height="74" loading="lazy" alt="ePlanSys wordmark" />
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p5_a">The execution layer for epistemic planning on real robots. It extends PlanSys2 with S5 and KD45 world models, EPDDL domain support, and heuristic search over epistemic states, so that multi-robot coordination under partial observability is expressed in the planner's own terms rather than encoded around it.</p>
+        <p data-i18n="p5_b">This sits alongside ALETHEIA, which is the planner proper, and <a href="https://github.com/HanielUlises/Epistemic-Robotics" rel="noopener">Epistemic-Robotics</a>, which connects both to physical robots under ROS 2. The motivating case is small and concrete. Two robots must retrieve an object from a corridor that may be blocked; a classical planner routes the second robot through it because it treats the world as globally known, and the robot fails on arrival. Here the initial epistemic state represents that uncertainty as two designated worlds, and no route is assigned until the first robot senses the corridor and collapses the belief state.</p>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/eplansys" rel="noopener">github.com/HanielUlises/eplansys</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">06</span>
+        <span>
+          <h3 class="p-title" data-i18n="qmr_title">Collaborative SLAM for a ground fleet</h3>
+          <span class="p-line" data-i18n="qmr_line">Multi-robot mapping under intermittent connectivity, where the fleet map is what has been delivered rather than what is known.</span>
+          <ul class="p-stack"><li>C++</li><li>ROS 2</li><li>Gazebo</li><li>SLAM</li></ul>
+        </span>
+      </div>
+      <div class="p-visual">
+        <figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/ROS-Mobile/main/Planning/MultiRobot_ws/docs/figures/iter2/fig_run.gif">
+            <img src="resources/figures/tt_run_poster.jpg" width="700" height="307" loading="lazy"
+                 alt="Three robots exploring a building floor plan, each building its own occupancy map" />
+            <span class="demo-tag" data-i18n="qmr_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="qmr_cap">Three agents exploring a real building floor plan, each running its own SLAM front end.</figcaption>
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="qmr_0">A fleet of unmanned ground vehicles explores an unknown planar environment, each agent running an independent pose-graph SLAM front end over its own laser observations. Because inter-agent connectivity is intermittent, the fleet-level map is not the instantaneous union of the individual maps. It is the union of what has actually been delivered, and this implementation makes that distinction explicit rather than assuming the link.</p>
+          <p data-i18n="qmr_1">Individual occupancy estimates are fused by an operator that is idempotent and order-independent over a bounded join-semilattice, so the same observations arriving in any order give the same map, and delivery is gated by a per-agent link process, so a lost link freezes an agent's contribution without erasing it. The divergence between what an agent knows and what the fleet knows is then measured directly. That divergence is precisely the asymmetry the dynamic epistemic logic layer is meant to reason about, which is what connects this to the planning work.</p>
+          <p data-i18n="qmr_2">A second iteration carries the same substrate, unchanged, onto the floor plan of a real building with three agents.</p>
+          <figure>
+            <img src="resources/figures/tt_maps.png" width="1712" height="668" loading="lazy"
+                 alt="Occupancy grid maps built by each agent side by side with the fused fleet map" />
+            <figcaption data-i18n="qmr_cap2">Per-agent occupancy estimates beside the fused fleet map.</figcaption>
+          </figure>
+          <figure>
+            <img src="resources/figures/tt_scenario.png" width="700" height="269" loading="lazy" alt="Floor plan of the building used as the exploration scenario, with agent starting positions" />
+            <figcaption data-i18n="qmr_cap3">The building floor plan used in the second iteration.</figcaption>
+          </figure>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/ROS-Mobile/tree/main/Planning/MultiRobot_ws" rel="noopener">github.com/HanielUlises/ROS-Mobile · Planning/MultiRobot_ws</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">07</span>
+        <span>
+          <h3 class="p-title" data-i18n="qer_title">Epistemic-Robotics</h3>
+          <span class="p-line" data-i18n="qer_line">The umbrella framework: epistemic SLAM and multi-agent planning under dynamic epistemic logic, on real robots.</span>
+          <ul class="p-stack"><li>C++</li><li>ROS 2</li><li>DEL</li></ul>
+        </span>
+      </div>
+      <div class="p-visual">
+        <figure>
+          <img src="resources/figures/epistemic_robotics_site.jpg" width="760" height="339" loading="lazy"
+               alt="The Epistemic Robotics project site, headed &quot;Robots that reason about what they know (and believe), and what they do not&quot;" />
+          <figcaption data-i18n="qer_cap">The project site. Planning formalisms, runtime architectures, and geometric reasoning grounded in dynamic epistemic logic and the &mu;-calculus, for heterogeneous multi-robot fleets under partial observability.</figcaption>
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="qer_0">Autonomous robots in partially observable environments cannot plan over what they do not know. This framework grounds multi-agent task planning in dynamic epistemic logic, so that ignorance is represented rather than assumed away. Each agent maintains a Kripke model of the world, actions are epistemic events that refine the model by product update rather than state transitions, and navigation routes are winning regions of &mu;-calculus reachability formulas computed over the occupancy graph rather than geometric shortest paths.</p>
+          <p data-i18n="qer_1">The distinction the framework insists on is that an agent reaching a zone and an agent <em>knowing</em> it has reached it are different goals, and the planner treats them differently. Several of the projects listed here derive from this one. ALETHEIA is the planner, ePlanSys is the execution layer, and the collaborative SLAM work of the degree thesis is the perceptual substrate. This repository is where they meet physical robots.</p>
+          <p class="p-repo"><a href="https://hanielulises.github.io/Epistemic-Robotics/" rel="noopener">hanielulises.github.io/Epistemic-Robotics</a><br><a href="https://github.com/HanielUlises/Epistemic-Robotics" rel="noopener">github.com/HanielUlises/Epistemic-Robotics</a><br></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">08</span>
+        <span>
+          <h3 class="p-title">GCN-GrabCut<span class="p-line" style="display:inline" data-i18n="p6_sub">, automatic segmentation</span></h3>
+          <span class="p-line" data-i18n="p6_line">Removes the user from the loop in GrabCut by predicting the trimap with a graph convolutional network.</span>
+          <ul class="p-stack"><li>Python</li><li>PyTorch Geometric</li><li>OpenCV</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/GCN-GrabCut/main/demo.gif">
+            <img src="resources/figures/gcn_poster.jpg" width="700" height="575" loading="lazy"
+                 alt="Frame from the segmentation demo showing an input image beside its predicted mask" />
+            <span class="demo-tag" data-i18n="p6_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="p6_cap">Segmentation with no user interaction at any stage.</figcaption>
+        </figure></div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p6_a">GrabCut needs a human to mark the initial trimap, which is what keeps it out of automated pipelines. Here the trimap is predicted instead by a graph convolutional network over superpixels, seeded by a training-free saliency prior computed from the image itself, so nothing about the method requires an annotated initialisation at inference time.</p>
+        <p data-i18n="p6_b">Mean IoU on DUTS is 0.584 against 0.109 for the trivial prediction, with 187,826 parameters.</p>
+        <figure>
+            <img src="resources/figures/gcn_architecture.png" width="760" height="421" loading="lazy" alt="Diagram of the graph convolutional network architecture over superpixels" />
+            <figcaption data-i18n="p6_cap2">The network over the superpixel graph, from the saliency prior to the predicted trimap.</figcaption>
+          </figure>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/GCN-GrabCut" rel="noopener">github.com/HanielUlises/GCN-GrabCut</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">09</span>
+        <span>
+          <h3 class="p-title" data-i18n="p7_title">Bare-metal embedded systems, STM32F401</h3>
+          <span class="p-line" data-i18n="p7_line">Register-level drivers with no vendor abstraction layer, on a Nucleo-F401RE.</span>
+          <ul class="p-stack"><li>C</li><li>ARM Cortex-M4</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+        <p data-i18n="p7_a">Peripheral definitions written from the reference manual rather than pulled from the vendor HAL, covering RCC and GPIO. UART2 transmission is brought up by configuring the alternate function, computing the baud rate register by hand, and polling the status register. A SysTick time base and standard output redirected over the serial port complete the minimum needed to work without a debugger attached.</p>
+        <p data-i18n="p7_b">The point of the exercise is that nothing between the code and the silicon is taken on faith.</p>
+        <p class="p-repo"><a href="https://github.com/HanielUlises/Embedded" rel="noopener">github.com/HanielUlises/Embedded</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">10</span>
+        <span>
+          <h3 class="p-title" data-i18n="q08_title">High-Performance Computer Vision</h3>
+          <span class="p-line" data-i18n="q08_line">Image processing and vision in modern C++ with OpenCV, written to be read as much as run.</span>
+          <ul class="p-stack"><li>C++</li><li>OpenCV</li><li>CMake</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/High-Performance-CV/main/Images/Background-Subtraction-Tutorial_merged.gif">
+            <img src="resources/figures/bgsub_poster.jpg" width="700" height="263" loading="lazy" alt="Side by side frames of a video showing the original scene, the extracted foreground mask, and the estimated background" />
+            <span class="demo-tag" data-i18n="q08_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="q08_cap">Background subtraction, with the source frame, the foreground mask, and the running background estimate side by side.</figcaption>
+        </figure></div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q08_a">A layered exploration of image processing and computer vision rather than one unified program. Part of it is deliberately didactic, implementing core techniques so that the algorithm is legible in the code, with correctness and readability placed ahead of premature optimisation. The rest is project work, some of it consolidating familiar ground and some of it starting from conceptual uncertainty and resolving through implementation.</p>
+          <p data-i18n="q08_b">Background subtraction, filtering, feature detection, stereo, and tracking all appear here, drawing on Szeliski and on the standard literature. The wider intent is to use the repository as a place to think critically about the structure of visual algorithms while extending toward scientific computing in modern C++.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/High-Performance-CV" rel="noopener">github.com/HanielUlises/High-Performance-CV</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">11</span>
+        <span>
+          <h3 class="p-title" data-i18n="q09_title">Computational PDEs</h3>
+          <span class="p-line" data-i18n="q09_line">Partial differential equations by classical schemes and by physics-informed networks, including the inverse problem.</span>
+          <ul class="p-stack"><li>Python</li><li>PyTorch</li><li>NumPy</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure class="demo">
+          <button class="demo-btn" data-gif="https://raw.githubusercontent.com/HanielUlises/Computational-PDEs/main/1D%20Wave%20Equation/wave_1D_postproc.gif">
+            <img src="resources/figures/wave_poster.jpg" width="700" height="263" loading="lazy" alt="Animation of a one dimensional wave propagating and reflecting, shown as a travelling profile" />
+            <span class="demo-tag" data-i18n="q09_play">Play demo</span>
+          </button>
+          <figcaption data-i18n="q09_cap">The one dimensional wave equation integrated and post-processed.</figcaption>
+        </figure></div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q09_a">Three complementary approaches to the same equations. Classical numerical schemes cover finite differences, finite elements, and finite volumes. Physics-informed neural networks embed the PDE residual together with the initial and boundary conditions directly in the loss, so the constraint is enforced by the objective rather than by the discretisation.</p>
+          <p data-i18n="q09_b">The inverse formulation is the interesting one. There the network is used to infer unknown coefficients, parameters, or source terms of the equation from observed data, which turns a solver into an identification method and makes the comparison against the classical schemes a comparison of what each approach assumes it already knows.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/Computational-PDEs" rel="noopener">github.com/HanielUlises/Computational-PDEs</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">12</span>
+        <span>
+          <h3 class="p-title" data-i18n="q10_title">Possible-World Semantics</h3>
+          <span class="p-line" data-i18n="q10_line">A machine-checked theory of possible worlds, situations, and modal necessity, formalised in Lean 4.</span>
+          <ul class="p-stack"><li>Lean 4</li></ul>
+        </span>
+      </div>
+      <div class="p-visual">
+        <figure>
+          <img src="resources/figures/pws_site.jpg" width="760" height="339" loading="lazy"
+               alt="The Possible-World Semantics documentation site, subtitled &quot;A Mechanistic Formalization in Dependent Type Theory&quot;" />
+          <figcaption data-i18n="q10_cap">The documentation. The whole of S5, including the necessitation rule, is derived from one definitional choice rather than postulated.</figcaption>
+        </figure>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q10_a">A formalisation of possible-world and situation semantics in the higher-order modal and situation-theoretic tradition of Zalta, Fine, and Barwise and Perry. Every theorem is checked by the Lean kernel, and every remaining gap is tabulated as an explicit open proof obligation rather than left implicit, which is the honest way to publish a partial formalisation.</p>
+          <p data-i18n="q10_b">The development is layered. An ontological grounding core fixes the primitives and their algebra, covering encoding, situations, truth, parthood, dependence, and abstract objects. A modality layer postulates the S5 calculus over frames and operators. A situation layer then builds worlds and their meet-semilattice on top, with extensionality and infima proved rather than assumed. It is the formal counterpart of the philosophical work.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/Possible-World-Semantics" rel="noopener">github.com/HanielUlises/Possible-World-Semantics</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">13</span>
+        <span>
+          <h3 class="p-title" data-i18n="q11_title">PolyGraph</h3>
+          <span class="p-line" data-i18n="q11_line">Computational geometry across Euclidean, spherical, and hyperbolic settings, joined to graph theory.</span>
+          <ul class="p-stack"><li>C++</li><li>Templates</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q11_a">A template library that treats geometric primitives and graph abstractions as one subject. Types expose their topological properties through the interface and algorithms state formal contracts on their inputs, so the separation between topology and representation is enforced by the compiler rather than by convention.</p>
+          <p data-i18n="q11_b">Working in the three constant-curvature geometries at once is the point. The same incidence and distance predicates have to be written so that the curvature is a parameter rather than an assumption baked into the arithmetic, which is a sharper constraint on the design than the Euclidean case alone would impose.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/PolyGraph" rel="noopener">github.com/HanielUlises/PolyGraph</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">14</span>
+        <span>
+          <h3 class="p-title" data-i18n="q12_title">SAT and SMT solver</h3>
+          <span class="p-line" data-i18n="q12_line">A complete DPLL implementation with an extension to DPLL(T) in progress.</span>
+          <ul class="p-stack"><li>C++</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q12_a">A decision procedure for propositional satisfiability built as complete DPLL, with unit propagation, pure literal elimination, and backtracking search over the assignment tree. The aim is to determine whether a formula is a tautology, a contingency, or a contradiction, and to do so with a procedure whose completeness is a property of the search rather than of the benchmark set.</p>
+          <p data-i18n="q12_b">The extension in progress lifts this to DPLL(T), where the propositional search is coupled to a theory solver and the boolean skeleton is checked for consistency against the theory at each step. Work in progress, and marked as such.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/Theorem-Prover" rel="noopener">github.com/HanielUlises/Theorem-Prover</a></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">15</span>
+        <span>
+          <h3 class="p-title" data-i18n="q13_title">noble-rig</h3>
+          <span class="p-line" data-i18n="q13_line">A reproducible ROS 2 Jazzy environment in Docker.</span>
+          <ul class="p-stack"><li>Docker</li><li>ROS 2</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="q13_a">A containerised ROS 2 Jazzy workspace, so that the robotics work has one environment definition instead of a set of instructions that drift. It is the substrate the planning and perception repositories are developed against.</p>
+          <p class="p-repo" data-i18n="norepo">Not public.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">16</span>
+        <span>
+          <h3 class="p-title" data-i18n="qeg_title">egregium</h3>
+          <span class="p-line" data-i18n="qeg_line">Interactive visualisation of surfaces and manifolds, with curvature and geodesics obtained by exact symbolic differentiation.</span>
+          <ul class="p-stack"><li>C++</li><li>OpenGL</li><li>Symbolic differentiation</li></ul>
+        </span>
+      </div>
+      <div class="p-visual"><figure>
+          <img src="resources/figures/egregium_pseudosphere.jpg" width="700" height="438" loading="lazy"
+               alt="Rendered pseudosphere, a trumpet-shaped surface of constant negative Gaussian curvature" />
+          <figcaption data-i18n="qeg_cap">The pseudosphere, a surface of constant curvature K = &minus;1, shaded by its exact symbolic curvature.</figcaption>
+        </figure></div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="qeg_0">A surface is given by a formula and rendered in three dimensions together with its Gaussian curvature and its geodesics. The name is from Gauss's <em>Theorema Egregium</em>, since the curvature is an intrinsic invariant of the surface, fixed by its metric alone and independent of any embedding in ℝ³. Surfaces enter in four forms, namely explicit, parametric, implicit by raymarching rather than tessellation, and by first fundamental form with an optional embedding for display.</p>
+          <p data-i18n="qeg_1">Every formula is parsed and symbolically differentiated rather than approximated by finite differences, so the quantities built on top of it are exact to floating-point precision. That matters here more than it usually does, because a finite-difference curvature on a coarse mesh produces plausible pictures that are quantitatively wrong, and the whole point of the visualiser is that the picture and the number agree.</p>
+          <figure>
+            <img src="resources/figures/egregium_torus_heatmap.jpg" width="700" height="438" loading="lazy" alt="Torus shaded by a heatmap of its Gaussian curvature, positive on the outside and negative on the inner ring" />
+            <figcaption data-i18n="qeg_cap2">A torus shaded by Gaussian curvature, positive on the outer band and negative on the inner one.</figcaption>
+          </figure>
+          <figure>
+            <img src="resources/figures/egregium_klein_bottle.jpg" width="700" height="438" loading="lazy" alt="Klein bottle rendered as an immersed surface in three dimensions" />
+            <figcaption data-i18n="qeg_cap3">The Klein bottle, immersed in three dimensions for display.</figcaption>
+          </figure>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/egregium" rel="noopener">github.com/HanielUlises/egregium</a><br></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">17</span>
+        <span>
+          <h3 class="p-title" data-i18n="qmu_title">MuMotion</h3>
+          <span class="p-line" data-i18n="qmu_line">Modal μ-calculus as a specification formalism for robotic motion planning.</span>
+          <ul class="p-stack"><li>C++20</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="qmu_0">A research implementation for studying fixed-point and modal logics as specifications for motion planning. The present phase establishes the logical core, namely finite Kripke structures, an explicit abstract syntax for the modal μ-calculus, well-formedness and fragment validation, and model checking over finite models by explicit Tarski and Knaster fixed-point iteration.</p>
+          <p data-i18n="qmu_1">The formalism reproduced is that of Larocque and Liu, who adapt the deterministic fragment and its model-checking procedure from Karaman and Frazzoli. This phase contributes no new theory and says so. Its purpose is a mathematically faithful, independently verified core that the later phases can depend on, so there is deliberately no planner in it yet.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/MuMotion" rel="noopener">github.com/HanielUlises/MuMotion</a><br></p>
+        </div>
+      </details>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <span class="p-num">18</span>
+        <span>
+          <h3 class="p-title" data-i18n="qml_title">mlpp</h3>
+          <span class="p-line" data-i18n="qml_line">Classical machine learning in modular C++, with the mathematics kept explicit in the interfaces.</span>
+          <ul class="p-stack"><li>C++</li><li>CMake</li><li>STL</li></ul>
+        </span>
+      </div>
+      <details class="p-more">
+        <summary><span class="more-tag" data-i18n="more">Detail</span></summary>
+        <div class="p-body">
+          <p data-i18n="qml_0">Modular implementations of classical machine learning algorithms covering supervised and unsupervised learning, model validation, clustering, dimensionality reduction, and the supporting mathematical utilities. Each module operates independently and exposes a concise interface.</p>
+          <p data-i18n="qml_1">The codebase keeps to a minimal-dependency philosophy, resting on the standard library and a set of self-contained headers, which buys predictable performance and complete control over memory. The formulations are written to be mathematically explicit, so that the statistical assumptions and convergence parameters of an algorithm are visible in its interface rather than buried in its body.</p>
+          <p class="p-repo"><a href="https://github.com/HanielUlises/machine-learning-cpp" rel="noopener">github.com/HanielUlises/machine-learning-cpp</a><br></p>
+        </div>
+      </details>
+    </article>
+
+  </div>
 </section>
 
-<section id="achievements">
-  <div class="section-header fade-in">
+<section id="philosophy" aria-labelledby="h-philosophy">
+  <div class="section-head">
     <span class="section-num">04</span>
-    <h2 class="section-title" data-i18n="ach_title"></h2>
+    <h2 id="h-philosophy" data-i18n="phil_h">Philosophy</h2>
   </div>
-  <div class="fade-in">
-    <div class="achievement-item">
-      <span class="ach-num">01</span>
-      <div>
-        <p class="ach-title" data-i18n="ach1_title"></p>
-        <p class="ach-desc"  data-i18n="ach1_desc"></p>
-      </div>
+  <div class="prose">
+    <p data-i18n="phil_p1">In preparation: <em>Metaphysical notes on the concept of space in algebraic geometry</em>. The paper examines spatiality as relational and algebraic, determined by rings of functions, ideals, and categorical morphisms rather than by a prior manifold of positions, and brings that reading to bear on the substantivalism and relationism debate as it applies to the points of a scheme.</p>
+    <p data-i18n="phil_p2">The question is not incidental to the technical work. A Kripke model and a scheme are both structures whose points are individuated by what holds at them, and asking what such a point is turns out to be the same question in both settings.</p>
+    <p data-i18n="phil_p3">Areas of interest: mathematical logic, philosophy of geometry, philosophy of language.</p>
+  </div>
+</section>
+
+<section id="recognition" aria-labelledby="h-recognition">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <h2 id="h-recognition" data-i18n="rec_h">Recognition</h2>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="a0_when">2026</p>
+    <div>
+      <h3 class="rec-title" data-i18n="a0_title">International Epistemic Planning Competition, I&epsilon;PC 2026</h3>
+      <p class="rec-desc" data-i18n="a0_desc">Entered ALETHEIA in Tracks Basic and Intermediate, and validated the planner against the competition benchmark set.</p>
     </div>
-    <div class="achievement-item">
-      <span class="ach-num">02</span>
-      <div>
-        <p class="ach-title" data-i18n="ach2_title"></p>
-        <p class="ach-desc"  data-i18n="ach2_desc"></p>
-      </div>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="a1_when">2024</p>
+    <div>
+      <h3 class="rec-title" data-i18n="a1_title">ICPC México, national finalist</h3>
+      <p class="rec-desc" data-i18n="a1_desc">Placed 28th among more than a thousand participants.</p>
+    </div>
+  </div>
+  <div class="rec">
+    <p class="rec-when" data-i18n="a2_when">2025</p>
+    <div>
+      <h3 class="rec-title" data-i18n="a2_title">Geometric Deep Learning hackathon, UCSB and UNAM, first place</h3>
+      <p class="rec-desc" data-i18n="a2_desc">Built a graph neural network for brain data, modelling the topology of the connectome as a graph and applying spectral convolution over neural signals to infer functional patterns.</p>
     </div>
   </div>
 </section>
 
-<section id="contact">
-  <div class="section-header fade-in">
-    <span class="section-num">05</span>
-    <h2 class="section-title" data-i18n="contact_title"></h2>
+<section id="contact" aria-labelledby="h-contact">
+  <div class="section-head">
+    <span class="section-num">06</span>
+    <h2 id="h-contact" data-i18n="contact_h">Contact</h2>
   </div>
-  <div class="contact-grid fade-in">
-    <a class="contact-item" href="/cdn-cgi/l/email-protection#9df5fcf3f4f8f1e8f1f4eef8eeddfaf0fcf4f1b3fef2f0">
-      <span class="contact-label" data-i18n="contact_email_label"></span>
-      <span class="contact-value"><span class="__cf_email__" data-cfemail="771f16191e121b021b1e04120437101a161e1b5914181a">[email&#160;protected]</span></span>
-    </a>
-    <a class="contact-item" href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">
-      <span class="contact-label">LinkedIn</span>
-      <span class="contact-value">haniel-ulises</span>
-    </a>
-    <a class="contact-item" href="https://github.com/HanielUlises" target="_blank" rel="noopener">
-      <span class="contact-label">GitHub</span>
-      <span class="contact-value">HanielUlises</span>
-    </a>
-  </div>
+  <ul class="contact-list">
+    <li><a href="mailto:hanielulises@gmail.com"><span class="contact-label" data-i18n="c_email">Email</span><span class="contact-value">hanielulises@gmail.com</span></a></li>
+    <li><a href="https://github.com/HanielUlises" rel="noopener"><span class="contact-label">GitHub</span><span class="contact-value">HanielUlises</span></a></li>
+    <li><a href="https://www.linkedin.com/in/haniel-ulises/" rel="noopener"><span class="contact-label">LinkedIn</span><span class="contact-value">haniel-ulises</span></a></li>
+  </ul>
 </section>
+
+</main>
 
 <footer>
-  <span class="footer-name">Haniel Ulises © 2025</span>
-  <ul class="footer-links">
-    <li><a href="https://github.com/HanielUlises" target="_blank" rel="noopener">GitHub</a></li>
-    <li><a href="https://www.linkedin.com/in/haniel-ulises/" target="_blank" rel="noopener">LinkedIn</a></li>
-    <li><a href="/cdn-cgi/l/email-protection#721a131c1b171e071e1b01170132151f131b1e5c111d1f">Email</a></li>
-  </ul>
+  <span class="foot-note">Haniel Ulises · 2026</span>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── i18n ─────────────────────────────────────────────────────────────────────
-const T = {
-  en: {
-    nav_about:"About", nav_skills:"Skills", nav_projects:"Projects",
-    nav_achievements:"Achievements", nav_contact:"Contact",
-    hero_label:"Engineer · Mathematician · Philosopher",
-    hero_subtitle:"Systems engineering, artificial intelligence, and the formal foundations of computation.",
-    hero_axiom:"Abstraction is not an intellectual luxury — it is the condition of possibility for every correct system.",
-    about_title:"About",
-    about_p1:"I am a Computer Engineer specializing in Artificial Intelligence, with emphasis on embedded systems and cloud architectures. My technical work centers on systems programming, computational performance, and model deployment in resource-constrained environments from edge platforms to large-scale inference pipelines.",
-    about_p2:"In parallel, I hold a deep interest in theoretical computer science and its logical-formal foundations: type theory, model theory, modal and epistemic logic, and category theory as a unifying language for mathematical structures. These frameworks are not peripheral curiosities for me, but conceptual tools that inform the design of correct and verifiable systems.",
-    about_p3:"I am on a trajectory toward pure mathematics, driven by the conviction that the most rigorous software engineering arises from a deep understanding of its formal foundations. Formal logic, proof theory, and denotational semantics are as relevant to me as performance analysis or compiler architecture.",
-    skills_title:"Skills",
-    sk_systems:"Systems, Languages & High-Performance Computing",
-    sk_ai:"Artificial Intelligence",
-    sk_ai_robotics:"Robotics & Autonomous Systems",
-    sk_ai_ml:"Classical Machine Learning",
-    sk_ai_dl:"Deep Learning & Computer Vision",
-    sk_formal:"Formal & Theoretical CS Foundations",
-    sk_perf:"Performance & Low-Level Engineering",
-    proj_title:"Projects",
-    ach_title:"Achievements",
-    ach1_title:"ICPC México 2024 — National Finalist",
-    ach1_desc:"Ranked 28th among 1,000+ participants. A high-stakes algorithmic programming competition validating mastery of advanced data structures, algorithm design, and problem-solving under pressure.",
-    ach2_title:"Geometric Deep Learning Hackathon — UCSB & UNAM",
-    ach2_desc:"First place at the Geometric Deep Learning hackathon jointly organized by UC Santa Barbara and UNAM. Developed a Graph Neural Network (GNN) system for brain data analysis, modeling the topological structure of the connectome as a graph and applying spectral convolution over neural signals to infer functional patterns.",
-    contact_title:"Contact",
-    contact_email_label:"Email",
-  },
-  es: {
-    nav_about:"Sobre mí", nav_skills:"Habilidades", nav_projects:"Proyectos",
-    nav_achievements:"Logros", nav_contact:"Contacto",
-    hero_label:"Ingeniero · Matemático · Filósofo",
-    hero_subtitle:"Ingeniería de sistemas, inteligencia artificial y los fundamentos formales del cómputo.",
-    hero_axiom:"La abstracción no es un lujo intelectual — es la condición de posibilidad de todo sistema correcto.",
-    about_title:"Sobre mí",
-    about_p1:"Soy Ingeniero en Computación con especialización en Inteligencia Artificial, con énfasis en sistemas embebidos y arquitecturas en la nube. Mi trabajo técnico gravita en torno a la programación de sistemas, el rendimiento computacional y el despliegue de modelos en entornos con restricciones de recursos desde plataformas edge hasta pipelines de inferencia a escala.",
-    about_p2:"Paralelamente, me interesa de manera profunda la ciencia de la computación teórica y su fundamento lógico-formal: la teoría de tipos, la teoría de modelos, la lógica modal y epistémica, y la teoría de categorías como lenguaje unificador de estructuras matemáticas. Estos marcos no son para mí objetos de curiosidad periférica, sino herramientas conceptuales que informan el diseño de sistemas correctos y verificables.",
-    about_p3:"Me encuentro en una trayectoria hacia las matemáticas puras, motivado por la convicción de que la ingeniería de software más rigurosa nace del entendimiento profundo de sus fundamentos formales. La lógica formal, la teoría de la demostración y la semántica denotacional son para mí tan relevantes como el análisis de rendimiento o la arquitectura de compiladores.",
-    skills_title:"Habilidades",
-    sk_systems:"Sistemas, Lenguajes y Cómputo de Alto Rendimiento",
-    sk_ai:"Inteligencia Artificial",
-    sk_ai_robotics:"Robótica y Sistemas Autónomos",
-    sk_ai_ml:"Machine Learning Clásico",
-    sk_ai_dl:"Deep Learning y Visión Computacional",
-    sk_formal:"Fundamentos Formales y Teóricos",
-    sk_perf:"Rendimiento e Ingeniería de Bajo Nivel",
-    proj_title:"Proyectos",
-    ach_title:"Logros",
-    ach1_title:"ICPC México 2024 — Finalista Nacional",
-    ach1_desc:"Puesto 28 entre más de 1000 participantes. Competencia de programación algorítmica de alta exigencia que valida el dominio de estructuras de datos avanzadas, diseño de algoritmos y resolución de problemas bajo presión temporal.",
-    ach2_title:"Hackathon de Geometric Deep Learning — UCSB & UNAM",
-    ach2_desc:"Primer lugar en hackathon de Geometric Deep Learning organizado conjuntamente por la UC Santa Barbara y la UNAM. Se desarrolló un sistema basado en Graph Neural Networks (GNNs) para el análisis de datos cerebrales, modelando la estructura topológica del conectoma como un grafo y aplicando convolución espectral sobre señales neuronales para inferir patrones funcionales.",
-    contact_title:"Contacto",
-    contact_email_label:"Correo",
-  }
+// English lives in the HTML, so the page is complete and indexable without JS.
+// Only the Spanish strings are carried here; switching back restores the
+// original nodes captured at load.
+const ES = {
+  skip:"Saltar al contenido",
+  nav_about:"Sobre mí", nav_research:"Investigación", nav_projects:"Proyectos",
+  nav_philosophy:"Filosofía", nav_contact:"Contacto",
+  eyebrow:"Ingeniero investigador en IA · Filósofo · Aspirante a matemático",
+  tagline:"Sistemas autónomos, métodos formales y cómputo de alto rendimiento.",
+  thesis:"Me interesa qué se puede demostrar sobre el comportamiento de un sistema autónomo, y las herramientas para demostrarlo vienen tanto de la lógica como de la geometría.",
+  affil1:"Estudiante investigador, Facultad de Ingeniería, UNAM",
+  affil2:"Colaboración de investigación con el Microsoft AI Lab",
+  affil3:"Ingeniería en IA, ESCOM-IPN · Filosofía, FFyL-UNAM",
+
+  about_h:"Sobre mí",
+  about_p1:"Soy investigador e ingeniero, y trabajo donde se encuentran el cómputo de alto rendimiento, los métodos formales y los sistemas autónomos. Mi trabajo abarca robótica, percepción autónoma, visión computacional, procesamiento de nubes de puntos, fusión sensorial, planificación automática y epistémica, verificación formal, gemelos digitales e IA neuro-simbólica. El hilo común es construir sistemas autónomos que perciban, razonen, planifiquen y actúen de manera confiable, donde confiable significa algo que una demostración pueda respaldar.",
+  about_p2:"Disfruto trabajar tan cerca del metal como en el nivel algorítmico, con énfasis en C++ y Python, cómputo paralelo, aceleración por GPU y sistemas de baja latencia. Los métodos de razonamiento sofisticados suelen descartarse por poco prácticos para sistemas reales; me interesan las arquitecturas computacionales que los vuelven practicables.",
+  about_p3:"Estudio Ingeniería en Inteligencia Artificial en ESCOM-IPN y Filosofía en la FFyL-UNAM. No son dos caminos separados. Las preguntas sobre qué es una estructura formal, y qué significa que una represente un espacio o un estado de conocimiento, aparecen en ambos.",
+
+  g1_l:"Intereses de investigación",
+  g1_v:"Métodos formales · Sistemas autónomos · Robótica · Planificación · Lógica epistémica · IA neuro-simbólica · Visión computacional · Procesamiento de nubes de puntos · Fusión sensorial · SLAM · Gemelos digitales · HPC · Cómputo en GPU · Sistemas de baja latencia · Geometría algebraica computacional",
+  g2_l:"Lenguajes",
+  g2_v:"C++ (17/20/23) · C · Python · CUDA · Rust · Lean 4 · Haskell · Prolog · R · Java · Verilog · VHDL · Bash",
+  g3_l:"Paralelo y sistemas",
+  g3_v:"CUDA · OpenCL · OpenMP · MPI · Intrínsecos SIMD · RDMA · WebAssembly · LLVM · ARM Cortex-M bare-metal · Programación de sistemas en Linux · Optimización de rendimiento y caché",
+  g4_l:"Robótica y percepción",
+  g4_v:"ROS 2 y ROS · Gazebo · PlanSys2 · KDL · PCL · Open3D · OpenCV · TensorRT · ONNX Runtime · Nubes de puntos LiDAR, segmentación y agrupamiento · Filtrado de Kalman y fusión sensorial · SLAM por grafo de poses · Gemelos digitales y simulación · PDDL y EPDDL",
+  g5_l:"Numérico y aprendizaje",
+  g5_v:"PyTorch · PyTorch Geometric · JAX · Eigen · Armadillo · GMP · BLAS · NumPy · Redes neuronales de grafos · Redes informadas por la física · Bases de Gröbner y cómputo simbólico",
+  g6_l:"Herramientas formales y build",
+  g6_v:"Lean 4 · Resolución SAT y SMT · Verificación de modelos de estado explícito · Bisimulación · CMake · Docker · Git · CTest · GitHub Actions",
+
+  research_h:"Investigación",
+  r1_when:"Desde ene 2026",
+  r1_title:"Estudiante investigador, Facultad de Ingeniería, UNAM",
+  r1_desc:"Afiliado al Microsoft AI Lab mediante una colaboración de investigación. Dirijo proyectos en verificación formal, planificación automática, IA neuro-simbólica y percepción autónoma, desarrollando métodos computacionales para razonar sobre el comportamiento autónomo inteligente en entornos complejos y para verificarlo.",
+  r2_when:"Jun 2026",
+  r2_title:"ICAPS 2026, taller PR-BGI",
+  r2_desc:"Presenté <em>ALETHEIA: Adaptive Epistemic Planning over Kripke Models with DEL Product-Update Semantics</em> en la sesión vespertina del taller sobre planificación y razonamiento con creencias, metas e intenciones. <a href=\"https://mrlab.ai/icaps26-workshops/index.html\" rel=\"noopener\">Programa</a>.",
+  r3_when:"En curso",
+  r3_title:"Trabajo de Titulación de la ingeniería",
+  r3_desc:"Integra SLAM colaborativo y planificación multi-robot sobre ROS 2. Una flota de vehículos terrestres explora un entorno plano desconocido bajo conectividad intermitente, de modo que el mapa de la flota no es la unión de lo que los agentes saben sino la unión de lo que efectivamente se ha entregado. Esa divergencia se mide de forma directa, y es justamente sobre lo que la capa de planificación epistémica está construida para razonar.",
+
+  more:"Detalle",
+  norepo:"No es público.",
+
+  a0_when:"2026",
+  a0_title:"Competencia Internacional de Planificación Epistémica, I&epsilon;PC 2026",
+  a0_desc:"Participé con ALETHEIA en las pistas Basic e Intermediate, y validé el planificador contra el conjunto de pruebas de la competencia.",
+
+  q08_title:"Visión computacional de alto rendimiento",
+  q08_line:"Procesamiento de imágenes y visión en C++ moderno con OpenCV, escrito tanto para leerse como para ejecutarse.",
+  q08_a:"Una exploración por capas del procesamiento de imágenes y la visión computacional más que un solo programa unificado. Parte es deliberadamente didáctica, con implementaciones de técnicas centrales donde el algoritmo se lee en el código, poniendo la corrección y la legibilidad por delante de la optimización prematura. El resto es trabajo de proyecto, algo consolidando terreno conocido y algo arrancando desde la incertidumbre conceptual y resolviéndose al implementar.",
+  q08_b:"Sustracción de fondo, filtrado, detección de características, estéreo y seguimiento aparecen aquí, apoyados en Szeliski y en la literatura estándar. La intención más amplia es usar el repositorio como un lugar para pensar críticamente sobre la estructura de los algoritmos visuales, extendiéndose hacia el cómputo científico en C++ moderno.",
+  q08_play:"Ver demo",
+  q08_cap:"Sustracción de fondo, con el cuadro fuente, la máscara de primer plano y la estimación de fondo en curso, lado a lado.",
+
+  q09_title:"PDEs computacionales",
+  q09_line:"Ecuaciones diferenciales parciales por esquemas clásicos y por redes informadas por la física, incluyendo el problema inverso.",
+  q09_a:"Tres enfoques complementarios sobre las mismas ecuaciones. Los esquemas numéricos clásicos cubren diferencias finitas, elementos finitos y volúmenes finitos. Las redes neuronales informadas por la física incorporan el residuo de la ecuación junto con las condiciones iniciales y de frontera directamente en la función de pérdida, de modo que la restricción la impone el objetivo y no la discretización.",
+  q09_b:"La formulación inversa es la interesante. Ahí la red se usa para inferir coeficientes, parámetros o términos fuente desconocidos de la ecuación a partir de datos observados, lo que convierte un solucionador en un método de identificación y vuelve la comparación con los esquemas clásicos una comparación de lo que cada enfoque supone que ya sabe.",
+  q09_play:"Ver demo",
+  q09_cap:"La ecuación de onda unidimensional integrada y posprocesada.",
+
+  q10_title:"Semántica de mundos posibles",
+  q10_line:"Una teoría de mundos posibles, situaciones y necesidad modal verificada por máquina, formalizada en Lean 4.",
+  q10_a:"Una formalización de la semántica de mundos posibles y de situaciones en la tradición modal de orden superior y situacional de Zalta, Fine, y Barwise y Perry. Cada teorema lo verifica el núcleo de Lean, y cada hueco restante queda tabulado como una obligación de prueba abierta y explícita en vez de quedar implícito, que es la manera honesta de publicar una formalización parcial.",
+  q10_b:"El desarrollo está por capas. Un núcleo ontológico de fundamentación fija los primitivos y su álgebra, cubriendo codificación, situaciones, verdad, parthood, dependencia y objetos abstractos. Una capa de modalidad postula el cálculo S5 sobre marcos y operadores. Una capa de situaciones construye encima los mundos y su semirretículo de ínfimos, con extensionalidad e ínfimos demostrados y no supuestos. Es la contraparte formal del trabajo filosófico.",
+
+  q11_title:"PolyGraph",
+  q11_line:"Geometría computacional euclidiana, esférica e hiperbólica, unida a la teoría de grafos.",
+  q11_a:"Una biblioteca de plantillas que trata las primitivas geométricas y las abstracciones de grafos como un solo tema. Los tipos exponen sus propiedades topológicas a través de la interfaz y los algoritmos declaran contratos formales sobre sus entradas, así que la separación entre topología y representación la impone el compilador y no la convención.",
+  q11_b:"Trabajar en las tres geometrías de curvatura constante a la vez es el punto. Los mismos predicados de incidencia y distancia deben escribirse de modo que la curvatura sea un parámetro y no un supuesto horneado en la aritmética, lo cual es una restricción de diseño más filosa que la que impondría el caso euclidiano solo.",
+
+  q12_title:"Solucionador SAT y SMT",
+  q12_line:"Una implementación completa de DPLL con extensión a DPLL(T) en curso.",
+  q12_a:"Un procedimiento de decisión para satisfacibilidad proposicional construido como DPLL completo, con propagación unitaria, eliminación de literales puros y búsqueda con retroceso sobre el árbol de asignaciones. El objetivo es determinar si una fórmula es tautología, contingencia o contradicción, y hacerlo con un procedimiento cuya completitud sea una propiedad de la búsqueda y no del conjunto de pruebas.",
+  q12_b:"La extensión en curso lo eleva a DPLL(T), donde la búsqueda proposicional se acopla a un solucionador de teoría y el esqueleto booleano se contrasta con la teoría en cada paso. Trabajo en curso, y señalado como tal.",
+
+  q13_title:"noble-rig",
+  q13_line:"Un entorno ROS 2 Jazzy reproducible en Docker.",
+  q13_a:"Un espacio de trabajo de ROS 2 Jazzy en contenedor, para que el trabajo de robótica tenga una definición de entorno en lugar de un conjunto de instrucciones que se desfasan. Es el sustrato contra el que se desarrollan los repositorios de planificación y percepción.",
+
+  qer_title:"Epistemic-Robotics",
+  qer_line:"El marco paraguas: SLAM epistémico y planificación multi-agente bajo lógica epistémica dinámica, sobre robots reales.",
+  qer_0:"Los robots autónomos en entornos parcialmente observables no pueden planificar sobre lo que no saben. Este marco fundamenta la planificación de tareas multi-agente en lógica epistémica dinámica, de modo que la ignorancia se representa en vez de suponerse resuelta. Cada agente mantiene un modelo de Kripke del mundo, las acciones son eventos epistémicos que refinan el modelo por actualización de producto y no transiciones de estado, y las rutas de navegación son regiones ganadoras de fórmulas de alcanzabilidad del &mu;-cálculo calculadas sobre el grafo de ocupación, no caminos geométricos más cortos.",
+  qer_1:"La distinción sobre la que el marco insiste es que un agente llegue a una zona y que un agente <em>sepa</em> que llegó son metas distintas, y el planificador las trata distinto. Varios de los proyectos aquí listados se derivan de este. ALETHEIA es el planificador, ePlanSys la capa de ejecución, y el SLAM colaborativo del Trabajo de Titulación el sustrato perceptual. Este repositorio es donde se encuentran con robots físicos.",
+
+  qeg_title:"egregium",
+  qeg_line:"Visualización interactiva de superficies y variedades, con curvatura y geodésicas obtenidas por diferenciación simbólica exacta.",
+  qeg_0:"Una superficie se da por una fórmula y se renderiza en tres dimensiones junto con su curvatura de Gauss y sus geodésicas. El nombre viene del <em>Theorema Egregium</em> de Gauss, ya que la curvatura es un invariante intrínseco de la superficie, fijado solo por su métrica e independiente de cualquier encaje en ℝ³. Las superficies entran en cuatro formas, a saber explícita, paramétrica, implícita por raymarching en lugar de teselación, y por primera forma fundamental con un encaje opcional para desplegar.",
+  qeg_1:"Cada fórmula se analiza y se diferencia simbólicamente en vez de aproximarse por diferencias finitas, así que las cantidades construidas sobre ella son exactas hasta la precisión de punto flotante. Eso importa aquí más de lo habitual, porque una curvatura por diferencias finitas sobre una malla burda produce imágenes plausibles y cuantitativamente equivocadas, y todo el punto del visualizador es que la imagen y el número coincidan.",
+  qeg_cap:"La pseudoesfera, superficie de curvatura constante K = &minus;1, sombreada por su curvatura simbólica exacta.",
+
+  qmu_title:"MuMotion",
+  qmu_line:"El &mu;-cálculo modal como formalismo de especificación para planificación de movimiento robótico.",
+  qmu_0:"Una implementación de investigación para estudiar lógicas modales y de punto fijo como especificaciones para planificación de movimiento. La fase actual establece el núcleo lógico, a saber estructuras de Kripke finitas, una sintaxis abstracta explícita para el &mu;-cálculo modal, validación de buena formación y de fragmento, y verificación de modelos sobre modelos finitos por iteración explícita de punto fijo de Tarski y Knaster.",
+  qmu_1:"El formalismo reproducido es el de Larocque y Liu, quienes adaptan el fragmento determinista y su procedimiento de verificación de Karaman y Frazzoli. Esta fase no aporta teoría nueva y lo dice. Su propósito es un núcleo matemáticamente fiel y verificado de forma independiente del que puedan depender las fases posteriores, así que deliberadamente todavía no incluye planificador.",
+
+  qml_title:"mlpp",
+  qml_line:"Aprendizaje automático clásico en C++ modular, con la matemática explícita en las interfaces.",
+  qml_0:"Implementaciones modulares de algoritmos clásicos de aprendizaje automático que cubren aprendizaje supervisado y no supervisado, validación de modelos, agrupamiento, reducción de dimensionalidad y las utilidades matemáticas de soporte. Cada módulo opera de forma independiente y expone una interfaz concisa.",
+  qml_1:"El código se atiene a una filosofía de dependencias mínimas, apoyándose en la biblioteca estándar y en encabezados autocontenidos, lo que compra rendimiento predecible y control total sobre la memoria. Las formulaciones están escritas para ser matemáticamente explícitas, de modo que los supuestos estadísticos y los parámetros de convergencia de un algoritmo se vean en su interfaz y no enterrados en su cuerpo.",
+
+  r4_when:"En curso",
+  r4_title:"Editor, blog de C++ de alto rendimiento",
+  r4_desc:"Escribo y edito <a href=\"https://hanielulises.github.io/high-performance-cpp/\" rel=\"noopener\">high-performance-cpp</a>, sobre C++ moderno para HPC, cubriendo el trabajo de optimización que separa una implementación correcta de una rápida.",
+
+  qmr_title:"SLAM colaborativo para una flota terrestre",
+  qmr_line:"Mapeo multi-robot bajo conectividad intermitente, donde el mapa de la flota es lo que se ha entregado y no lo que se sabe.",
+  qmr_0:"Una flota de vehículos terrestres no tripulados explora un entorno plano desconocido, y cada agente corre un frontal de SLAM por grafo de poses sobre sus propias observaciones láser. Como la conectividad entre agentes es intermitente, el mapa a nivel de flota no es la unión instantánea de los mapas individuales. Es la unión de lo que efectivamente se ha entregado, y esta implementación hace explícita esa distinción en vez de suponer el enlace.",
+  qmr_1:"Las estimaciones de ocupación individuales se fusionan con un operador idempotente e independiente del orden sobre un semirretículo acotado, así que las mismas observaciones en cualquier orden dan el mismo mapa, y la entrega está condicionada por un proceso de enlace por agente, así que un enlace perdido congela la contribución de un agente sin borrarla. La divergencia entre lo que un agente sabe y lo que la flota sabe se mide entonces de forma directa. Esa divergencia es justamente la asimetría sobre la que la capa de lógica epistémica dinámica debe razonar, que es lo que conecta esto con el trabajo de planificación.",
+  qmr_2:"Una segunda iteración lleva el mismo sustrato, sin cambios, al plano de un edificio real con tres agentes.",
+  qmr_play:"Ver demo",
+  qmr_cap:"Tres agentes explorando el plano de un edificio real, cada uno con su propio frontal de SLAM.",
+  qmr_cap2:"Estimaciones de ocupación por agente junto al mapa fusionado de la flota.",
+
+  p2_play:"Ver demo",
+  p2_cap0:"Un barrido de URDF por el espacio articular, con el frontal leyendo geometría exacta sobre los racionales.",
+  p1_play2:"Ver demo de KITTI",
+  p1_cap3:"KITTI, sin reentrenamiento. El carril se recupera en 94.7% de los cuadros.",
+  p6_cap2:"La red sobre el grafo de superpíxeles, del prior de saliencia al trimapa predicho.",
+  qeg_cap2:"Un toro sombreado por curvatura de Gauss, positiva en la banda exterior y negativa en la interior.",
+  qeg_cap3:"La botella de Klein, sumergida en tres dimensiones para desplegarla.",
+  qmr_cap3:"El plano del edificio usado en la segunda iteración.",
+
+  qer_cap:"El sitio del proyecto. Formalismos de planificación, arquitecturas de ejecución y razonamiento geométrico fundados en lógica epistémica dinámica y el &mu;-cálculo, para flotas multi-robot heterogéneas bajo observabilidad parcial.",
+  q10_cap:"La documentación. Todo S5, incluida la regla de necesitación, se deriva de una sola elección definicional en vez de postularse.",
+
+  projects_h:"Proyectos",
+  projects_intro:"Dieciocho proyectos. Cada uno se despliega con el detalle, las figuras y el repositorio.",
+
+  p1_title:"Percepción de carriles orientada a control",
+  p1_line:"Segmentación monocular evaluada por la geometría que consume un controlador MPC, no por traslape de máscaras.",
+  p1_a:"Un segmentador de carriles suele juzgarse por qué tanto traslapa su máscara con la anotación. Un controlador predictivo no consume máscaras. Consume el desplazamiento lateral del vehículo dentro del carril y la curvatura del camino por delante, así que esas son las cantidades que aquí se miden. Promediar el traslape sobre la distribución natural de cuadros es insensible justo a los cuadros que le importan a un controlador, que son las curvas cerradas.",
+  p1_b:"El entrenamiento usa un subconjunto de CurveLanes estratificado por curvatura con una función de costo sensible a ella, lo que aplana la distribución y levanta las colas. La brecha de detección entre recta y curva cerrada era de 21.6 puntos; ahora es de 3.9. La calibración es un modelo pinhole ajustado por paralelismo de carriles y luego contrastado de forma independiente contra el punto de fuga, un arreglo donde la validación no reutiliza el supuesto que valida.",
+  p1_c:"La cadena completa fue portada a C++, incluyendo el preprocesamiento, la red por ONNX Runtime sobre un motor TensorRT en media precisión, y toda la geometría. El port está anclado a la referencia en Python por vectores dorados en lugar de darse por bueno. Generaliza a KITTI sin reentrenamiento, recuperando el carril en 94.7% de los cuadros.",
+  p1_tcap:"Medido sobre la cadena portada",
+  p1_m1:"Rendimiento extremo a extremo", p1_m2:"Módulo de geometría contra la referencia en Python",
+  p1_m3:"Concordancia con esa referencia", p1_m4:"Recta contra curva cerrada, antes",
+  p1_m5:"Recta contra curva cerrada, después", p1_m6:"Cuadros de KITTI con carril recuperado, sin reentrenar",
+  p1_play:"Ver demo",
+  p1_play_seg:"Ver demo de segmentación",
+  p1_cap1:"Las cantidades que el controlador realmente consume. Vista de cámara a la izquierda con el carril ajustado, vista cenital métrica a la derecha reportando desplazamiento lateral, rumbo y curvatura, crudo contra filtrado.",
+  p1_cap1_seg:"Material de TuSimple fuera del entrenamiento, con una cámara distinta, cuadro por cuadro y sin modelo temporal.",
+  p1_cap2:"IoU por bin de curvatura. La exactitud no decae conforme sube la curvatura; el bin casi recto es el más débil, por una razón geométrica y no de modelado.",
+
+  p2_sub:", cinemática algebraica para ROS 2",
+  p2_line:"Cinemática inversa exacta por bases de Gröbner, con la completitud certificada por la estructura del ideal.",
+  p2_a:"La cinemática de un robot es un sistema de ecuaciones polinomiales sobre un anillo cociente de dimensión finita, y varietas la resuelve como tal, con teoría de eliminación en lugar de iteración numérica o reconocimiento de patrones estructurales. La sustitución del ángulo mitad racionaliza el mapa de cinemática directa, se calcula fuera de línea una base de Gröbner del ideal resultante, y la cinemática inversa se resuelve en tiempo de ejecución por descomposición espectral de una matriz de acción de tamaño fijo.",
+  p2_b:"La completitud no se afirma, se certifica. Por el Teorema de Finitud el álgebra cociente es de dimensión finita exactamente cuando la variedad es finita, condición decidible solo a partir de los términos líderes de la base, y su dimensión acota el número de soluciones contadas con multiplicidad. Donde IKFast reconoce patrones de estructuras cinemáticas conocidas y falla en silencio fuera de ellas, varietas devuelve un conjunto de soluciones con esa garantía o señala con precisión qué hipótesis del Teorema de Extensión se violó.",
+  p2_c:"La exactitud se impone donde entra la geometría en lugar de suponerse. El algoritmo de Buchberger descarta un par crítico cuando el S-polinomio se reduce a cero, lo cual es una prueba estructural sobre una lista de términos vacía; en punto flotante la cancelación deja un residuo, el par sobrevive, y el veredicto de finitud leído en los monomios líderes describe entonces un ideal distinto. La mitad fuera de línea corre por eso sobre ℚ con racionales respaldados por GMP. La misma consideración gobierna el frontal de URDF, que recupera geometría exacta sobre los racionales por aproximación proyectiva de cuaterniones, ya que un URDF escribe π/2 como 1.57079632679 y leer ese literal como racional produce una respuesta exacta sobre un robot que nadie construyó. Validado contra KDL en un KUKA iiwa.",
+  p2_cap:"Una cadena serial plana y su formulación algebraica. La cinemática directa evalúa el mapa; la inversa calcula la fibra, realizada como la variedad de un ideal en un anillo cociente de dimensión finita.",
+
+  p3_sub:", planificador epistémico",
+  p3_line:"Planificación sobre lógica epistémica dinámica en marcos S5<sub>n</sub> y KD45<sub>n</sub>. Presentado en ICAPS 2026.",
+  p3_a:"La planificación clásica supone que el agente sabe qué proposiciones se cumplen. La planificación epistémica abandona ese supuesto. El espacio de búsqueda no es un conjunto de valuaciones sino de modelos de Kripke punteados, cada uno de los cuales debe actualizarse, minimizarse y compararse por completo en cada nodo, y las metas pueden ser irreduciblemente modales: no que la puerta esté abierta sino que un agente <em>sepa</em> que lo está. El rendimiento se reduce entonces a tres preguntas, a saber cómo se representa un modelo de Kripke, cómo se evalúan fórmulas modales sobre él, y cómo se reconoce que dos modelos son la misma situación epistémica.",
+  p3_b:"Tres respuestas dominan el diseño. Un modelo son tres arreglos planos de palabras de 64 bits para valuación, accesibilidad y designación, de modo que los operadores modales se vuelven operaciones de conjuntos paralelas a nivel de palabra en lugar de recorridos por punteros. Las fórmulas se evalúan como extensiones y no punto por punto, calculando para cada subfórmula el conjunto de mundos donde se cumple, de abajo hacia arriba y memoizado sobre identidad de fórmula hash-consed, lo que convierte el conocimiento común en un único punto fijo máximo en vez de una búsqueda en grafo por mundo. La contracción por bisimulación asigna índices de mundo en un orden fijado solo por la estructura del modelo, así que los estados bisimilares se serializan idénticamente y la detección de duplicados se vuelve una comparación de huellas de 128 bits.",
+  p3_tcap:"Contra la implementación previa, mismo conjunto de pruebas",
+  p3_th1:"Antes", p3_th2:"Después",
+  p3_m1:"Instancia mayor resuelta, tiempo de reloj",
+  p3_m2:"Memoria residente en esa instancia",
+  p3_m3:"Rendimiento de búsqueda AND-OR",
+  p3_c:"Validado contra los benchmarks de I&epsilon;PC 2026, pistas Basic e Intermediate. Construido en UNAM-FI e IPN-ESCOM.",
+
+  p4_sub:", verificación de modelos en GPU",
+  p4_line:"Verificación de modelos de estado explícito sobre estructuras de Kripke, con CTL como cómputo de punto fijo sobre el semianillo booleano.",
+  p4_a:"Verificar una lógica de tiempo ramificado es un cómputo de punto fijo sobre el retículo potencia, que es completo y de altura finita, así que por Knaster and Tarski los operadores modales alcanzan sus puntos fijos mínimo y máximo por iteración de Kleene en a lo más |S| pasos. Cada operador de CTL es entonces una sucesión de aplicaciones de la preimagen existencial intercaladas con operaciones de conjuntos, y la preimagen existencial es exactamente un producto matriz-vector disperso sobre el semianillo booleano contra la relación de transición transpuesta. Esa es la observación sobre la que descansa toda la implementación, porque es una forma para la que una GPU está hecha.",
+  p4_b:"La relación de transición reside en el dispositivo en formato CSR, los conjuntos de estados son mapas de bits ensamblados por ballot de warp sin atómicos, y los productos de modelos se construyen íntegramente en la GPU en lugar de pasar por el anfitrión. Los ciclos justos requieren componentes fuertemente conexas, que se hallan por coloreo paralelo. Los invariantes estructurales se verifican en la construcción en vez de darse por buenos, así que se comprueba la totalidad de la relación y se ordenan las listas de sucesores, lo que hace del arreglo CSR una función únicamente del modelo y no del orden en que quien llama entregó sus transiciones.",
+  p4_c:"Cada cómputo en dispositivo tiene una contraparte secuencial verificada paso por paso contra él.",
+  p4_cap:"El modelo de exclusión mutua de dos procesos, uno de los ejemplos trabajados. Los estados llevan sus proposiciones atómicas; la relación de transición es la matriz booleana dispersa contra la que multiplican los kernels.",
+
+  p5_sub:", planificación epistémica para ROS 2",
+  p5_line:"Planificación basada en EPDDL con razonamiento en lógica epistémica dinámica, construida sobre PlanSys2.",
+  p5_a:"La capa de ejecución para planificación epistémica en robots reales. Extiende PlanSys2 con modelos de mundo S5 y KD45, soporte de dominios EPDDL y búsqueda heurística sobre estados epistémicos, de modo que la coordinación multi-robot bajo observabilidad parcial se expresa en los términos propios del planificador y no codificada alrededor de él.",
+  p5_b:"Esto acompaña a ALETHEIA, que es el planificador propiamente dicho, y a <a href=\"https://github.com/HanielUlises/Epistemic-Robotics\" rel=\"noopener\">Epistemic-Robotics</a>, que conecta ambos con robots físicos bajo ROS 2. El caso que lo motiva es pequeño y concreto. Dos robots deben recuperar un objeto de un pasillo que puede estar bloqueado; un planificador clásico enruta al segundo robot por ahí porque trata el mundo como globalmente conocido, y el robot falla al llegar. Aquí el estado epistémico inicial representa esa incertidumbre como dos mundos designados, y no se asigna ruta hasta que el primer robot sensa el pasillo y colapsa el estado de creencia.",
+
+  p6_sub:", segmentación automática",
+  p6_line:"Elimina al usuario del ciclo en GrabCut prediciendo el trimapa con una red convolucional de grafos.",
+  p6_a:"GrabCut necesita que una persona marque el trimapa inicial, que es lo que lo mantiene fuera de las canalizaciones automatizadas. Aquí el trimapa se predice en cambio con una red convolucional de grafos sobre superpíxeles, sembrada por un prior de saliencia sin entrenamiento calculado de la imagen misma, así que nada del método requiere una inicialización anotada en inferencia.",
+  p6_b:"IoU media en DUTS de 0.584 contra 0.109 de la predicción trivial, con 187,826 parámetros.",
+  p6_play:"Ver demo",
+  p6_cap:"Segmentación sin intervención del usuario en ninguna etapa.",
+
+  p7_title:"Sistemas embebidos bare-metal, STM32F401",
+  p7_line:"Drivers a nivel de registro sin capa de abstracción del fabricante, sobre una Nucleo-F401RE.",
+  p7_a:"Definiciones de periféricos escritas desde el manual de referencia en vez de tomadas del HAL del fabricante, cubriendo RCC y GPIO. La transmisión por UART2 se levanta configurando la función alterna, calculando a mano el registro de baudios y sondeando el registro de estado. Una base de tiempo por SysTick y la salida estándar redirigida al puerto serie completan lo mínimo para trabajar sin depurador conectado.",
+  p7_b:"El punto del ejercicio es que nada entre el código y el silicio se toma por fe.",
+
+
+  phil_h:"Filosofía",
+  phil_p1:"En preparación: <em>Notas metafísicas sobre el concepto de espacio en geometría algebraica</em>. El texto examina la espacialidad como relacional y algebraica, determinada por anillos de funciones, ideales y morfismos categóricos antes que por una variedad previa de posiciones, y lleva esa lectura al debate entre sustancialismo y relacionismo aplicado a los puntos de un esquema.",
+  phil_p2:"La pregunta no es incidental al trabajo técnico. Un modelo de Kripke y un esquema son ambos estructuras cuyos puntos se individúan por lo que en ellos se cumple, y preguntar qué es uno de esos puntos resulta ser la misma pregunta en los dos casos.",
+  phil_p3:"Áreas de interés: lógica matemática, filosofía de la geometría, filosofía del lenguaje.",
+
+  rec_h:"Reconocimientos",
+  a1_when:"2024",
+  a1_title:"ICPC México, finalista nacional",
+  a1_desc:"Puesto 28 entre más de mil participantes.",
+  a2_when:"2025",
+  a2_title:"Hackathon de Geometric Deep Learning, UCSB y UNAM, primer lugar",
+  a2_desc:"Se construyó una red neuronal de grafos para datos cerebrales, modelando la topología del conectoma como grafo y aplicando convolución espectral sobre señales neuronales para inferir patrones funcionales.",
+
+  contact_h:"Contacto",
+  c_email:"Correo",
 };
 
-const PROJECTS = {
-  en: [
-    { title:"Machine-Learning-Cpp (MLPP)", url:"https://github.com/HanielUlises/Machine-Learning-Cpp", stack:["C++17","CMake","STL","Linear Algebra"],
-      desc:["A modular C++ library of classical machine learning algorithm implementations, with emphasis on clarity, efficiency, and extensibility. The design prioritizes mathematical legibility: each algorithm explicitly exposes its statistical assumptions, convergence parameters, and state invariants.","Includes supervised and unsupervised learning, cross-validation tools, clustering, dimensionality reduction, and supporting mathematical utilities. The architecture precisely separates abstraction layers: data structures, algorithms, and evaluation criteria share no implicit state.","Built on the STL without external dependencies, offering predictable performance and complete control over memory management. CMake-based build system, usable as a standalone library or integrable module."] },
-    { title:"Statistical-Computing", url:"https://github.com/HanielUlises/Statistical-Computing", stack:["C++17","Template Metaprogramming","Generic Design","HPC-ready"],
-      desc:["A C++ statistical computing library grounded in generic programming. The design uses templates to parameterize numeric types, distributions, and data structures, allowing the same code to operate at single, double, or extended precision without modification.","The architecture cleanly separates statistical algorithms from their underlying data structures, enabling modular composition and backend substitution. Special attention is paid to numerical precision: accumulation and reduction routines are designed to minimize cancellation error.","The modular design anticipates extensions toward high-performance computing (HPC), with an interface that imposes no assumptions about the memory model or execution context — sequential or parallel."] },
-    { title:"PolyGraph", url:"https://github.com/HanielUlises/PolyGraph", stack:["C++17","Template Library","Computational Geometry","Graph Theory"],
-      desc:["A modern C++ template library combining computational geometry primitives with graph theory abstractions. The design is mathematically explicit: types expose their topological properties through the interface, and algorithms assume formal contracts on their inputs.","The separation between topology and representation is a central design principle: geometric and graph operations share an algebraic foundation, but their in-memory representations are interchangeable via template parameters.","Generic programming allows structures to be instantiated with different coordinate and edge-weight types without duplicating algorithmic logic, adhering to correctness-by-construction principles."] },
-    { title:"Nature-Inspired-Algorithms", url:"https://github.com/HanielUlises/Nature-Inspired-Algorithms", stack:["Modern C++","PSO","GA","Metaheuristics"],
-      desc:["Modern C++ implementations of bioinspired metaheuristics: Particle Swarm Optimization (PSO), Genetic Algorithms (GA), and related variants. The design is modular and oriented toward systematic experimentation.","The separation between search strategy and evaluation function is a design invariant: variation, selection, and update operators are interchangeable components, enabling configuration comparisons without modifying the framework core.","Extensibility is an explicit goal: new metaheuristics can be incorporated by implementing defined interfaces, without altering logging, recording, or convergence evaluation mechanisms."] },
-    { title:"Image-Processing-C", url:"https://github.com/HanielUlises/Image-Processing-C", stack:["C","Manual Memory","Buffer Ops","WebAssembly-ready"],
-      desc:["A C implementation of classical image processing algorithms with emphasis on manual memory manipulation and explicit control over data structures. Each routine operates directly on pixel buffers, avoiding abstraction layers that would obscure the true cost of each operation.","Buffer-level optimization is a guiding principle: memory access patterns maximize cache locality, and convolution and interpolation operations are written to be predictable by the compiler.","The design is prepared for WebAssembly migration: the absence of external dependencies and complete control over data layout make the code portable to sandboxed execution environments without major refactoring."] },
-    { title:"Digital-Signal-Processing", url:"https://github.com/HanielUlises/Digital-Signal-Processing", stack:["C","FFT","Digital Filters","Embedded-ready"],
-      desc:["C implementations of fundamental digital signal processing algorithms: Discrete and Fast Fourier Transforms (DFT/FFT), FIR and IIR filters, and spectral manipulation. The emphasis is on computational efficiency and explicit memory control.","Each algorithm exposes its time and space complexity through its interface, and avoids dynamic allocations where buffer sizes can be determined at compile time or initialization.","The design serves as a foundation for embedded applications where resources are constrained and deterministic real-time behavior is a requirement, not an aspiration."] },
-    { title:"Landmark Classification with PyTorch", url:"https://github.com/HanielUlises", stack:["PyTorch","CNN","Python","Transfer Learning"],
-      desc:["A custom CNN architecture for geographic landmark classification, with a complete pipeline covering data loading, augmentation, training, validation, and evaluation. The modular design allows substituting the network backbone without rewriting the training pipeline.","Systematic experiments were conducted with different architectural configurations: network depth, regularization strategies, and adaptive learning rates. The focus on generalization motivated explicit decisions about data partitioning and evaluation metrics.","The project illustrates the separation between training logic and model architecture, facilitating reproducibility and fair comparison between configurations."] },
-    { title:"RAG with Ollama", url:"https://github.com/HanielUlises", stack:["Python","Ollama","Vector DB","Embeddings","Local LLM"],
-      desc:["A modular Retrieval-Augmented Generation (RAG) system integrating semantic embeddings, vector retrieval, and a local language model executed via Ollama. The architecture is designed to operate entirely in a local environment, without dependencies on external APIs.","The system precisely separates the three pipeline phases: document ingestion and preprocessing, vector indexing, and retrieval-conditioned generation. This separation allows replacing any component — the embedding model, the vector backend, or the LLM — independently.","The extensible design anticipates scenarios where the document corpus grows dynamically or where different LLMs must be comparatively evaluated under the same retrieval conditions."] }
-  ],
-  es: [
-    { title:"Machine-Learning-Cpp (MLPP)", url:"https://github.com/HanielUlises/Machine-Learning-Cpp", stack:["C++17","CMake","STL","Álgebra Lineal"],
-      desc:["Biblioteca modular de implementaciones en C++ de algoritmos clásicos de aprendizaje automático, con énfasis en claridad, eficiencia y extensibilidad. El diseño prioriza la legibilidad matemática: cada algoritmo expone explícitamente sus supuestos estadísticos, parámetros de convergencia e invariantes de estado.","Incluye aprendizaje supervisado y no supervisado, herramientas de validación cruzada, clustering, reducción de dimensionalidad y utilidades matemáticas de soporte. La arquitectura separa con precisión las capas de abstracción: estructuras de datos, algoritmos y criterios de evaluación no comparten estado implícito.","Construido sobre la STL sin dependencias externas, ofrece rendimiento predecible y control total sobre la gestión de memoria. Sistema de build basado en CMake, integrable como biblioteca standalone o módulo dentro de proyectos más amplios."] },
-    { title:"Statistical-Computing", url:"https://github.com/HanielUlises/Statistical-Computing", stack:["C++17","Template Metaprogramming","Genérico","HPC-ready"],
-      desc:["Biblioteca de cómputo estadístico en C++ basada en programación genérica. El diseño emplea templates para parametrizar tipos numéricos, distribuciones y estructuras de datos, permitiendo que el mismo código opere con precisión simple, doble o extendida sin modificaciones.","La arquitectura separa con claridad los algoritmos estadísticos de las estructuras de datos subyacentes, facilitando la composición modular y la sustitución de backends. Se presta especial atención a la precisión numérica: las rutinas de acumulación y reducción están diseñadas para minimizar error de cancelación.","El diseño modular anticipa extensiones hacia cómputo de alto rendimiento (HPC), con una interfaz que no impone suposiciones sobre el modelo de memoria o el contexto de ejecución."] },
-    { title:"PolyGraph", url:"https://github.com/HanielUlises/PolyGraph", stack:["C++17","Template Library","Geometría Computacional","Teoría de Grafos"],
-      desc:["Template library moderna en C++ que combina primitivas de geometría computacional con abstracciones de teoría de grafos. El diseño es matemáticamente explícito: los tipos exponen sus propiedades topológicas a través de la interfaz, y los algoritmos asumen contratos formales sobre sus entradas.","La separación entre topología y representación es un principio de diseño central: las operaciones geométricas y sobre grafos comparten una base algebraica, pero sus representaciones en memoria son intercambiables mediante parámetros de plantilla.","La programación genérica permite instanciar las estructuras con diferentes tipos de coordenadas y pesos de aristas sin duplicación de lógica algorítmica, respetando principios de corrección por construcción."] },
-    { title:"Nature-Inspired-Algorithms", url:"https://github.com/HanielUlises/Nature-Inspired-Algorithms", stack:["C++ moderno","PSO","GA","Metaheurísticas"],
-      desc:["Implementaciones modernas en C++ de metaheurísticas bioinspiradas: algoritmos de enjambre de partículas (PSO), algoritmos genéticos (GA) y variantes relacionadas. El diseño es modular y orientado a la experimentación sistemática.","La separación entre estrategia de búsqueda y función de evaluación es un invariante de diseño: los operadores de variación, selección y actualización son componentes intercambiables, permitiendo comparar configuraciones sin modificar el núcleo del framework.","La extensibilidad es un objetivo explícito: nuevas metaheurísticas pueden incorporarse implementando las interfaces definidas, sin alterar los mecanismos de logging o evaluación de convergencia."] },
-    { title:"Image-Processing-C", url:"https://github.com/HanielUlises/Image-Processing-C", stack:["C","Memoria Manual","Buffer Ops","WebAssembly-ready"],
-      desc:["Implementación en C de algoritmos clásicos de procesamiento de imágenes con énfasis en manipulación manual de memoria y control explícito de estructuras de datos. Cada rutina opera directamente sobre buffers de píxeles, evitando capas de abstracción que oscurecerían el costo real de cada operación.","La optimización a nivel de buffer es un principio rector: el acceso a memoria sigue patrones que maximizan la localidad de caché, y las operaciones de convolución e interpolación están escritas para ser predecibles por el compilador.","El diseño está preparado para migración a WebAssembly: la ausencia de dependencias externas y el control total sobre el layout de datos hacen que el código sea portable a entornos sandboxed sin refactorizaciones mayores."] },
-    { title:"Digital-Signal-Processing", url:"https://github.com/HanielUlises/Digital-Signal-Processing", stack:["C","FFT","Filtros Digitales","Embedded-ready"],
-      desc:["Implementaciones en C de algoritmos fundamentales de procesamiento digital de señales: transformadas de Fourier discretas y rápidas (DFT/FFT), filtros FIR e IIR, y manipulación espectral. El énfasis es en eficiencia computacional y control explícito de memoria.","Cada algoritmo expone su complejidad temporal y espacial a través de su interfaz, y evita asignaciones dinámicas donde el tamaño de los buffers puede determinarse en tiempo de compilación o inicialización.","El diseño sirve como base para aplicaciones embebidas donde los recursos son limitados y el comportamiento determinista en tiempo real es un requisito, no una aspiración."] },
-    { title:"Landmark Classification con PyTorch", url:"https://github.com/HanielUlises", stack:["PyTorch","CNN","Python","Transfer Learning"],
-      desc:["Arquitectura CNN personalizada para clasificación de landmarks geográficos, con un pipeline completo que abarca carga de datos, augmentación, entrenamiento, validación y evaluación. El diseño modular permite sustituir el backbone de la red sin reescribir el pipeline de entrenamiento.","Se realizaron experimentos sistemáticos con distintas configuraciones arquitectónicas: profundidad de red, estrategias de regularización y tasas de aprendizaje adaptativas. El enfoque en generalización motivó decisiones explícitas sobre partición de datos y métricas de evaluación.","El proyecto ilustra la separación entre la lógica de entrenamiento y la arquitectura del modelo, facilitando la reproducibilidad y la comparación justa entre configuraciones."] },
-    { title:"RAG con Ollama", url:"https://github.com/HanielUlises", stack:["Python","Ollama","Vector DB","Embeddings","LLM Local"],
-      desc:["Sistema de Retrieval-Augmented Generation (RAG) modular que integra embeddings semánticos, recuperación vectorial y un modelo de lenguaje local ejecutado mediante Ollama. La arquitectura está diseñada para operar completamente en entorno local, sin dependencias de APIs externas.","El sistema separa con precisión las tres fases del pipeline: ingesta y preprocesamiento de documentos, indexación vectorial y generación condicionada por recuperación. Esta separación permite reemplazar cualquier componente de manera independiente.","El diseño extensible anticipa escenarios donde el corpus de documentos crece dinámicamente o donde diferentes LLMs deben ser evaluados comparativamente bajo las mismas condiciones de recuperación."] }
-  ]
-};
+const nodes = document.querySelectorAll('[data-i18n]');
+const EN = new Map();
+nodes.forEach(el => EN.set(el, el.innerHTML));
 
 let lang = 'en';
-let isDark = true;
+const langBtn = document.getElementById('langToggle');
 
-function apply(l) {
-  const t = T[l];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const k = el.getAttribute('data-i18n');
-    if (t[k] !== undefined) el.textContent = t[k];
+function applyLang(l) {
+  nodes.forEach(el => {
+    const k = el.dataset.i18n;
+    const v = l === 'en' ? EN.get(el) : ES[k];
+    if (v !== undefined) el.innerHTML = v;
   });
   document.documentElement.lang = l;
-  renderProjects(l);
+  langBtn.textContent = l === 'en' ? 'Español' : 'English';
+  langBtn.lang = l === 'en' ? 'es' : 'en';
+  refreshThemeLabel();
+  decorateProjects();
+  try { localStorage.setItem('lang', l); } catch (e) {}
 }
 
-function renderProjects(l) {
-  const grid = document.getElementById('projectsGrid');
-  grid.innerHTML = '';
-  PROJECTS[l].forEach(p => {
-    const a = document.createElement('a');
-    a.href = p.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-    a.className = 'project-card';
-    a.innerHTML = `
-      <div class="project-header">
-        <h3 class="project-title">${p.title}</h3>
-        <span class="project-link-icon">↗</span>
-      </div>
-      <div class="project-desc">${p.desc.map(d=>`<p>${d}</p>`).join('')}</div>
-      <div class="project-stack">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div>`;
-    grid.appendChild(a);
-  });
-}
-
-document.getElementById('langToggle').addEventListener('click', () => {
+langBtn.addEventListener('click', () => {
   lang = lang === 'en' ? 'es' : 'en';
-  document.getElementById('langToggle').textContent = lang === 'en' ? 'ES' : 'EN';
-  apply(lang);
+  applyLang(lang);
 });
 
+// ── theme ────────────────────────────────────────────────────────────────────
 const themeBtn = document.getElementById('themeToggle');
+
+const THEME_LABEL = {
+  en:{toLight:'Switch to light theme', toDark:'Switch to dark theme'},
+  es:{toLight:'Cambiar a tema claro',  toDark:'Cambiar a tema oscuro'}
+};
+
+// The glyph carries no meaning on its own, so the accessible name is set here.
+function refreshThemeLabel() {
+  const light = document.documentElement.classList.contains('light');
+  const L = THEME_LABEL[lang] || THEME_LABEL.en;
+  themeBtn.setAttribute('aria-label', light ? L.toDark : L.toLight);
+}
+
+function applyTheme(t) {
+  const light = t === 'light';
+  document.documentElement.classList.toggle('light', light);
+  themeBtn.setAttribute('aria-pressed', String(light));
+  themeBtn.textContent = light ? '●' : '○';
+  refreshThemeLabel();
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+
 themeBtn.addEventListener('click', () => {
-  isDark = !isDark;
-  document.documentElement.classList.toggle('light', !isDark);
-  themeBtn.textContent = isDark ? '○' : '●';
-  document.querySelectorAll('#logic-canvas canvas').forEach(cnv => {
-    if (cnv.__kripkeTpl) drawKripke(cnv, cnv.__kripkeTpl, isDark);
-  });
+  applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light');
 });
 
-const portrait = document.getElementById('heroPortrait');
-const heroSection = document.getElementById('hero');
+// ── demos load only when asked for ───────────────────────────────────────────
+document.querySelectorAll('.demo-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const img = btn.querySelector('img');
+    const tag = btn.querySelector('.demo-tag');
+    tag.textContent = lang === 'en' ? 'Loading…' : 'Cargando…';
+    const gif = new Image();
+    gif.onload = () => {
+      img.src = gif.src;
+      img.removeAttribute('srcset');
+      tag.remove();
+      btn.replaceWith(...btn.childNodes);
+    };
+    gif.onerror = () => {
+      tag.textContent = lang === 'en' ? 'Demo unavailable' : 'Demo no disponible';
+    };
+    gif.src = btn.dataset.gif;
+  }, { once: true });
+});
 
-function updatePortraitOnScroll() {
-  const heroH = heroSection.offsetHeight;
-  const scrollY = window.scrollY;
-  const fadeStart = heroH * 0.10;
-  const fadeEnd   = heroH * 0.55;
-  let progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-  progress = Math.min(1, Math.max(0, progress));
-  const eased = 1 - Math.pow(1 - progress, 3);
-  portrait.style.opacity = 1 - eased;
-  portrait.style.transform = `translateY(${-eased * 30}px)`;
+// ── the project name, and any static figure, offer the repository ───────────
+// A demo figure is left out: there the first click has to play the GIF.
+const ASK = {
+  en:{q:'Open the repository?', yes:'Open', no:'Cancel'},
+  es:{q:'¿Abrir el repositorio?', yes:'Abrir', no:'Cancelar'}
+};
+
+function offerRepo(host, url) {
+  if (host.querySelector(':scope > .repo-ask')) return;
+  const t = ASK[lang] || ASK.en;
+  const ask = document.createElement('div');
+  ask.className = 'repo-ask';
+  const q = document.createElement('span');
+  q.textContent = t.q;
+  const yes = document.createElement('button');
+  yes.type = 'button'; yes.textContent = t.yes;
+  const no = document.createElement('button');
+  no.type = 'button'; no.textContent = t.no;
+  yes.addEventListener('click', () => { window.open(url, '_blank', 'noopener'); ask.remove(); });
+  no.addEventListener('click', () => ask.remove());
+  ask.append(q, yes, no);
+  host.appendChild(ask);
+  yes.focus();
 }
 
-window.addEventListener('scroll', updatePortraitOnScroll, { passive: true });
-updatePortraitOnScroll();
+// applyLang rewrites the innerHTML of every [data-i18n] node, and most project
+// titles are one, so the outbound link has to be re-attached after a switch.
+function decorateProjects() {
+  document.querySelectorAll('.project').forEach(art => {
+    const link = art.querySelector('.p-repo a');
+    if (!link) return;                     // nothing to offer, e.g. noble-rig
+    const url = link.href;
+    const short = url.replace(/^https?:\/\//, '');
+    const title = art.querySelector('.p-title');
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.08 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-apply('en');
-
-// ── FLOATING LOGIC GLYPHS ─────────────────────────────────────────────────────
-const GLYPHS = [
-  'M ⊧ t₁ = t₂  iff  t₁ᴹ = t₂ᴹ',
-  'M ⊧ R(t₁,…,tₙ)  iff  (t₁ᴹ,…,tₙᴹ) ∈ Rᴹ',
-  'M ⊧ ¬φ  iff  M ⊭ φ',
-  'M ⊧ (φ ∧ ψ)  iff  M ⊧ φ  and  M ⊧ ψ',
-  'M ⊧ ∃x.φ  iff  ∃a ∈ |M|: M ⊧ φ[a/x]',
-  'M ⊧ ∀x.φ  iff  ∀a ∈ |M|: M ⊧ φ[a/x]',
-  'M ⊧ (φ → ψ)  iff  M ⊭ φ  or  M ⊧ ψ',
-  '⊧ φ  iff  ∀M: M ⊧ φ',
-  '∀x∀y(x = y → y = x)',
-  '∀x∃y(y > x)',
-  '∃!x.φ(x)',
-  '∀x(φ → ψ) → (∀xφ → ∀xψ)',
-  '¬∃x.φ ↔ ∀x.¬φ',
-  '⊢ ∀x.φ(x) → φ(t)',
-  'φ[t/x]',
-  'Γ ⊢ ⊥',
-  '⊥',
-  '⊤',
-  '□p → p',
-  '□(p → q) → (□p → □q)',
-  '◇p ↔ ¬□¬p',
-  'p → □◇p',
-  '◇□p → □◇p',
-  '□p → □□p',
-  '¬□p ↔ ◇¬p',
-  '□⊤',
-  '◇⊤',
-  '□(φ ∧ ψ) ↔ □φ ∧ □ψ',
-  '◇(φ ∨ ψ) ↔ ◇φ ∨ ◇ψ',
-  'Th(ℳ) = {φ : ℳ ⊧ φ}',
-  'ℳ ≡ ℕ',
-  'ℳ ≺ ℕ',
-  'tp(ā/A)',
-  'κ-categorical',
-  '|ℳ| = ℵ₀',
-  'ACF₀',
-  'DLO',
-  'dcl(A)',
-  'acl(A)',
-  'Γ ⊢ t : τ',
-  'Γ, x:A ⊢ t : B',
-  '∀α.α → α',
-  'A × B',
-  'A + B',
-  'μX.F(X)',
-  '⊢ A ∨ ¬A',
-  'Cut',
-  'Weakening',
-  'F ⊣ G',
-  'Hom(F(A),B) ≅ Hom(A,G(B))',
-  'η : Id ⇒ GF',
-  'ε : FG ⇒ Id',
-  'lim F',
-  'colim F',
-  'Nat(F,G)',
-  '∘',
-  'ob(𝒞)',
-  '□□p → □p',
-  '◇p → □◇p',
-  'K(p ∧ q) ↔ Kp ∧ Kq',
-  'Kp → p',
-  'Kp → KKp',
-  '¬Kp → K¬Kp',
-];
-
-const logicLayer = document.createElement('div');
-logicLayer.id = 'logic-canvas';
-document.body.appendChild(logicLayer);
-
-let glyphsActive = 0;
-const MAX_GLYPHS = 10;
-
-function spawnGlyph() {
-  if (glyphsActive >= MAX_GLYPHS) return;
-  glyphsActive++;
-  const el = document.createElement('span');
-  el.className = 'logic-glyph';
-  el.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-  const duration = 16 + Math.random() * 20;
-  const startX   = 3  + Math.random() * 90;
-  const startY   = 8  + Math.random() * 82;
-  const driftY   = (Math.random() - 0.5) * 110;
-  const driftX   = (Math.random() - 0.5) * 70;
-  const peakOp   = 0.16 + Math.random() * 0.12;
-  el.style.cssText = `left:${startX}vw;top:${startY}vh;--drift-y:${driftY}px;--drift-x:${driftX}px;--peak-opacity:${peakOp};animation-duration:${duration}s;`;
-  logicLayer.appendChild(el);
-  el.addEventListener('animationend', () => { el.remove(); glyphsActive--; }, { once: true });
-}
-
-setInterval(spawnGlyph, 2000);
-setTimeout(() => { spawnGlyph(); spawnGlyph(); spawnGlyph(); }, 1600);
-
-
-const KRIPKE_TEMPLATES = [
-  // Classic axiom systems
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
-    edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[1,2],[2,1],[0,2],[2,0]], label: 'S5' },
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['p','q'],['q']],
-    edges: [[0,0],[1,1],[2,2],[0,1],[1,2],[0,2]], label: 'S4' },
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],[]],
-    edges: [[0,0],[1,1],[2,2],[0,1],[1,2]], label: 'T' },
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
-    edges: [[0,1],[0,2],[1,2]], label: 'K' },
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['p','q']],
-    edges: [[0,0],[1,1],[2,2],[0,1],[1,0],[0,2],[2,0]], label: 'B' },
-  { worlds: ['w*','w'], props: [['p','q'],['q']],
-    edges: [[0,0],[0,1],[1,1]], label: 'KD45' },
-  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['p'],['p','q']],
-    edges: [[0,1],[0,2],[1,3],[2,3],[0,0],[3,3]], label: 'K4' },
-
-  // Two-world models
-  { worlds: ['w₀','w₁'], props: [['p'],[]],
-    edges: [[0,1]], label: 'K (2W)' },
-  { worlds: ['w₀','w₁'], props: [['p'],['p']],
-    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'S5 (2W)' },
-  { worlds: ['w₀','w₁'], props: [['p'],['q']],
-    edges: [[0,0],[1,1],[0,1]], label: 'D (2W)' },
-  { worlds: ['w₀','w₁'], props: [['p'],['¬p']],
-    edges: [[0,1],[1,0]], label: 'Sym' },
-  { worlds: ['w₀','w₁'], props: [['p'],['q']],
-    edges: [[0,0],[1,1],[0,1],[1,0]], label: 'S4 (2W)' },
-
-  // Linear / chain
-  { worlds: ['t₀','t₁','t₂','t₃'], props: [['p'],['q'],['p','q'],['r']],
-    edges: [[0,1],[1,2],[2,3],[0,0],[1,1],[2,2],[3,3],[0,2],[0,3],[1,3]], label: 'CTL-like' },
-  { worlds: ['now','soon','later'], props: [['p'],['p','q'],['q']],
-    edges: [[0,1],[1,2],[0,0],[1,1],[2,2]], label: 'LTL-like' },
-  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],[],['q'],['r'],['p','q','r']],
-    edges: [[0,1],[1,2],[2,3],[3,4],[0,0],[4,4]], label: 'Linear T' },
-
-  // Cyclic
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['r']],
-    edges: [[0,1],[1,2],[2,0],[0,0],[1,1],[2,2]], label: 'Cyclic T' },
-  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['r'],['s']],
-    edges: [[0,1],[1,2],[2,3],[3,0]], label: 'Cyclic K' },
-  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],['q'],['r'],['p','q'],['q','r']],
-    edges: [[0,1],[1,2],[2,3],[3,4],[4,0],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Pentagon T' },
-  { worlds: ['α','β','γ'], props: [['p'],['q'],['r']],
-    edges: [[0,1],[1,2],[2,0]], label: 'Triangle K' },
-
-  // Diamond / lattice
-  { worlds: ['⊤','a','b','⊥'], props: [['p','q'],['p'],['q'],[]],
-    edges: [[0,1],[0,2],[1,3],[2,3]], label: 'Diamond K' },
-  { worlds: ['⊤','a','b','⊥'], props: [['p','q'],['p'],['q'],[]],
-    edges: [[0,0],[1,1],[2,2],[3,3],[0,1],[0,2],[1,3],[2,3],[0,3]], label: 'Diamond S4' },
-  { worlds: ['w₀','w₁','w₂','w₃','w₄','w₅'], props: [['p','q'],['p'],['q'],['p'],['q'],[]],
-    edges: [[0,1],[0,2],[1,3],[2,4],[3,5],[4,5],[0,0],[5,5]], label: 'Hexagonal' },
-
-  // Trees
-  { worlds: ['r','a','b','c','d'], props: [['p','q'],['p'],['q'],['p'],['q']],
-    edges: [[0,1],[0,2],[1,3],[2,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Binary Tree T' },
-  { worlds: ['w₀','w₁','w₂','w₃','w₄'], props: [['p'],['q'],['r'],['p','q'],['q','r']],
-    edges: [[0,1],[0,2],[1,3],[1,4],[2,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Tree K4' },
-
-  // Epistemic / Multi-agent
-  { worlds: ['wₐ','w_b','w_c'], props: [['Kₐp'],['K_bq'],['Kₐp','K_bq']],
-    edges: [[0,0],[1,1],[2,2],[0,2],[2,0],[1,2],[2,1]], label: 'S5 Epistemic' },
-  { worlds: ['α','β','γ','δ'], props: [['p'],['q'],['p','q'],['¬p']],
-    edges: [[0,2],[2,0],[1,2],[2,1],[3,1],[0,0],[1,1],[2,2],[3,3]], label: 'Multi-Agent' },
-  { worlds: ['α','β'], props: [['Bp'],['¬p']],
-    edges: [[0,1],[0,0]], label: 'KD Belief' },
-  { worlds: ['α','β','γ'], props: [['Bp','Bq'],['p'],['q']],
-    edges: [[0,1],[0,2],[0,0]], label: 'KD45 Belief' },
-
-  // Complete graphs (S5 variants)
-  { worlds: ['w₀','w₁','w₂','w₃'], props: [['p'],['q'],['r'],['p','q','r']],
-    edges: [[0,0],[1,1],[2,2],[3,3],
-            [0,1],[1,0],[0,2],[2,0],[0,3],[3,0],
-            [1,2],[2,1],[1,3],[3,1],[2,3],[3,2]], label: 'S5 K₄' },
-
-  // Counterexamples
-  { worlds: ['w₀','w₁'], props: [['p'],['¬p']],
-    edges: [[0,1],[1,0],[0,0],[1,1]], label: '¬(□p→p) fails' },
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['¬p','¬q']],
-    edges: [[0,1],[1,2],[2,0]], label: '◇□p fails K4' },
-  { worlds: ['u','v','w'], props: [['p'],[],['q']],
-    edges: [[0,1],[0,2],[1,0]], label: 'Non-det B' },
-
-  // Doxastic
-  { worlds: ['w₀','w₁','w₂'], props: [['p'],['q'],['r']],
-    edges: [[0,1],[1,2],[0,2],[0,0]], label: 'K4 Doxastic' },
-
-  // Pentagonal / star
-  { worlds: ['c','n','e','s','w'], props: [['p'],['q'],['r'],['s'],['t']],
-    edges: [[0,1],[0,2],[0,3],[0,4],[0,0],[1,1],[2,2],[3,3],[4,4]], label: 'Star K' },
-
-  // Bipartite-like
-  { worlds: ['a₀','a₁','b₀','b₁'], props: [['p'],['p'],['q'],['q']],
-    edges: [[0,2],[0,3],[1,2],[1,3],[2,0],[3,1]], label: 'Bipartite' },
-];
-
-function circleLayout(n, cx, cy, r) {
-  const pts = [];
-  for (let i = 0; i < n; i++) {
-    const a = (2 * Math.PI * i / n) - Math.PI / 2;
-    pts.push({ x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) });
-  }
-  return pts;
-}
-
-function layoutNodes(n, cx, cy, W, H, nodeR) {
-  if (n === 1) return [{ x: cx, y: cy }];
-  if (n === 2) return [{ x: cx - W * 0.20, y: cy }, { x: cx + W * 0.20, y: cy }];
-  const maxR = Math.min(W, H) * 0.5 - nodeR * 2 - 14;
-  const r = Math.max(28, maxR * (n <= 4 ? 0.68 : n <= 6 ? 0.78 : 0.86));
-  return circleLayout(n, cx, cy, r);
-}
-
-function drawArrowHead(ctx, x, y, angle, color, size) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(angle);
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(-size, -size * 0.48);
-  ctx.lineTo(-size, size * 0.48);
-  ctx.closePath();
-  ctx.fillStyle = color;
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawKripke(canvas, tpl, dark) {
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-
-  const fgRgb = dark ? '210,210,210' : '30,30,30';
-  const fg = (a) => `rgba(${fgRgb},${a})`;
-
-  const n = tpl.worlds.length;
-  const cx = W / 2, cy = H / 2;
-  const nodeR = Math.max(11, Math.min(17, (Math.min(W, H) * 0.13) / Math.max(1, Math.sqrt(n * 0.6))));
-  const pts = layoutNodes(n, cx, cy, W, H, nodeR);
-
-  const bidiSet = new Set();
-  for (const [a, b] of tpl.edges) {
-    if (a === b) continue;
-    if (tpl.edges.some(([c, d]) => c === b && d === a)) {
-      bidiSet.add(`${Math.min(a,b)}-${Math.max(a,b)}`);
-    }
-  }
-
-  const drawnPairs = new Set();
-
-  for (const [a, b] of tpl.edges) {
-    const pa = pts[a], pb = pts[b];
-
-    if (a === b) {
-      const dx = pa.x - cx, dy = pa.y - cy;
-      const dlen = Math.hypot(dx, dy) || 1;
-      const outX = dx / dlen, outY = dy / dlen;
-
-      const loopR = nodeR * 0.82;
-      const lx = pa.x + outX * (nodeR + loopR - 2);
-      const ly = pa.y + outY * (nodeR + loopR - 2);
-
-      ctx.beginPath();
-      ctx.arc(lx, ly, loopR, 0, 2 * Math.PI);
-      ctx.strokeStyle = fg(0.46);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      const contactAngle = Math.atan2(pa.y - ly, pa.x - lx);
-      const arrowAngle = contactAngle - 1.05;
-      const ax = lx + loopR * Math.cos(arrowAngle);
-      const ay = ly + loopR * Math.sin(arrowAngle);
-      const tangentAngle = Math.atan2(-Math.cos(arrowAngle), Math.sin(arrowAngle));
-      drawArrowHead(ctx, ax, ay, tangentAngle, fg(0.46), 4.5);
-      continue;
+    if (!title.querySelector('.p-out')) {
+      const out = document.createElement('a');
+      out.className = 'p-out';
+      out.href = url;
+      out.target = '_blank';
+      out.rel = 'noopener';
+      out.textContent = '\u2197';
+      out.setAttribute('aria-label', short);
+      out.title = short;
+      title.appendChild(out);
     }
 
-    const pairKey = `${a}-${b}`;
-    const isBidi = bidiSet.has(`${Math.min(a,b)}-${Math.max(a,b)}`);
-
-    const dx = pb.x - pa.x, dy = pb.y - pa.y;
-    const len = Math.hypot(dx, dy);
-    if (len < 1) continue;
-
-    const ux = dx / len, uy = dy / len;
-    const px = -uy, py = ux;
-
-    const sign = (a < b) ? 1 : -1;
-    const off = isBidi ? 5.5 * sign : 0;
-    const ox = px * off, oy = py * off;
-
-    const ratio = nodeR / len;
-    const sx = pa.x + ux * nodeR + ox;
-    const sy = pa.y + uy * nodeR + oy;
-    const ex = pb.x - ux * nodeR + ox;
-    const ey = pb.y - uy * nodeR + oy;
-
-    if (isBidi) {
-      const bowAmt = Math.min(len * 0.18, 22);
-      const midX = (sx + ex) / 2 + px * bowAmt * sign;
-      const midY = (sy + ey) / 2 + py * bowAmt * sign;
-
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.quadraticCurveTo(midX, midY, ex, ey);
-      ctx.strokeStyle = fg(0.44);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      const t = 0.88;
-      const tgx = 2 * (1 - t) * (midX - sx) + 2 * t * (ex - midX);
-      const tgy = 2 * (1 - t) * (midY - sy) + 2 * t * (ey - midY);
-      drawArrowHead(ctx, ex, ey, Math.atan2(tgy, tgx), fg(0.44), 4.5);
-    } else {
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = fg(0.44);
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      drawArrowHead(ctx, ex, ey, Math.atan2(ey - sy, ex - sx), fg(0.44), 4.5);
-    }
-  }
-
-  // Draw nodes
-  const fontSize = Math.round(nodeR * 0.70);
-  const propFontSize = Math.round(nodeR * 0.54);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  for (let i = 0; i < n; i++) {
-    const p = pts[i];
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, nodeR, 0, 2 * Math.PI);
-    ctx.strokeStyle = fg(0.70);
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    ctx.fillStyle = fg(0.90);
-    ctx.font = `${fontSize}px 'JetBrains Mono',monospace`;
-    ctx.fillText(tpl.worlds[i], p.x, p.y);
-
-    const propStr = (tpl.props[i] && tpl.props[i].length) ? tpl.props[i].join(',') : '∅';
-    ctx.fillStyle = fg(0.44);
-    ctx.font = `${propFontSize}px 'JetBrains Mono',monospace`;
-    ctx.fillText(propStr, p.x, p.y + nodeR + 9);
-  }
-
-  ctx.fillStyle = fg(0.26);
-  ctx.font = "8px 'JetBrains Mono',monospace";
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'top';
-  ctx.fillText('ℳ=(W,R,V)·' + tpl.label, W - 4, 3);
+    // a static figure asks first; a demo figure is left alone so the GIF can play
+    art.querySelectorAll('figure:not(.demo)').forEach(fig => {
+      const img = fig.querySelector('img');
+      if (!img || img.classList.contains('askable-img')) return;
+      img.classList.add('askable-img');
+      img.title = short;
+      img.addEventListener('click', () => offerRepo(fig, url));
+    });
+  });
 }
 
-let kripkeActive = 0;
-const MAX_KRIPKE = 3;
+decorateProjects();
 
-function spawnKripke() {
-  if (kripkeActive >= MAX_KRIPKE) return;
-  kripkeActive++;
-
-  const tpl = KRIPKE_TEMPLATES[Math.floor(Math.random() * KRIPKE_TEMPLATES.length)];
-  const n = tpl.worlds.length;
-
-  const base = 160 + n * 14 + Math.random() * 40;
-  const size = Math.round(Math.min(base, 260));
-
-  const cnv = document.createElement('canvas');
-  cnv.width = size;
-  cnv.height = size;
-
-  const startX   = 2  + Math.random() * 86;
-  const startY   = 8  + Math.random() * 78;
-  const driftY   = (Math.random() - 0.5) * 100;
-  const driftX   = (Math.random() - 0.5) * 60;
-  const duration = 22 + Math.random() * 26;
-  const peakOp   = 0.55 + Math.random() * 0.30;
-
-  cnv.style.cssText = `
-    position:absolute;
-    left:${startX}vw;
-    top:${startY}vh;
-    --drift-y:${driftY}px;
-    --drift-x:${driftX}px;
-    --peak-opacity:${peakOp};
-    animation:logicFloat ${duration}s linear forwards;
-    pointer-events:none;
-    will-change:transform,opacity;
-  `;
-
-  cnv.__kripkeTpl = tpl;
-
-  logicLayer.appendChild(cnv);
-  drawKripke(cnv, tpl, isDark);
-
-  cnv.addEventListener('animationend', () => { cnv.remove(); kripkeActive--; }, { once: true });
+// ── defaults are English and the dark theme; an explicit choice is remembered ─
+try {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') applyTheme('light');
+  else applyTheme('dark');
+  if (localStorage.getItem('lang') === 'es') { lang = 'es'; applyLang('es'); }
+} catch (e) {
+  applyTheme('dark');
 }
-
-setInterval(spawnKripke, 5000);
-setTimeout(() => { spawnKripke(); }, 2400);
-setTimeout(() => { spawnKripke(); }, 4600);
-setTimeout(() => { spawnKripke(); }, 6800);
-
 </script>
 </body>
 </html>

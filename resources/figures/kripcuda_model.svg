@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="824" height="754" viewBox="0 0 824 754" role="img" aria-label="Kripke structure of the two-process mutual exclusion example: nine states drawn as circles labelled with the propositions holding in them, with the state in which both processes are critical unreachable">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#111111"/></marker>
+<marker id="arrowFaint" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#8f8f8f"/></marker>
+</defs>
+<rect width="824" height="754" fill="#ffffff"/>
+<text x="124" y="44" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">M = (S, S₀, R, L) over AP = {crit0, crit1}; a state is the pair (pc₀, pc₁)</text>
+<path d="M 62 168 L 113 168" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<text x="56" y="172" text-anchor="end" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="12" font-style="italic">s₀</text>
+<path d="M 176.0 220.0 L 176.0 290.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 228.0 168.0 L 328.0 168.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 384.0 220.0 L 384.0 290.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 436.0 168.0 L 536.0 168.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 592.0 220.0 L 592.0 290.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 569.2 121.3 C 569.2 52.0, 200.5 52.0, 200.5 117.7" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 176.0 398.0 L 176.0 468.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 228.0 346.0 L 328.0 346.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 384.0 398.0 L 384.0 468.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 436.0 346.0 L 536.0 346.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 628.1 308.6 C 715.0 287.9, 715.0 404.1, 630.9 386.3" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 569.2 299.3 C 569.2 230.0, 200.5 230.0, 200.5 295.7" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 126.0 509.7 C 62.0 509.7, 62.0 183.4, 122.2 183.4" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 228.0 524.0 L 328.0 524.0" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 334.0 509.7 C 270.0 509.7, 270.0 183.4, 330.2 183.4" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 421.4 560.1 C 442.1 647.0, 325.9 647.0, 343.7 562.9" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#arrow)"/>
+<path d="M 542.0 509.7 C 478.0 509.7, 478.0 183.4, 538.2 183.4" fill="none" stroke="#8f8f8f" stroke-width="1.2" marker-end="url(#arrowFaint)"/>
+<path d="M 569.2 477.3 C 569.2 408.0, 200.5 408.0, 200.5 473.7" fill="none" stroke="#8f8f8f" stroke-width="1.2" marker-end="url(#arrowFaint)"/>
+<circle cx="176" cy="168" r="57" fill="none" stroke="#111111" stroke-width="1"/><circle cx="176" cy="168" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="176" y="164" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">idle, idle</text><text x="176" y="183" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{ }</text>
+<circle cx="384" cy="168" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="384" y="164" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">idle, wait</text><text x="384" y="183" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{ }</text>
+<circle cx="592" cy="168" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="592" y="164" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">idle, crit</text><text x="592" y="183" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{crit1}</text>
+<circle cx="176" cy="346" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="176" y="342" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">wait, idle</text><text x="176" y="361" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{ }</text>
+<circle cx="384" cy="346" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="384" y="342" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">wait, wait</text><text x="384" y="361" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{ }</text>
+<circle cx="592" cy="346" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="592" y="342" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">wait, crit</text><text x="592" y="361" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{crit1}</text>
+<circle cx="176" cy="524" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="176" y="520" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">crit, idle</text><text x="176" y="539" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{crit0}</text>
+<circle cx="384" cy="524" r="52" fill="#ffffff" stroke="#111111" stroke-width="1.3"/><text x="384" y="520" text-anchor="middle" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">crit, wait</text><text x="384" y="539" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{crit0}</text>
+<circle cx="592" cy="524" r="52" fill="#ffffff" stroke="#8f8f8f" stroke-width="1.3" stroke-dasharray="5 4"/><text x="592" y="520" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="13">crit, crit</text><text x="592" y="539" text-anchor="middle" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="11.5" font-style="italic">{crit0, crit1}</text>
+<text x="124" y="680" fill="#111111" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="12.5">Vertical arrows move process 0, horizontal arrows move process 1; a self loop is a blocked move.</text>
+<text x="124" y="700" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="12.5">Every state has a successor, so R is total and the branching-time semantics are defined on every path.</text>
+<text x="124" y="720" fill="#8f8f8f" font-family="Georgia, 'Iowan Old Style', 'Times New Roman', serif" font-size="12.5">Dashed: (crit, crit) has no incoming transition, so AG ¬(crit0 ∧ crit1) holds on the reachable fragment.</text>
+</svg>
