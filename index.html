@@ -42,7 +42,7 @@
       --text:#e8e8e8;--heading:#fafafa;
       --border:rgba(255,255,255,0.10);--border-light:rgba(255,255,255,0.18);
       --nav-bg:rgba(10,10,10,0.93);--hover-bg:rgba(255,255,255,0.03);
-      --link:#e8e8e8;--focus:#8ab4f8;
+      --link:#e8e8e8;--focus:#8ab4f8;--glow:rgba(255,255,255,0.07);
       --serif:'EB Garamond',Georgia,'Times New Roman',serif;
       --mono:'JetBrains Mono',ui-monospace,'Courier New',monospace;
       --t:0.18s ease;
@@ -53,7 +53,7 @@
       --text:#1a1a1a;--heading:#080808;
       --border:rgba(0,0,0,0.13);--border-light:rgba(0,0,0,0.22);
       --nav-bg:rgba(247,247,245,0.94);--hover-bg:rgba(0,0,0,0.035);
-      --link:#1a1a1a;--focus:#1a5fb4;
+      --link:#1a1a1a;--focus:#1a5fb4;--glow:rgba(0,0,0,0.06);
     }
     html{font-size:16px;-webkit-text-size-adjust:100%}
     body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -101,7 +101,66 @@
     .tagline{font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--pale-gray);max-width:34ch;margin-bottom:1.1rem}
     .thesis{max-width:60ch;color:var(--text)}
     .portrait{align-self:start}
-    .portrait img{width:100%}
+    /* a fixed box, so whatever is inside keeps the same footprint */
+    .portrait-frame{position:relative;display:block;aspect-ratio:148/197;isolation:isolate}
+    .portrait-frame picture{display:contents}
+    .portrait-frame::before{
+      content:'';position:absolute;left:50%;top:48%;translate:-50% -50%;
+      width:140%;height:122%;z-index:0;pointer-events:none;
+      background:radial-gradient(closest-side,var(--glow),transparent 74%);
+      filter:blur(8px);
+    }
+    /* a blurred copy behind, so the halo follows the shape of whatever is shown */
+    .portrait-bloom{
+      position:absolute;inset:0;width:100%;height:100%;z-index:0;
+      object-fit:contain;pointer-events:none;
+      filter:blur(18px) saturate(0);opacity:.2;scale:1.18;
+    }
+    html.light .portrait-bloom{opacity:.13;filter:blur(20px) saturate(0) brightness(.8)}
+    .portrait-img{
+      position:absolute;inset:0;width:100%;height:100%;z-index:1;
+      object-fit:contain;transform-origin:18% 100%;will-change:transform;
+    }
+
+    /* easter egg */
+    .portrait-img{transform-origin:18% 100%}
+    /* each click tips it a little further, --wob grows 1..4 */
+    @keyframes portraitWobble{
+      0%  {transform:rotate(0deg)}
+      18% {transform:rotate(calc(var(--wob) * -1.7deg))}
+      38% {transform:rotate(calc(var(--wob) *  1.4deg))}
+      58% {transform:rotate(calc(var(--wob) * -0.9deg))}
+      78% {transform:rotate(calc(var(--wob) *  0.5deg))}
+      100%{transform:rotate(0deg)}
+    }
+    .portrait-img.wobble{animation:portraitWobble .55s cubic-bezier(.36,.07,.19,.97)}
+
+    /* the last click pushes it past balance and it goes over */
+    @keyframes portraitTopple{
+      0%  {transform:rotate(0deg);opacity:1;animation-timing-function:ease-in-out}
+      16% {transform:rotate(-9deg);animation-timing-function:ease-in-out}
+      34% {transform:rotate(6deg);animation-timing-function:ease-in-out}
+      50% {transform:rotate(-4deg);animation-timing-function:ease-in}
+      64% {transform:rotate(11deg) translate(1%,0);opacity:1;
+           animation-timing-function:cubic-bezier(.45,0,1,1)}
+      100%{transform:rotate(92deg) translate(34%,128%);opacity:0}
+    }
+    .portrait-img.topple{animation:portraitTopple 1.05s forwards}
+
+    /* and the replacement drops in and settles */
+    @keyframes eggDrop{
+      0%  {transform:translateY(-30px) rotate(-7deg) scale(.92);opacity:0;
+           animation-timing-function:cubic-bezier(.3,.8,.5,1)}
+      55% {transform:translateY(5px) rotate(2deg) scale(1.02);opacity:1;
+           animation-timing-function:ease-out}
+      75% {transform:translateY(-3px) rotate(-1deg) scale(1)}
+      90% {transform:translateY(1px) rotate(.4deg)}
+      100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}
+    }
+    .portrait-img.egg-in{animation:eggDrop .78s forwards}
+
+    .portrait.egg .portrait-frame::before{opacity:0}
+    .portrait.egg .portrait-img{transform-origin:50% 50%}
     .affil{margin-top:1.6rem;font-family:var(--mono);font-size:.7rem;line-height:1.9;letter-spacing:.04em;color:var(--light-gray)}
     .affil span{display:block}
 
@@ -249,12 +308,15 @@
         <span data-i18n="affil3">AI Engineering, ESCOM-IPN · Philosophy, FFyL-UNAM</span>
       </p>
     </div>
-    <div class="portrait">
-      <picture>
-        <source srcset="resources/selfie_lmao@2x.webp" type="image/webp">
-        <img src="resources/selfie_lmao.png" width="148" height="197"
-             alt="Portrait of Haniel Ulises, black and white, facing the camera" />
-      </picture>
+    <div class="portrait" id="portrait">
+      <span class="portrait-frame">
+        <img class="portrait-bloom" src="resources/selfie_lmao@2x.webp" alt="" aria-hidden="true" />
+        <picture>
+          <source srcset="resources/selfie_lmao@2x.webp" type="image/webp">
+          <img class="portrait-img" id="portraitImg" src="resources/selfie_lmao.png" width="148" height="197"
+               alt="Portrait of Haniel Ulises, black and white, facing the camera" />
+        </picture>
+      </span>
     </div>
   </div>
 </section>
@@ -1242,6 +1304,84 @@ function decorateProjects() {
 }
 
 decorateProjects();
+
+// ── portrait easter egg ──────────────────────────────────────────────────────
+// A few clicks make it teeter, the last one tips it over and something else
+// lands in its place. Click again to put it back.
+(function () {
+  const wrap  = document.getElementById('portrait');
+  const img   = document.getElementById('portraitImg');
+  if (!wrap || !img) return;
+
+  const source = wrap.querySelector('source');
+  const bloom  = wrap.querySelector('.portrait-bloom');
+
+  const ORIGINAL = {
+    src: img.getAttribute('src'),
+    srcset: source ? source.getAttribute('srcset') : null,
+    alt: img.getAttribute('alt'),
+    w: img.getAttribute('width'),
+    h: img.getAttribute('height')
+  };
+  const EGG = {
+    src: 'resources/listen-him.png',
+    alt: 'A grainy video still of a small dog, captioned "Listen to him"',
+    w: '498', h: '288'
+  };
+
+  const TRIGGER = 5;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let clicks = 0, busy = false, swapped = false, preloaded = false;
+
+  function play(cls, done) {
+    img.classList.remove('wobble', 'topple', 'egg-in');
+    void img.offsetWidth;                      // restart the animation
+    img.classList.add(cls);
+    img.addEventListener('animationend', function handler() {
+      img.removeEventListener('animationend', handler);
+      img.classList.remove(cls);
+      if (done) done();
+    }, { once: true });
+  }
+
+  function show(what, animate) {
+    if (source) {
+      if (what === EGG) source.removeAttribute('srcset');
+      else if (ORIGINAL.srcset) source.setAttribute('srcset', ORIGINAL.srcset);
+    }
+    img.src = what.src;
+    img.alt = what.alt;
+    img.width = what.w;
+    img.height = what.h;
+    if (bloom) bloom.src = what.src;
+    swapped = (what === EGG);
+    wrap.classList.toggle('egg', swapped);
+    if (animate && !reduced) play('egg-in');
+  }
+
+  wrap.addEventListener('click', () => {
+    if (busy) return;
+
+    if (!preloaded) { new Image().src = EGG.src; preloaded = true; }
+
+    clicks += 1;
+
+    // the first few clicks only make it teeter, harder each time
+    if (clicks < TRIGGER) {
+      if (reduced) return;
+      img.style.setProperty('--wob', String(clicks));
+      play('wobble');
+      return;
+    }
+
+    // the last one tips it over, and whatever was not showing lands instead
+    busy = true;
+    clicks = 0;
+    const next = swapped ? ORIGINAL : EGG;
+    const land = () => { show(next, true); busy = false; };
+    reduced ? land() : play('topple', land);
+  });
+})();
 
 // ── defaults are English and the dark theme; an explicit choice is remembered ─
 try {
