@@ -2927,7 +2927,9 @@ if (document.fonts) {
     showModel(P.length, mode === 'delaunay' ? E.length : E.filter(e => e[mode]).length);
     // how much of the intro is still on screen: 1 at the top, 0 once past it.
     // Below the intro only a faint triangulation remains, so it never competes with the text.
-    const r = host.getBoundingClientRect(), h = Math.max(0, Math.min(1, r.bottom / r.height)), k = .3 + .7 * h;
+    const r = host.getBoundingClientRect(), h = Math.max(0, Math.min(1, r.bottom / r.height));
+    // over the planning projects the field steps back for the Kripke structures
+    const w = planWeight(), k = (.3 + .7 * h) * (1 - .8 * w);
     c.lineWidth = 1;
 
     c.globalAlpha = k;
@@ -2980,7 +2982,150 @@ if (document.fonts) {
       c.fillStyle = col.accent;
       c.beginPath(); c.arc(mouse.x, mouse.y, 2.2, 0, Math.PI * 2); c.fill();
     }
+    drawKripke(w);
     c.globalAlpha = 1;
+  }
+
+  // ── Kripke structures behind the planning projects ─────────────────────────
+  // Random pointed models, drawn plain: worlds, one relation as arrows, another
+  // as dashed links between indistinguishable worlds, the designated world ringed
+  // twice. Each one grows, holds, is updated (some worlds are eliminated, as an
+  // action would), then fades, and another is generated somewhere else.
+  const groups = document.querySelectorAll('#projects .p-group');
+  const planFrom = groups[0], planTo = groups[1];
+  const models = [];
+  let nextModel = 0;
+  const T = { grow: 1600, hold: 2400, upd: 1400, rest: 2000, fade: 1200 };
+  const LIFE = T.grow + T.hold + T.upd + T.rest + T.fade;
+
+  function planWeight() {
+    if (!planFrom || !H) return 0;
+    const a = planFrom.getBoundingClientRect().top;
+    const b = planTo ? planTo.getBoundingClientRect().top : a + 2000;
+    const seen = Math.max(0, Math.min(b, H) - Math.max(a, 0)) / H;
+    return Math.min(1, seen * 1.6);
+  }
+
+  function makeModel(now) {
+    const R = (75 + Math.random() * 60) * Math.min(1, Math.max(.6, W / 1100));
+    let cx, cy, ok = false;
+    for (let tries = 0; tries < 25 && !ok; tries++) {
+      cx = R + 30 + Math.random() * (W - 2 * R - 60);
+      cy = R + 80 + Math.random() * (H - 2 * R - 110);
+      ok = models.every(m => Math.hypot(m.cx - cx, m.cy - cy) > m.R + R + 50);
+    }
+    if (!ok) return;
+    // worlds spaced around a ring, with one at the centre in the larger models
+    const n = 3 + (Math.random() * 5 | 0), worlds = [], ring = n > 4 ? n - 1 : n, off = Math.random() * Math.PI * 2;
+    for (let i = 0; i < ring; i++) {
+      const a = off + (i + (Math.random() - .5) * .35) / ring * Math.PI * 2;
+      worlds.push({ a, rr: R * (.72 + Math.random() * .28), loop: Math.random() < .3 });
+    }
+    if (ring < n) worlds.push({ a: 0, rr: 0, loop: false });
+    const arrows = new Set();
+    for (let i = 0; i < n; i++) {
+      const out = 1 + (Math.random() < .4);
+      for (let q = 0; q < out; q++) { const j = Math.random() * n | 0; if (j !== i) arrows.add(i * 16 + j); }
+    }
+    // the dashed relation joins worlds of the same class, one chain per class
+    const classes = Math.max(1, Math.ceil(n / 2)), cls = worlds.map(() => Math.random() * classes | 0), links = [];
+    for (let k = 0; k < classes; k++) {
+      const mem = cls.map((x, i) => x === k ? i : -1).filter(i => i >= 0);
+      for (let q = 1; q < mem.length; q++) links.push([mem[q - 1], mem[q]]);
+    }
+    const d = Math.random() * n | 0, gone = new Set();
+    if (n > 3) while (gone.size < 1 + (n > 5)) { const i = Math.random() * n | 0; if (i !== d) gone.add(i); }
+    models.push({ cx, cy, R, worlds, arrows: [...arrows].map(x => [x >> 4, x & 15]), links, d, gone,
+                  spin: (Math.random() - .5) * .06, t0: now });
+  }
+
+  function arrow(p, q, rad, curve) {
+    const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2, dx = q.x - p.x, dy = q.y - p.y, L = Math.hypot(dx, dy) || 1;
+    const kx = mx - dy / L * L * curve, ky = my + dx / L * L * curve;
+    const u1 = Math.hypot(kx - p.x, ky - p.y), u2 = Math.hypot(q.x - kx, q.y - ky);
+    const sx = p.x + (kx - p.x) / u1 * rad, sy = p.y + (ky - p.y) / u1 * rad;
+    const ex = q.x - (q.x - kx) / u2 * (rad + 1.5), ey = q.y - (q.y - ky) / u2 * (rad + 1.5);
+    c.beginPath(); c.moveTo(sx, sy); c.quadraticCurveTo(kx, ky, ex, ey); c.stroke();
+    const ang = Math.atan2(q.y - ky, q.x - kx);
+    c.beginPath();
+    c.moveTo(ex, ey);
+    c.lineTo(ex - 6 * Math.cos(ang - .38), ey - 6 * Math.sin(ang - .38));
+    c.lineTo(ex - 6 * Math.cos(ang + .38), ey - 6 * Math.sin(ang + .38));
+    c.closePath(); c.fill();
+  }
+
+  function drawKripke(w) {
+    if (w <= .01 && !models.length) return;
+    const now = reducedMotion ? null : performance.now();
+    const want = W < 700 ? 1 : 3;
+    if (w > .05 && models.length < want && (reducedMotion || now > nextModel)) {
+      makeModel(reducedMotion ? 0 : now);
+      nextModel = (now || 0) + 700 + Math.random() * 1500;
+    }
+    const rad = 5;
+    for (let mi = models.length - 1; mi >= 0; mi--) {
+      const m = models[mi];
+      // with reduced motion each model stays still, just before its update
+      const age = reducedMotion ? T.grow + T.hold / 2 : now - m.t0;
+      if (age > LIFE) { models.splice(mi, 1); continue; }
+      const fade = age > LIFE - T.fade ? (LIFE - age) / T.fade : 1;
+      const e = Math.max(0, Math.min(1, (age - T.grow - T.hold) / T.upd));   // elimination progress
+      const rot = reducedMotion ? 0 : m.spin * age / 1000;
+      const P = m.worlds.map(q => ({ x: m.cx + Math.cos(q.a + rot) * q.rr, y: m.cy + Math.sin(q.a + rot) * q.rr }));
+      const n = P.length;
+      const on = i => Math.max(0, Math.min(1, (age - i / n * T.grow * .6) / 300)) * (m.gone.has(i) ? 1 - e : 1);
+      const base = .7 * w * fade;
+      c.strokeStyle = col.ink; c.fillStyle = col.ink; c.lineWidth = 1;
+
+      for (const [i, j] of m.arrows) {
+        const a = Math.min(on(i), on(j), Math.max(0, (age - T.grow * .5) / T.grow));
+        if (a <= 0) continue;
+        c.globalAlpha = base * a;
+        arrow(P[i], P[j], rad, .16);
+      }
+      c.setLineDash([3, 3]);
+      for (const [i, j] of m.links) {
+        const a = Math.min(on(i), on(j), Math.max(0, (age - T.grow * .5) / T.grow));
+        if (a <= 0) continue;
+        c.globalAlpha = base * a;
+        const dx = P[j].x - P[i].x, dy = P[j].y - P[i].y, L = Math.hypot(dx, dy) || 1;
+        c.beginPath();
+        c.moveTo(P[i].x + dx / L * rad, P[i].y + dy / L * rad);
+        c.lineTo(P[j].x - dx / L * rad, P[j].y - dy / L * rad);
+        c.stroke();
+      }
+      c.setLineDash([]);
+
+      for (let i = 0; i < n; i++) {
+        const a = on(i);
+        if (a <= 0) continue;
+        const gone = m.gone.has(i);
+        c.globalAlpha = base * a;
+        c.strokeStyle = gone && e > 0 ? col.accent : col.ink;
+        c.beginPath(); c.arc(P[i].x, P[i].y, rad * (gone ? 1 - .5 * e : 1), 0, Math.PI * 2); c.stroke();
+        if (m.worlds[i].loop) {
+          // a teardrop pointing away from the centre of the model
+          const f = Math.atan2(P[i].y - m.cy, P[i].x - m.cx), at = (t, r) => [P[i].x + Math.cos(t) * r, P[i].y + Math.sin(t) * r];
+          const [sx, sy] = at(f - .45, rad), [ex, ey] = at(f + .45, rad + 1.5);
+          const [ax, ay] = at(f - .75, rad + 20), [bx, by] = at(f + .75, rad + 20);
+          c.beginPath(); c.moveTo(sx, sy); c.bezierCurveTo(ax, ay, bx, by, ex, ey); c.stroke();
+          const ang = Math.atan2(ey - by, ex - bx);
+          c.beginPath(); c.moveTo(ex, ey);
+          c.lineTo(ex - 5 * Math.cos(ang - .4), ey - 5 * Math.sin(ang - .4));
+          c.lineTo(ex - 5 * Math.cos(ang + .4), ey - 5 * Math.sin(ang + .4));
+          c.closePath(); c.fill();
+        }
+        if (i === m.d) {
+          c.strokeStyle = col.accent;
+          c.beginPath(); c.arc(P[i].x, P[i].y, rad + 3, 0, Math.PI * 2); c.stroke();
+          // the update registers at the designated world as a single ring going outward
+          if (e > 0 && e < 1) {
+            c.globalAlpha = base * (1 - e);
+            c.beginPath(); c.arc(P[i].x, P[i].y, rad + 3 + e * 18, 0, Math.PI * 2); c.stroke();
+          }
+        }
+      }
+    }
   }
 
   function step(dt) {
