@@ -120,19 +120,24 @@
 
     /* HERO */
     #intro{display:block;position:relative;padding:clamp(3rem,7vw,5.5rem) 0 3.25rem;border-top:none}
-    /* proximity graphs over drifting points, faint behind the text and fuller toward the portrait */
-    .intro-graph{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
-                 --fade-x:linear-gradient(to right,rgba(0,0,0,.22),rgba(0,0,0,.4) 40%,#000 72%);
-                 --fade-y:linear-gradient(to bottom,transparent,#000 14%,#000 78%,transparent);
+    /* proximity graphs over drifting points, behind the whole page: full in the
+       intro, fuller toward the portrait, and a faint ground once scrolled past */
+    .intro-graph{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;
+                 --fade-x:linear-gradient(to right,rgba(0,0,0,.3),rgba(0,0,0,.5) 40%,#000 72%);
+                 --fade-y:linear-gradient(to bottom,transparent 3.2rem,#000 18%,#000 82%,transparent);
                  -webkit-mask-image:var(--fade-x),var(--fade-y);-webkit-mask-composite:source-in;
                  mask-image:var(--fade-x),var(--fade-y);mask-composite:intersect}
-    #intro>:not(.intro-graph){position:relative;z-index:1}
+    @media print{.intro-graph{display:none}}
     .graph-chain{margin-top:.55rem;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;gap:.1rem .45rem;
                  font-family:var(--sc);font-size:.88rem;letter-spacing:.04em;color:var(--mid-gray);text-transform:lowercase}
     .graph-chain button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--light-gray);background:none;border:0;padding:0 .05rem;
                         cursor:pointer;border-bottom:1px solid transparent;transition:color var(--t),border-color var(--t)}
     .graph-chain button:hover{color:var(--heading)}
     .graph-chain button[aria-pressed="true"]{color:var(--heading);border-bottom-color:var(--border-light)}
+    .graph-logic{margin-top:.3rem;text-align:right;font-family:var(--cm);font-size:.98rem;line-height:1.5;color:var(--light-gray)}
+    .graph-logic .frag{font-family:var(--sc);font-size:.85rem;letter-spacing:.04em;color:var(--mid-gray);margin-left:.6rem}
+    .graph-logic sub,.graph-logic sup{font-size:.7em;line-height:0}
+    .graph-model{font-family:var(--cm);font-size:.92rem;text-align:right;color:var(--mid-gray);font-variant-numeric:lining-nums tabular-nums}
     .intro-grid{display:grid;grid-template-columns:minmax(0,1fr) 172px;gap:clamp(1.5rem,5vw,4.5rem);align-items:end}
     .eyebrow{font-family:var(--sc);font-size:1rem;letter-spacing:.1em;color:var(--accent);text-transform:lowercase;margin-bottom:1.1rem}
     h1{font-family:var(--display);font-weight:400;font-size:clamp(3rem,8.5vw,6.4rem);letter-spacing:-.025em;line-height:.95;margin-bottom:1.4rem}
@@ -407,10 +412,11 @@
   </div>
 </nav>
 
+<canvas class="intro-graph" id="introGraph" aria-hidden="true"></canvas>
+
 <main id="main">
 
 <section id="intro" aria-labelledby="name">
-  <canvas class="intro-graph" id="introGraph" aria-hidden="true"></canvas>
   <div class="intro-grid">
     <div>
       <p class="eyebrow" data-i18n="eyebrow">AI Research Engineer · Philosopher · Aspiring Mathematician</p>
@@ -442,6 +448,8 @@
     <button type="button" data-mode="gabriel" aria-pressed="false">gabriel</button><span aria-hidden="true">⊆</span>
     <button type="button" data-mode="delaunay" aria-pressed="false">delaunay</button>
   </p>
+  <p class="graph-logic" id="graphLogic" aria-live="polite"></p>
+  <p class="graph-model" id="graphModel" aria-hidden="true"></p>
 </section>
 
 <section id="about" aria-labelledby="h-about">
@@ -2714,11 +2722,35 @@ if (document.fonts) {
   const host = document.getElementById('intro');
   const cv = document.getElementById('introGraph');
   const chain = document.getElementById('graphChain');
+  const logicEl = document.getElementById('graphLogic'), modelEl = document.getElementById('graphModel');
   if (!cv || !cv.getContext) return;
+
+  // Each graph as a definition over the finite structure of sites, with its logic.
+  // RNG forbids a shorter two-step detour; the EMST forbids a shorter detour of any
+  // length, which is the step from first-order logic to transitive closure.
+  const LOGIC = (() => {
+    const it = s => `<i>${s}</i>`, [x, y, z, u, v, cc] = ['x', 'y', 'z', 'u', 'v', 'c'].map(it);
+    const d = (a, b) => `${it('d')}(${a},${b})`, head = `${it('E')}(${x},${y}) ↔ `;
+    return {
+      emst: [`${head}¬[TC<sub>${u},${v}</sub> ${d(u, v)} &lt; ${d(x, y)}](${x},${y})`, 'fo(tc)'],
+      rng: [`${head}¬∃${z} (${d(x, z)} &lt; ${d(x, y)} ∧ ${d(y, z)} &lt; ${d(x, y)})`, 'fo'],
+      gabriel: [`${head}¬∃${z} (${d(x, z)}<sup>2</sup> + ${d(y, z)}<sup>2</sup> &lt; ${d(x, y)}<sup>2</sup>)`, 'fo'],
+      delaunay: [`${head}∃${cc} ∈ ℝ<sup>2</sup> (${d(cc, x)} = ${d(cc, y)} ∧ ∀${z} ${d(cc, z)} ≥ ${d(cc, x)})`, 'fo over ℝ²'],
+    };
+  })();
+  function showLogic() {
+    const [f, frag] = LOGIC[mode];
+    logicEl.innerHTML = `${f}<span class="frag">${frag}</span>`;
+  }
+  let modelText = '';
+  function showModel(n, m) {
+    const s = `𝔄 = (<i>A</i>, <i>E</i><sup>𝔄</sup>) &nbsp;·&nbsp; |<i>A</i>| = ${n} &nbsp;·&nbsp; |<i>E</i><sup>𝔄</sup>| = ${m}`;
+    if (s !== modelText) modelEl.innerHTML = modelText = s;
+  }
   const c = cv.getContext('2d');
   const PAD = 24;
   let W = 0, H = 0, pts = [], anchor = 0, mouse = null, mode = 'emst', col = {};
-  let visible = true, raf = 0, last = 0;
+  let raf = 0, last = 0, search = null, nextSearch = performance.now() + 2500;
 
   function readColors() {
     const s = getComputedStyle(document.documentElement);
@@ -2727,6 +2759,7 @@ if (document.fonts) {
   }
 
   function seed() {
+    search = null;
     const n = Math.max(24, Math.min(90, Math.round(W * H / 9000)));
     pts = [];
     for (let i = 0; i < n; i++) {
@@ -2816,28 +2849,110 @@ if (document.fonts) {
     return { path, length: dist[t] };
   }
 
+  // A* over the Delaunay graph with the straight-line heuristic, which is admissible
+  // here; the settled order is kept so the search can be replayed as it happened
+  function astar(E, s, t) {
+    const n = pts.length, adj = Array.from({ length: n }, () => []);
+    for (const e of E) if (e.b < n) { adj[e.a].push([e.b, e.len]); adj[e.b].push([e.a, e.len]); }
+    const hd = i => Math.hypot(pts[i].x - pts[t].x, pts[i].y - pts[t].y);
+    const g = new Array(n).fill(Infinity), prev = new Array(n).fill(-1), closed = new Array(n).fill(false), order = [];
+    const open = new Set([s]);
+    g[s] = 0;
+    while (open.size) {
+      let u = -1;
+      for (const i of open) if (u < 0 || g[i] + hd(i) < g[u] + hd(u)) u = i;
+      open.delete(u); closed[u] = true; order.push(u);
+      if (u === t) break;
+      for (const [v, w] of adj[u]) if (!closed[v] && g[u] + w < g[v]) { g[v] = g[u] + w; prev[v] = u; open.add(v); }
+    }
+    const path = [];
+    if (closed[t]) for (let v = t; v >= 0; v = prev[v]) path.push(v);
+    return { s, t, order, prev, path: path.reverse() };
+  }
+
+  // every so often, search between two distant sites and replay it: expansion, path, fade
+  function planSearch(E, now) {
+    const inside = pts.map((p, i) => i).filter(i => pts[i].x > 40 && pts[i].x < W - 40 && pts[i].y > 80 && pts[i].y < H - 40);
+    if (inside.length < 2) return;
+    for (let tries = 0; tries < 30; tries++) {
+      const s = inside[Math.random() * inside.length | 0], t = inside[Math.random() * inside.length | 0];
+      if (Math.hypot(pts[s].x - pts[t].x, pts[s].y - pts[t].y) < .45 * Math.hypot(W, H)) continue;
+      const r = astar(E, s, t);
+      if (r.path.length < 2) continue;
+      r.t0 = now; r.tExpand = Math.min(2600, r.order.length * 55); r.tPath = 900; r.tHold = 1800; r.tFade = 1200;
+      search = r;
+      return;
+    }
+  }
+
+  function drawSearch(now, k) {
+    const S = search, el = now - S.t0, end = S.tExpand + S.tPath + S.tHold + S.tFade;
+    if (el > end) { search = null; nextSearch = now + 6000 + Math.random() * 6000; return; }
+    const fade = el < S.tExpand + S.tPath + S.tHold ? 1 : 1 - (el - S.tExpand - S.tPath - S.tHold) / S.tFade;
+    const seen = Math.min(S.order.length, Math.floor(S.order.length * el / S.tExpand));
+    const P = pts, line = (i, j) => { c.moveTo(P[i].x, P[i].y); c.lineTo(P[j].x, P[j].y); };
+    c.strokeStyle = col.accent; c.fillStyle = col.accent; c.lineWidth = 1;
+    // the search tree as it grew
+    c.globalAlpha = .5 * k * fade;
+    c.beginPath();
+    for (let q = 1; q < seen; q++) { const u = S.order[q]; if (S.prev[u] >= 0) line(S.prev[u], u); }
+    c.stroke();
+    for (let q = 0; q < seen; q++) { const u = S.order[q]; c.beginPath(); c.arc(P[u].x, P[u].y, 1.9, 0, Math.PI * 2); c.fill(); }
+    // then the path, drawn from the source outward
+    if (el > S.tExpand) {
+      const f = Math.min(1, (el - S.tExpand) / S.tPath) * (S.path.length - 1);
+      c.globalAlpha = .7 * k * fade; c.lineWidth = 1.5;
+      c.beginPath(); c.moveTo(P[S.path[0]].x, P[S.path[0]].y);
+      for (let q = 1; q <= Math.ceil(f); q++) {
+        const a = P[S.path[q - 1]], b = P[S.path[q]], w = Math.min(1, f - (q - 1));
+        c.lineTo(a.x + (b.x - a.x) * w, a.y + (b.y - a.y) * w);
+      }
+      c.stroke();
+    }
+    c.globalAlpha = .8 * k * fade; c.lineWidth = 1;
+    for (const i of [S.s, S.t]) { c.beginPath(); c.arc(P[i].x, P[i].y, 3.5, 0, Math.PI * 2); c.stroke(); }
+    if (el > S.tExpand && k > .6) {
+      c.globalAlpha = .7 * fade;
+      c.font = `italic 12px ${CM}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(`A*  ${S.order.length}/${pts.length} ${es() ? 'expandidos' : 'expanded'}`, P[S.t].x + 9, P[S.t].y - 12);
+    }
+  }
+
   function draw() {
+    if (!pts.length) return;   // not sized yet
     c.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     c.clearRect(0, 0, W, H);
     const P = mouse ? pts.concat([mouse]) : pts;
     const tris = triangulate(P), E = graphs(P, tris);
+    showModel(P.length, mode === 'delaunay' ? E.length : E.filter(e => e[mode]).length);
+    // how much of the intro is still on screen: 1 at the top, 0 once past it.
+    // Below the intro only a faint triangulation remains, so it never competes with the text.
+    const r = host.getBoundingClientRect(), h = Math.max(0, Math.min(1, r.bottom / r.height)), k = .3 + .7 * h;
     c.lineWidth = 1;
 
+    c.globalAlpha = k;
     c.strokeStyle = col.faint;
     c.beginPath();
     for (const e of E) { c.moveTo(P[e.a].x, P[e.a].y); c.lineTo(P[e.b].x, P[e.b].y); }
     c.stroke();
 
-    c.globalAlpha = mode === 'delaunay' ? .22 : .34;
+    c.globalAlpha = (mode === 'delaunay' ? .22 : .34) * h;
     c.strokeStyle = col.ink;
     c.beginPath();
     for (const e of E) if (mode === 'delaunay' || e[mode]) { c.moveTo(P[e.a].x, P[e.a].y); c.lineTo(P[e.b].x, P[e.b].y); }
     c.stroke();
 
     c.fillStyle = col.ink;
-    c.globalAlpha = .5;
+    c.globalAlpha = .5 * k;
     for (const p of pts) { c.beginPath(); c.arc(p.x, p.y, 1.6, 0, Math.PI * 2); c.fill(); }
-    c.globalAlpha = .7;
+    if (!reducedMotion) {
+      const now = performance.now();
+      if (!search && now > nextSearch) planSearch(E, now);
+      if (search) drawSearch(now, k);
+    }
+
+    c.globalAlpha = .7 * h;
+    c.lineWidth = 1;
     c.strokeStyle = col.accent;
     c.beginPath(); c.arc(pts[anchor].x, pts[anchor].y, 4, 0, Math.PI * 2); c.stroke();
 
@@ -2878,15 +2993,15 @@ if (document.fonts) {
 
   function frame(t) {
     raf = 0;
-    if (!visible || document.hidden) return;
-    step(Math.min(.05, (t - (last || t)) / 1000));
+    if (document.hidden) return;
+    step(Math.min(.08, (t - (last || t)) / 1000));
     last = t;
     draw();
     raf = requestAnimationFrame(frame);
   }
   function start() {
     if (reducedMotion) { draw(); return; }
-    if (!raf && visible && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); }
+    if (!raf && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); }
   }
   // with reduced motion nothing moves on its own, so redraw on each change instead
   const redraw = () => { if (reducedMotion || !raf) draw(); };
@@ -2898,15 +3013,14 @@ if (document.fonts) {
     if (Math.abs(w - W) > 1 || !pts.length) { W = w; H = h; seed(); } else { W = w; H = h; }
     draw();
   }).observe(cv);
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; start(); }).observe(host);
   document.addEventListener('visibilitychange', start);
+  addEventListener('scroll', () => { mouse = null; if (reducedMotion) draw(); }, { passive: true });
   new MutationObserver(() => { readColors(); redraw(); })
     .observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
 
   host.addEventListener('pointermove', e => {
     if (e.pointerType === 'touch') return;
-    const r = cv.getBoundingClientRect();
-    mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
+    mouse = { x: e.clientX, y: e.clientY };
     redraw();
   });
   host.addEventListener('pointerleave', () => { mouse = null; redraw(); });
@@ -2914,10 +3028,12 @@ if (document.fonts) {
   chain.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
     mode = b.dataset.mode;
     chain.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    showLogic();
     redraw();
   }));
 
   readColors();
+  showLogic();
   start();
 })();
 
