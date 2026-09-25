@@ -119,7 +119,20 @@
     .lede{color:var(--light-gray);max-width:var(--measure);margin-bottom:1.75rem;font-style:italic}
 
     /* HERO */
-    #intro{display:block;padding:clamp(3rem,7vw,5.5rem) 0 3.25rem;border-top:none}
+    #intro{display:block;position:relative;padding:clamp(3rem,7vw,5.5rem) 0 3.25rem;border-top:none}
+    /* proximity graphs over drifting points, faint behind the text and fuller toward the portrait */
+    .intro-graph{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
+                 --fade-x:linear-gradient(to right,rgba(0,0,0,.22),rgba(0,0,0,.4) 40%,#000 72%);
+                 --fade-y:linear-gradient(to bottom,transparent,#000 14%,#000 78%,transparent);
+                 -webkit-mask-image:var(--fade-x),var(--fade-y);-webkit-mask-composite:source-in;
+                 mask-image:var(--fade-x),var(--fade-y);mask-composite:intersect}
+    #intro>:not(.intro-graph){position:relative;z-index:1}
+    .graph-chain{margin-top:.55rem;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;gap:.1rem .45rem;
+                 font-family:var(--sc);font-size:.88rem;letter-spacing:.04em;color:var(--mid-gray);text-transform:lowercase}
+    .graph-chain button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--light-gray);background:none;border:0;padding:0 .05rem;
+                        cursor:pointer;border-bottom:1px solid transparent;transition:color var(--t),border-color var(--t)}
+    .graph-chain button:hover{color:var(--heading)}
+    .graph-chain button[aria-pressed="true"]{color:var(--heading);border-bottom-color:var(--border-light)}
     .intro-grid{display:grid;grid-template-columns:minmax(0,1fr) 172px;gap:clamp(1.5rem,5vw,4.5rem);align-items:end}
     .eyebrow{font-family:var(--sc);font-size:1rem;letter-spacing:.1em;color:var(--accent);text-transform:lowercase;margin-bottom:1.1rem}
     h1{font-family:var(--display);font-weight:400;font-size:clamp(3rem,8.5vw,6.4rem);letter-spacing:-.025em;line-height:.95;margin-bottom:1.4rem}
@@ -397,6 +410,7 @@
 <main id="main">
 
 <section id="intro" aria-labelledby="name">
+  <canvas class="intro-graph" id="introGraph" aria-hidden="true"></canvas>
   <div class="intro-grid">
     <div>
       <p class="eyebrow" data-i18n="eyebrow">AI Research Engineer · Philosopher · Aspiring Mathematician</p>
@@ -421,6 +435,13 @@
     </div>
   </div>
   <hr class="intro-rule" />
+  <p class="graph-chain" id="graphChain">
+    <span data-i18n="graph_cap">proximity graphs, behind:</span>
+    <button type="button" data-mode="emst" aria-pressed="true">emst</button><span aria-hidden="true">⊆</span>
+    <button type="button" data-mode="rng" aria-pressed="false">rng</button><span aria-hidden="true">⊆</span>
+    <button type="button" data-mode="gabriel" aria-pressed="false">gabriel</button><span aria-hidden="true">⊆</span>
+    <button type="button" data-mode="delaunay" aria-pressed="false">delaunay</button>
+  </p>
 </section>
 
 <section id="about" aria-labelledby="h-about">
@@ -1567,6 +1588,8 @@ const ES = {
 
   contact_h:"Contacto",
   c_email:"Correo",
+
+  graph_cap:"grafos de proximidad, al fondo:",
 };
 
 const nodes = document.querySelectorAll('[data-i18n]');
@@ -2680,6 +2703,222 @@ if (document.fonts) {
   });
   new ResizeObserver(draw).observe(host);
   window.redrawTimeline = draw;
+})();
+
+// ── intro background: proximity graphs over drifting points ──────────────────
+// Every frame recomputes the Delaunay triangulation of the points and, from it,
+// the chain EMST ⊆ RNG ⊆ Gabriel ⊆ Delaunay. The cursor joins as one more site:
+// its Voronoi cell is outlined, and the shortest Delaunay path to a marked site
+// is drawn with its dilation, the ratio of path length to straight-line distance.
+(function introGraph() {
+  const host = document.getElementById('intro');
+  const cv = document.getElementById('introGraph');
+  const chain = document.getElementById('graphChain');
+  if (!cv || !cv.getContext) return;
+  const c = cv.getContext('2d');
+  const PAD = 24;
+  let W = 0, H = 0, pts = [], anchor = 0, mouse = null, mode = 'emst', col = {};
+  let visible = true, raf = 0, last = 0;
+
+  function readColors() {
+    const s = getComputedStyle(document.documentElement);
+    col = { faint: s.getPropertyValue('--border').trim(), ink: s.getPropertyValue('--light-gray').trim(),
+            accent: s.getPropertyValue('--accent').trim() };
+  }
+
+  function seed() {
+    const n = Math.max(24, Math.min(90, Math.round(W * H / 9000)));
+    pts = [];
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = 4 + Math.random() * 7;
+      pts.push({ x: -PAD + Math.random() * (W + 2 * PAD), y: -PAD + Math.random() * (H + 2 * PAD),
+                 vx: Math.cos(a) * v, vy: Math.sin(a) * v });
+    }
+    // the marked site is whichever starts nearest the upper right
+    let best = Infinity;
+    pts.forEach((p, i) => { const d = (p.x - W * .9) ** 2 + (p.y - H * .15) ** 2; if (d < best) { best = d; anchor = i; } });
+  }
+
+  function circum(P, a, b, d) {
+    const ax = P[a].x, ay = P[a].y, bx = P[b].x, by = P[b].y, cx = P[d].x, cy = P[d].y;
+    const D = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+    if (Math.abs(D) < 1e-9) return { a, b, c: d, x: 0, y: 0, r2: Infinity };
+    const A = ax * ax + ay * ay, B = bx * bx + by * by, C = cx * cx + cy * cy;
+    const x = (A * (by - cy) + B * (cy - ay) + C * (ay - by)) / D;
+    const y = (A * (cx - bx) + B * (ax - cx) + C * (bx - ax)) / D;
+    return { a, b, c: d, x, y, r2: (ax - x) ** 2 + (ay - y) ** 2 };
+  }
+
+  // Bowyer–Watson; fine at this size and simple enough to read
+  function triangulate(P) {
+    const n = P.length, M = 1e5;
+    const V = P.concat([{ x: -M, y: -M }, { x: M, y: -M }, { x: 0, y: M }]);
+    let tris = [circum(V, n, n + 1, n + 2)];
+    for (let i = 0; i < n; i++) {
+      const p = V[i], keep = [], edges = new Map();
+      for (const t of tris) {
+        if ((p.x - t.x) ** 2 + (p.y - t.y) ** 2 < t.r2) {
+          for (const [u, v] of [[t.a, t.b], [t.b, t.c], [t.c, t.a]]) {
+            const k = u < v ? u * 4096 + v : v * 4096 + u;
+            edges.has(k) ? edges.delete(k) : edges.set(k, [u, v]);
+          }
+        } else keep.push(t);
+      }
+      for (const [u, v] of edges.values()) keep.push(circum(V, u, v, i));
+      tris = keep;
+    }
+    return tris.filter(t => t.a < n && t.b < n && t.c < n);
+  }
+
+  function graphs(P, tris) {
+    const map = new Map();
+    for (const t of tris) {
+      for (const [u, v, o] of [[t.a, t.b, t.c], [t.b, t.c, t.a], [t.c, t.a, t.b]]) {
+        const k = u < v ? u * 4096 + v : v * 4096 + u;
+        let e = map.get(k);
+        if (!e) { e = { a: Math.min(u, v), b: Math.max(u, v), opp: [] }; e.len = Math.hypot(P[u].x - P[v].x, P[u].y - P[v].y); map.set(k, e); }
+        e.opp.push(o);
+      }
+    }
+    const E = [...map.values()];
+    for (const e of E) {
+      const p = P[e.a], q = P[e.b], mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2, r2 = e.len * e.len / 4;
+      // for a Delaunay edge, the diametral disc is empty iff it misses the opposite vertices
+      e.gabriel = e.opp.every(o => (P[o].x - mx) ** 2 + (P[o].y - my) ** 2 >= r2);
+      e.rng = e.gabriel && P.every((r, i) => i === e.a || i === e.b ||
+        Math.max(Math.hypot(r.x - p.x, r.y - p.y), Math.hypot(r.x - q.x, r.y - q.y)) >= e.len);
+    }
+    // Kruskal over the Delaunay edges, which always contain the EMST
+    const parent = P.map((_, i) => i);
+    const find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
+    [...E].sort((x, y) => x.len - y.len).forEach(e => {
+      const ra = find(e.a), rb = find(e.b);
+      e.emst = ra !== rb;
+      if (e.emst) parent[ra] = rb;
+    });
+    return E;
+  }
+
+  function shortestPath(n, E, s, t) {
+    const adj = Array.from({ length: n }, () => []);
+    for (const e of E) { adj[e.a].push([e.b, e.len]); adj[e.b].push([e.a, e.len]); }
+    const dist = new Array(n).fill(Infinity), prev = new Array(n).fill(-1), done = new Array(n).fill(false);
+    dist[s] = 0;
+    for (let k = 0; k < n; k++) {
+      let u = -1;
+      for (let i = 0; i < n; i++) if (!done[i] && (u < 0 || dist[i] < dist[u])) u = i;
+      if (u < 0 || dist[u] === Infinity || u === t) break;
+      done[u] = true;
+      for (const [v, w] of adj[u]) if (dist[u] + w < dist[v]) { dist[v] = dist[u] + w; prev[v] = u; }
+    }
+    const path = [];
+    for (let v = t; v >= 0; v = prev[v]) path.push(v);
+    return { path, length: dist[t] };
+  }
+
+  function draw() {
+    c.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    c.clearRect(0, 0, W, H);
+    const P = mouse ? pts.concat([mouse]) : pts;
+    const tris = triangulate(P), E = graphs(P, tris);
+    c.lineWidth = 1;
+
+    c.strokeStyle = col.faint;
+    c.beginPath();
+    for (const e of E) { c.moveTo(P[e.a].x, P[e.a].y); c.lineTo(P[e.b].x, P[e.b].y); }
+    c.stroke();
+
+    c.globalAlpha = mode === 'delaunay' ? .22 : .34;
+    c.strokeStyle = col.ink;
+    c.beginPath();
+    for (const e of E) if (mode === 'delaunay' || e[mode]) { c.moveTo(P[e.a].x, P[e.a].y); c.lineTo(P[e.b].x, P[e.b].y); }
+    c.stroke();
+
+    c.fillStyle = col.ink;
+    c.globalAlpha = .5;
+    for (const p of pts) { c.beginPath(); c.arc(p.x, p.y, 1.6, 0, Math.PI * 2); c.fill(); }
+    c.globalAlpha = .7;
+    c.strokeStyle = col.accent;
+    c.beginPath(); c.arc(pts[anchor].x, pts[anchor].y, 4, 0, Math.PI * 2); c.stroke();
+
+    if (mouse) {
+      const m = P.length - 1;
+      // the Voronoi cell of the cursor: circumcentres of its triangles, in angular order
+      const cell = tris.filter(t => t.a === m || t.b === m || t.c === m)
+        .map(t => ({ x: t.x, y: t.y, th: Math.atan2(t.y - mouse.y, t.x - mouse.x) }))
+        .sort((u, v) => u.th - v.th);
+      if (cell.length > 2) {
+        c.globalAlpha = .45; c.setLineDash([3, 3]);
+        c.beginPath(); cell.forEach((q, i) => i ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y)); c.closePath(); c.stroke();
+        c.setLineDash([]);
+      }
+      const { path, length } = shortestPath(P.length, E, m, anchor);
+      if (path.length > 1 && Math.hypot(mouse.x - pts[anchor].x, mouse.y - pts[anchor].y) > 8) {
+        c.globalAlpha = .75; c.lineWidth = 1.4;
+        c.beginPath(); path.forEach((i, k) => k ? c.lineTo(P[i].x, P[i].y) : c.moveTo(P[i].x, P[i].y)); c.stroke();
+        const straight = Math.hypot(mouse.x - pts[anchor].x, mouse.y - pts[anchor].y);
+        c.globalAlpha = .8; c.fillStyle = col.accent;
+        c.font = `italic 12px ${CM}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+        c.fillText(`${es() ? 'dilatación' : 'dilation'} ${(length / straight).toFixed(3)}`, mouse.x + 10, mouse.y + 14);
+      }
+      c.globalAlpha = .8;
+      c.fillStyle = col.accent;
+      c.beginPath(); c.arc(mouse.x, mouse.y, 2.2, 0, Math.PI * 2); c.fill();
+    }
+    c.globalAlpha = 1;
+  }
+
+  function step(dt) {
+    for (const p of pts) {
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.x < -PAD || p.x > W + PAD) { p.vx = -p.vx; p.x = Math.max(-PAD, Math.min(W + PAD, p.x)); }
+      if (p.y < -PAD || p.y > H + PAD) { p.vy = -p.vy; p.y = Math.max(-PAD, Math.min(H + PAD, p.y)); }
+    }
+  }
+
+  function frame(t) {
+    raf = 0;
+    if (!visible || document.hidden) return;
+    step(Math.min(.05, (t - (last || t)) / 1000));
+    last = t;
+    draw();
+    raf = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (reducedMotion) { draw(); return; }
+    if (!raf && visible && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); }
+  }
+  // with reduced motion nothing moves on its own, so redraw on each change instead
+  const redraw = () => { if (reducedMotion || !raf) draw(); };
+
+  new ResizeObserver(() => {
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    cv.width = Math.round(w * devicePixelRatio); cv.height = Math.round(h * devicePixelRatio);
+    if (Math.abs(w - W) > 1 || !pts.length) { W = w; H = h; seed(); } else { W = w; H = h; }
+    draw();
+  }).observe(cv);
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; start(); }).observe(host);
+  document.addEventListener('visibilitychange', start);
+  new MutationObserver(() => { readColors(); redraw(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'lang'] });
+
+  host.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    const r = cv.getBoundingClientRect();
+    mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
+    redraw();
+  });
+  host.addEventListener('pointerleave', () => { mouse = null; redraw(); });
+
+  chain.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    mode = b.dataset.mode;
+    chain.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    redraw();
+  }));
+
+  readColors();
+  start();
 })();
 
 // ── defaults are English and the system theme; an explicit choice is remembered
