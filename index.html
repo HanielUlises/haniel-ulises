@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,6 +36,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Spectral:ital,wght@0,400;0,500;1,400&family=Spectral+SC:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <script>
+    // Set the theme before first paint: a remembered choice, otherwise the system's.
+    try {
+      var t = localStorage.getItem('themeChoice') ||
+              (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'light') document.documentElement.classList.add('light');
+    } catch (e) { document.documentElement.classList.add('light'); }
+  </script>
   <style>
     @font-face{font-family:'Computer Modern Serif';src:url('https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/font/Serif/cmunrm.woff') format('woff');font-weight:400;font-style:normal;font-display:swap}
     @font-face{font-family:'Computer Modern Serif';src:url('https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/font/Serif/cmunti.woff') format('woff');font-weight:400;font-style:italic;font-display:swap}
@@ -1604,18 +1612,18 @@ function refreshThemeLabel() {
   themeBtn.setAttribute('aria-label', light ? L.toDark : L.toLight);
 }
 
-function applyTheme(t) {
+function applyTheme(t, remember) {
   const light = t === 'light';
   document.documentElement.classList.toggle('light', light);
   themeBtn.setAttribute('aria-pressed', String(light));
   themeBtn.textContent = light ? '●' : '○';
   refreshThemeLabel();
   if (window.redrawViz) redrawViz();
-  try { localStorage.setItem('theme', t); } catch (e) {}
+  if (remember) try { localStorage.setItem('themeChoice', t); } catch (e) {}
 }
 
 themeBtn.addEventListener('click', () => {
-  applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light');
+  applyTheme(document.documentElement.classList.contains('light') ? 'dark' : 'light', true);
 });
 
 // ── demos load only when asked for ───────────────────────────────────────────
@@ -2674,15 +2682,21 @@ if (document.fonts) {
   window.redrawTimeline = draw;
 })();
 
-// ── defaults are English and the light theme; an explicit choice is remembered
+// ── defaults are English and the system theme; an explicit choice is remembered
+// The old 'theme' key was written on every visit, so it says nothing about intent.
+const systemDark = matchMedia('(prefers-color-scheme: dark)');
 try {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') applyTheme('dark');
-  else applyTheme('light');
+  localStorage.removeItem('theme');
+  applyTheme(localStorage.getItem('themeChoice') || (systemDark.matches ? 'dark' : 'light'));
   if (localStorage.getItem('lang') === 'es') { lang = 'es'; applyLang('es'); }
 } catch (e) {
   applyTheme('light');
 }
+systemDark.addEventListener('change', e => {
+  let chosen = null;
+  try { chosen = localStorage.getItem('themeChoice'); } catch (err) {}
+  if (!chosen) applyTheme(e.matches ? 'dark' : 'light');
+});
 </script>
 </body>
 </html>
