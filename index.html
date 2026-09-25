@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -381,7 +381,7 @@
     <li><a href="#contact"    data-i18n="nav_contact">Contact</a></li>
   </ul>
   <div class="nav-controls">
-    <button class="nav-btn theme-btn" id="themeToggle" aria-pressed="false" aria-label="Switch to light theme">○</button>
+    <button class="nav-btn theme-btn" id="themeToggle" aria-pressed="true" aria-label="Switch to dark theme">●</button>
     <button class="nav-btn" id="langToggle" lang="es">Español</button>
   </div>
 </nav>
@@ -2674,14 +2674,14 @@ if (document.fonts) {
   window.redrawTimeline = draw;
 })();
 
-// ── defaults are English and the dark theme; an explicit choice is remembered ─
+// ── defaults are English and the light theme; an explicit choice is remembered
 try {
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'light') applyTheme('light');
-  else applyTheme('dark');
+  if (savedTheme === 'dark') applyTheme('dark');
+  else applyTheme('light');
   if (localStorage.getItem('lang') === 'es') { lang = 'es'; applyLang('es'); }
 } catch (e) {
-  applyTheme('dark');
+  applyTheme('light');
 }
 </script>
 </body>
