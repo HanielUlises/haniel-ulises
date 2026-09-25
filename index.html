@@ -2986,17 +2986,22 @@ if (document.fonts) {
     c.globalAlpha = 1;
   }
 
-  // ── Kripke structures behind the planning projects ─────────────────────────
+  // ── Kripke structures beside the planning projects ─────────────────────────
   // Random pointed models, drawn plain: worlds, one relation as arrows, another
   // as dashed links between indistinguishable worlds, the designated world ringed
-  // twice. Each one grows, holds, is updated (some worlds are eliminated, as an
-  // action would), then fades, and another is generated somewhere else.
+  // twice. They are placed in page coordinates, only where they clear the text and
+  // figures, so they scroll with the content and are never covered by it. Each one
+  // grows, holds, is updated (some worlds are eliminated, as an action would),
+  // then fades. Hovering pauses a model; clicking a world makes it the designated
+  // one and keeps only the worlds reachable from it, the generated submodel.
   const groups = document.querySelectorAll('#projects .p-group');
   const planFrom = groups[0], planTo = groups[1];
+  const secHead = document.querySelector('#projects .section-head');
   const models = [];
-  let nextModel = 0;
-  const T = { grow: 1600, hold: 2400, upd: 1400, rest: 2000, fade: 1200 };
+  let nextModel = 0, lastK = 0, hot = null;
+  const T = { grow: 1600, hold: 3200, upd: 1400, rest: 2600, fade: 1200 };
   const LIFE = T.grow + T.hold + T.upd + T.rest + T.fade;
+  const RAD = 5;
 
   function planWeight() {
     if (!planFrom || !H) return 0;
@@ -3006,15 +3011,39 @@ if (document.fonts) {
     return Math.min(1, seen * 1.6);
   }
 
-  function makeModel(now) {
-    const R = (75 + Math.random() * 60) * Math.min(1, Math.max(.6, W / 1100));
-    let cx, cy, ok = false;
-    for (let tries = 0; tries < 25 && !ok; tries++) {
-      cx = R + 30 + Math.random() * (W - 2 * R - 60);
-      cy = R + 80 + Math.random() * (H - 2 * R - 110);
-      ok = models.every(m => Math.hypot(m.cx - cx, m.cy - cy) > m.R + R + 50);
+  // everything a model must stay clear of, in page coordinates
+  function obstacles() {
+    const sel = 'h2,h3,h4,p,li,figure,table,pre,.p-visual,.p-more,.section-head,.p-group-num';
+    const out = [];
+    document.querySelectorAll('#projects ' + sel.split(',').join(',#projects ')).forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.width && r.height) out.push([r.left, r.top + scrollY, r.right, r.bottom + scrollY]);
+    });
+    return out;
+  }
+  const boxOf = m => { const b = m.R + 26; return [m.cx - b, m.cy - b, m.cx + b, m.cy + b]; };
+  const hits = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+
+  function place() {
+    const lo = Math.max(planFrom.getBoundingClientRect().top + scrollY, scrollY + 90);
+    const hi = Math.min(planTo ? planTo.getBoundingClientRect().top + scrollY : lo + 2000, scrollY + H - 30);
+    const obs = obstacles(), taken = models.map(boxOf);
+    for (const R of [95, 78, 62, 50]) {
+      const b = R + 26, pad = 14;
+      if (hi - lo < 2 * b || W < 2 * b + 16) continue;
+      for (let tries = 0; tries < 60; tries++) {
+        const cx = b + 8 + Math.random() * (W - 2 * b - 16), cy = lo + b + Math.random() * (hi - lo - 2 * b);
+        const box = [cx - b - pad, cy - b - pad, cx + b + pad, cy + b + pad];
+        if (!obs.some(o => hits(o, box)) && !taken.some(o => hits(o, box))) return { cx, cy, R };
+      }
     }
-    if (!ok) return;
+    return null;
+  }
+
+  function makeModel() {
+    const spot = place();
+    if (!spot) return;
+    const { cx, cy, R } = spot;
     // worlds spaced around a ring, with one at the centre in the larger models
     const n = 3 + (Math.random() * 5 | 0), worlds = [], ring = n > 4 ? n - 1 : n, off = Math.random() * Math.PI * 2;
     for (let i = 0; i < ring; i++) {
@@ -3036,8 +3065,62 @@ if (document.fonts) {
     const d = Math.random() * n | 0, gone = new Set();
     if (n > 3) while (gone.size < 1 + (n > 5)) { const i = Math.random() * n | 0; if (i !== d) gone.add(i); }
     models.push({ cx, cy, R, worlds, arrows: [...arrows].map(x => [x >> 4, x & 15]), links, d, gone,
-                  spin: (Math.random() - .5) * .06, t0: now });
+                  spin: (Math.random() - .5) * .06, rot: 0, age: reducedMotion ? T.grow + T.hold / 2 : 0,
+                  vis: worlds.map(() => 1), target: worlds.map(() => 1), updated: false, touched: false,
+                  hover: false, hi: -1, P: [] });
   }
+
+  // the worlds reachable from i along either relation
+  function reach(m, i) {
+    const seen = new Set([i]), stack = [i];
+    while (stack.length) {
+      const u = stack.pop();
+      for (const [a, b] of m.arrows) if (a === u && !seen.has(b)) { seen.add(b); stack.push(b); }
+      for (const [a, b] of m.links) {
+        const v = a === u ? b : b === u ? a : -1;
+        if (v >= 0 && !seen.has(v)) { seen.add(v); stack.push(v); }
+      }
+    }
+    return seen;
+  }
+
+  function worldAt(x, y) {
+    for (const m of models) for (let i = 0; i < m.P.length; i++)
+      if (m.vis[i] > .5 && Math.hypot(m.P[i].x - x, m.P[i].y - y) < RAD + 7) return [m, i];
+    return null;
+  }
+  const interactive = t => t.closest && t.closest('a,button,input,select,textarea,label,summary,figure,canvas.mini,[data-viz]');
+
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch' || !models.length) return;
+    let changed = false;
+    for (const m of models) {
+      const [x0, y0, x1, y1] = boxOf(m), top = scrollY;
+      const over = e.clientX > x0 && e.clientX < x1 && e.clientY > y0 - top && e.clientY < y1 - top;
+      if (over !== m.hover) { m.hover = over; changed = true; }
+    }
+    const w = interactive(e.target) ? null : worldAt(e.clientX, e.clientY);
+    for (const m of models) { const hi = w && w[0] === m ? w[1] : -1; if (hi !== m.hi) { m.hi = hi; changed = true; } }
+    const next = w ? 'pointer' : '';
+    if (next !== hot) { document.body.style.cursor = hot = next; }
+    if (changed) redraw();
+  }, { passive: true });
+
+  addEventListener('click', e => {
+    if (!models.length || interactive(e.target) || String(getSelection())) return;
+    const w = worldAt(e.clientX, e.clientY);
+    if (!w) return;
+    const [m, i] = w;
+    // clicking the designated world again restores the whole model
+    const restore = m.touched && i === m.d;
+    const keep = restore ? null : reach(m, i);
+    m.d = i; m.touched = true; m.updated = true;
+    m.target = m.worlds.map((_, j) => !keep || keep.has(j) ? 1 : 0);
+    m.age = Math.min(m.age, T.grow + T.hold);   // an interaction buys the model a full stay
+    if (reducedMotion) m.vis = m.target.slice();
+    m.pulse = 0;
+    redraw();
+  });
 
   function arrow(p, q, rad, curve) {
     const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2, dx = q.x - p.x, dy = q.y - p.y, L = Math.hypot(dx, dy) || 1;
@@ -3055,59 +3138,76 @@ if (document.fonts) {
   }
 
   function drawKripke(w) {
-    if (w <= .01 && !models.length) return;
-    const now = reducedMotion ? null : performance.now();
-    const want = W < 700 ? 1 : 3;
-    if (w > .05 && models.length < want && (reducedMotion || now > nextModel)) {
-      makeModel(reducedMotion ? 0 : now);
-      nextModel = (now || 0) + 700 + Math.random() * 1500;
+    const now = performance.now(), dt = reducedMotion ? 0 : Math.min(100, now - (lastK || now));
+    lastK = now;
+    // drop models well out of view, so their space can be used again
+    for (let mi = models.length - 1; mi >= 0; mi--) {
+      const b = boxOf(models[mi]);
+      if (b[3] < scrollY - H || b[1] > scrollY + 2 * H) models.splice(mi, 1);
     }
-    const rad = 5;
+    if (planFrom && w > .05 && models.length < 4 && (reducedMotion ? models.length < 3 : now > nextModel)) {
+      makeModel();
+      nextModel = now + 900 + Math.random() * 1600;
+    }
+    if (!models.length) return;
+    const head = secHead ? secHead.getBoundingClientRect() : null;
+
     for (let mi = models.length - 1; mi >= 0; mi--) {
       const m = models[mi];
-      // with reduced motion each model stays still, just before its update
-      const age = reducedMotion ? T.grow + T.hold / 2 : now - m.t0;
-      if (age > LIFE) { models.splice(mi, 1); continue; }
+      if (!m.hover && !reducedMotion) { m.age += dt; m.rot += m.spin * dt / 1000; }
+      if (m.age > LIFE) { models.splice(mi, 1); continue; }
+      if (!m.updated && m.age > T.grow + T.hold) { m.updated = true; m.pulse = 0; m.gone.forEach(i => { m.target[i] = 0; }); }
+      const k = Math.min(1, dt / 1000 * 3);
+      m.vis = m.vis.map((v, i) => v + (m.target[i] - v) * (reducedMotion ? 1 : k));
+      if (m.pulse !== undefined) m.pulse += dt / T.upd;
+
+      const age = m.age, n = m.worlds.length;
+      const P = m.P = m.worlds.map(q => ({ x: m.cx + Math.cos(q.a + m.rot) * q.rr, y: m.cy - scrollY + Math.sin(q.a + m.rot) * q.rr }));
       const fade = age > LIFE - T.fade ? (LIFE - age) / T.fade : 1;
-      const e = Math.max(0, Math.min(1, (age - T.grow - T.hold) / T.upd));   // elimination progress
-      const rot = reducedMotion ? 0 : m.spin * age / 1000;
-      const P = m.worlds.map(q => ({ x: m.cx + Math.cos(q.a + rot) * q.rr, y: m.cy + Math.sin(q.a + rot) * q.rr }));
-      const n = P.length;
-      const on = i => Math.max(0, Math.min(1, (age - i / n * T.grow * .6) / 300)) * (m.gone.has(i) ? 1 - e : 1);
-      const base = .7 * w * fade;
-      c.strokeStyle = col.ink; c.fillStyle = col.ink; c.lineWidth = 1;
+      // step back while passing under the sticky section heading
+      const under = head && hits([head.left - 10, head.top - 10, head.right + 10, head.bottom + 10], [m.cx - m.R - 26, m.cy - scrollY - m.R - 26, m.cx + m.R + 26, m.cy - scrollY + m.R + 26]);
+      const base = (m.hover ? .95 : .75) * fade * (under ? .2 : 1);
+      const on = i => Math.max(0, Math.min(1, (age - i / n * T.grow * .6) / 300)) * m.vis[i];
+      const edgeIn = Math.max(0, Math.min(1, (age - T.grow * .5) / T.grow));
+      c.lineWidth = 1;
 
       for (const [i, j] of m.arrows) {
-        const a = Math.min(on(i), on(j), Math.max(0, (age - T.grow * .5) / T.grow));
-        if (a <= 0) continue;
+        const a = Math.min(on(i), on(j), edgeIn);
+        if (a <= .01) continue;
+        const lit = i === m.hi;
         c.globalAlpha = base * a;
-        arrow(P[i], P[j], rad, .16);
+        c.strokeStyle = c.fillStyle = lit ? col.accent : col.ink;
+        c.lineWidth = lit ? 1.5 : 1;
+        arrow(P[i], P[j], RAD, .16);
       }
+      c.lineWidth = 1;
       c.setLineDash([3, 3]);
       for (const [i, j] of m.links) {
-        const a = Math.min(on(i), on(j), Math.max(0, (age - T.grow * .5) / T.grow));
-        if (a <= 0) continue;
+        const a = Math.min(on(i), on(j), edgeIn);
+        if (a <= .01) continue;
         c.globalAlpha = base * a;
+        c.strokeStyle = i === m.hi || j === m.hi ? col.accent : col.ink;
         const dx = P[j].x - P[i].x, dy = P[j].y - P[i].y, L = Math.hypot(dx, dy) || 1;
         c.beginPath();
-        c.moveTo(P[i].x + dx / L * rad, P[i].y + dy / L * rad);
-        c.lineTo(P[j].x - dx / L * rad, P[j].y - dy / L * rad);
+        c.moveTo(P[i].x + dx / L * RAD, P[i].y + dy / L * RAD);
+        c.lineTo(P[j].x - dx / L * RAD, P[j].y - dy / L * RAD);
         c.stroke();
       }
       c.setLineDash([]);
 
       for (let i = 0; i < n; i++) {
         const a = on(i);
-        if (a <= 0) continue;
-        const gone = m.gone.has(i);
+        if (a <= .01) continue;
+        const leaving = m.target[i] === 0;
         c.globalAlpha = base * a;
-        c.strokeStyle = gone && e > 0 ? col.accent : col.ink;
-        c.beginPath(); c.arc(P[i].x, P[i].y, rad * (gone ? 1 - .5 * e : 1), 0, Math.PI * 2); c.stroke();
+        c.strokeStyle = c.fillStyle = leaving || i === m.hi ? col.accent : col.ink;
+        c.beginPath(); c.arc(P[i].x, P[i].y, RAD * (.5 + .5 * m.vis[i]), 0, Math.PI * 2); c.stroke();
+        if (i === m.hi) { c.globalAlpha = base * a * .25; c.fill(); c.globalAlpha = base * a; }
         if (m.worlds[i].loop) {
           // a teardrop pointing away from the centre of the model
-          const f = Math.atan2(P[i].y - m.cy, P[i].x - m.cx), at = (t, r) => [P[i].x + Math.cos(t) * r, P[i].y + Math.sin(t) * r];
-          const [sx, sy] = at(f - .45, rad), [ex, ey] = at(f + .45, rad + 1.5);
-          const [ax, ay] = at(f - .75, rad + 20), [bx, by] = at(f + .75, rad + 20);
+          const f = Math.atan2(P[i].y - (m.cy - scrollY), P[i].x - m.cx), at = (t, r) => [P[i].x + Math.cos(t) * r, P[i].y + Math.sin(t) * r];
+          const [sx, sy] = at(f - .45, RAD), [ex, ey] = at(f + .45, RAD + 1.5);
+          const [ax, ay] = at(f - .75, RAD + 20), [bx, by] = at(f + .75, RAD + 20);
           c.beginPath(); c.moveTo(sx, sy); c.bezierCurveTo(ax, ay, bx, by, ex, ey); c.stroke();
           const ang = Math.atan2(ey - by, ex - bx);
           c.beginPath(); c.moveTo(ex, ey);
@@ -3117,11 +3217,11 @@ if (document.fonts) {
         }
         if (i === m.d) {
           c.strokeStyle = col.accent;
-          c.beginPath(); c.arc(P[i].x, P[i].y, rad + 3, 0, Math.PI * 2); c.stroke();
-          // the update registers at the designated world as a single ring going outward
-          if (e > 0 && e < 1) {
-            c.globalAlpha = base * (1 - e);
-            c.beginPath(); c.arc(P[i].x, P[i].y, rad + 3 + e * 18, 0, Math.PI * 2); c.stroke();
+          c.beginPath(); c.arc(P[i].x, P[i].y, RAD + 3, 0, Math.PI * 2); c.stroke();
+          // an update registers at the designated world as a single ring going outward
+          if (m.pulse !== undefined && m.pulse < 1) {
+            c.globalAlpha = base * (1 - m.pulse);
+            c.beginPath(); c.arc(P[i].x, P[i].y, RAD + 3 + m.pulse * 18, 0, Math.PI * 2); c.stroke();
           }
         }
       }
